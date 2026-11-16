@@ -1,0 +1,117 @@
+@model ProductCare.Web.ViewModels.Admin.AdminProductListViewModel
+@{
+    ViewData["Title"] = "All Registered Products";
+}
+
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
+    <div>
+        <h2 class="fw-bold mb-1">Global Product Inventory</h2>
+        <p class="text-muted mb-0">System-wide inventory of customer-registered appliances, electronics, and warranty terms.</p>
+    </div>
+    <span class="badge bg-primary px-3 py-2 fs-6">Total: @Model.TotalProducts Products</span>
+</div>
+
+<!-- Filters Toolbar -->
+<div class="card pc-card mb-4">
+    <div class="card-body">
+        <form method="get" class="row g-2 align-items-center">
+            <div class="col-md-4">
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-search"></i></span>
+                    <input type="text" name="search" value="@Model.SearchTerm" class="form-control" placeholder="Search by name, brand, model, S/N, customer..." />
+                </div>
+            </div>
+            <div class="col-md-3">
+                <select name="category" class="form-select" asp-for="FilterCategory" asp-items="Html.GetEnumSelectList<ProductCare.Web.Models.Enums.ProductCategory>()">
+                    <option value="">-- All Categories --</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <select name="status" class="form-select" asp-for="FilterStatus" asp-items="Html.GetEnumSelectList<ProductCare.Web.Models.Enums.WarrantyStatus>()">
+                    <option value="">-- All Warranty Statuses --</option>
+                </select>
+            </div>
+            <div class="col-md-2 d-flex gap-2">
+                <button type="submit" class="btn btn-primary w-100">Filter</button>
+                <a asp-action="Index" class="btn btn-outline-secondary" title="Reset"><i class="bi bi-arrow-counterclockwise"></i></a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Products Table -->
+<div class="card pc-card">
+    <div class="pc-card-header d-flex justify-content-between align-items-center">
+        <span><i class="bi bi-boxes me-2 text-primary"></i>All System Products</span>
+    </div>
+    <div class="card-body p-0">
+        @if (Model.Products.Any())
+        {
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Product Name</th>
+                            <th>Brand & Model</th>
+                            <th>Serial Number</th>
+                            <th>Customer Owner</th>
+                            <th>Category</th>
+                            <th>Purchase Date</th>
+                            <th>Expiry Date</th>
+                            <th>Status</th>
+                            <th>Tickets</th>
+                            <th class="text-end">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var p in Model.Products)
+                        {
+                            <tr>
+                                <td class="fw-semibold">
+                                    <a asp-action="Details" asp-route-id="@p.Id" class="text-decoration-none">
+                                        @p.Name
+                                    </a>
+                                </td>
+                                <td>@p.Brand &middot; @p.ModelNumber</td>
+                                <td><code class="text-dark">@p.SerialNumber</code></td>
+                                <td>
+                                    <a asp-controller="Customers" asp-action="Details" asp-route-id="@p.CustomerId" class="text-decoration-none fw-semibold">
+                                        @p.CustomerName
+                                    </a>
+                                    <div class="text-muted small">@p.CustomerEmail</div>
+                                </td>
+                                <td><span class="badge bg-light text-dark border">@p.CategoryName</span></td>
+                                <td>@p.PurchaseDate.ToString("yyyy-MM-dd")</td>
+                                <td>@p.WarrantyExpiryDate.ToString("yyyy-MM-dd")</td>
+                                <td><span class="@p.StatusBadgeCssClass">@p.StatusDisplayText</span></td>
+                                <td>
+                                    @if (p.ServiceRequestsCount > 0)
+                                    {
+                                        <span class="badge bg-info text-dark">@p.ServiceRequestsCount</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted small">0</span>
+                                    }
+                                </td>
+                                <td class="text-end">
+                                    <a asp-action="Details" asp-route-id="@p.Id" class="btn btn-sm btn-outline-primary">
+                                        Details &rarr;
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <div class="text-center py-5 text-muted">
+                <i class="bi bi-boxes fs-1 d-block mb-2 text-secondary"></i>
+                <h5 class="fw-bold">No Products Found</h5>
+                <p class="small">No products match your filter criteria.</p>
+            </div>
+        }
+    </div>
+</div>

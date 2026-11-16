@@ -1,0 +1,114 @@
+@model ProductCare.Web.ViewModels.Admin.AdminServiceRequestListViewModel
+@{
+    ViewData["Title"] = "Service Tickets Management Queue";
+}
+
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
+    <div>
+        <h2 class="fw-bold mb-1">Service Ticket Queue</h2>
+        <p class="text-muted mb-0">Master operational dashboard to monitor, triage, assign, and advance customer service tickets.</p>
+    </div>
+    <div class="d-flex gap-2">
+        <span class="badge bg-warning text-dark px-3 py-2 fs-6">Pending: @Model.PendingCount</span>
+        <span class="badge bg-primary px-3 py-2 fs-6">In Progress: @Model.InProgressCount</span>
+        <span class="badge bg-success px-3 py-2 fs-6">Resolved: @Model.ResolvedCount</span>
+    </div>
+</div>
+
+<!-- Filters Toolbar -->
+<div class="card pc-card mb-4">
+    <div class="card-body">
+        <form method="get" class="row g-2 align-items-center">
+            <div class="col-md-3">
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-search"></i></span>
+                    <input type="text" name="search" value="@Model.SearchTerm" class="form-control" placeholder="Ticket #, customer, product..." />
+                </div>
+            </div>
+            <div class="col-md-3">
+                <select name="status" class="form-select" asp-for="FilterStatus" asp-items="Html.GetEnumSelectList<ProductCare.Web.Models.Enums.RequestStatus>()">
+                    <option value="">-- All Statuses --</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <select name="priority" class="form-select" asp-for="FilterPriority" asp-items="Html.GetEnumSelectList<ProductCare.Web.Models.Enums.PriorityLevel>()">
+                    <option value="">-- All Priorities --</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <select name="category" class="form-select" asp-for="FilterCategory" asp-items="Html.GetEnumSelectList<ProductCare.Web.Models.Enums.RequestCategory>()">
+                    <option value="">-- All Categories --</option>
+                </select>
+            </div>
+            <div class="col-md-2 d-flex gap-2">
+                <button type="submit" class="btn btn-primary w-100">Filter</button>
+                <a asp-action="Index" class="btn btn-outline-secondary" title="Reset Filters"><i class="bi bi-arrow-counterclockwise"></i></a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Master Queue Table -->
+<div class="card pc-card">
+    <div class="pc-card-header d-flex justify-content-between align-items-center">
+        <span><i class="bi bi-ticket-detailed me-2 text-primary"></i>Operational Tickets</span>
+        <span class="badge bg-light text-dark border">Total: @Model.TotalTickets</span>
+    </div>
+    <div class="card-body p-0">
+        @if (Model.Tickets.Any())
+        {
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Ticket #</th>
+                            <th>Customer</th>
+                            <th>Target Device</th>
+                            <th>Subject</th>
+                            <th>Priority</th>
+                            <th>Current Status</th>
+                            <th>Assigned Tech</th>
+                            <th>Created</th>
+                            <th class="text-end">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var t in Model.Tickets)
+                        {
+                            <tr>
+                                <td class="font-monospace fw-bold">
+                                    <a asp-action="Details" asp-route-id="@t.Id" class="text-decoration-none">
+                                        @t.TicketNumber
+                                    </a>
+                                </td>
+                                <td>
+                                    <strong>@t.CustomerName</strong>
+                                    <div class="text-muted small">@t.CustomerEmail</div>
+                                </td>
+                                <td>@t.ProductName <span class="text-muted small">(@t.ProductBrand)</span></td>
+                                <td>@t.Subject</td>
+                                <td><span class="@t.PriorityBadgeCssClass">@t.Priority</span></td>
+                                <td><span class="@t.StatusBadgeCssClass">@t.StatusDisplayText</span></td>
+                                <td>@(string.IsNullOrEmpty(t.AssignedTechnician) ? "—" : t.AssignedTechnician)</td>
+                                <td>@t.CreatedAtUtc.ToString("yyyy-MM-dd")</td>
+                                <td class="text-end">
+                                    <a asp-action="Details" asp-route-id="@t.Id" class="btn btn-sm btn-outline-primary">
+                                        Manage &rarr;
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <div class="text-center py-5 text-muted">
+                <i class="bi bi-check2-circle fs-1 d-block text-success mb-2"></i>
+                <h5 class="fw-bold">No Service Requests Found</h5>
+                <p class="small">No tickets currently match your filter criteria.</p>
+            </div>
+        }
+    </div>
+</div>

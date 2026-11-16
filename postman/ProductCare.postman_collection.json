@@ -1,0 +1,359 @@
+{
+  "info": {
+    "_postman_id": "productcare-api-collection-v1",
+    "name": "ProductCare REST API Collection",
+    "description": "Comprehensive API collection for ProductCare (INT402 Modern Web Programming). Contains endpoints for Authentication, Product Inventory, and Service Request Lifecycle management with JWT Bearer authentication.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://localhost:5001",
+      "type": "string"
+    },
+    {
+      "key": "authToken",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Authentication",
+      "item": [
+        {
+          "name": "Login (Generate JWT Token)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData && jsonData.data && jsonData.data.token) {",
+                  "    pm.collectionVariables.set('authToken', jsonData.data.token);",
+                  "    pm.test('Auth token captured into collection variable', function() {",
+                  "        pm.expect(jsonData.data.token).to.not.be.empty;",
+                  "    });",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"customer@example.com\",\n  \"password\": \"Customer123!\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "login"]
+            },
+            "description": "Authenticates user credentials and generates a signed JWT bearer token."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "2. Products API",
+      "item": [
+        {
+          "name": "Get All Products",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{authToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/products",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "products"]
+            },
+            "description": "Retrieves all products registered by the authenticated customer (or all products if admin)."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Product By ID",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{authToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/products/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "products", "1"]
+            },
+            "description": "Retrieves full details and calculated warranty status for a specific product."
+          },
+          "response": []
+        },
+        {
+          "name": "Create Product",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{authToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Dell UltraSharp 27 4K Monitor\",\n  \"brand\": \"Dell\",\n  \"modelNumber\": \"U2723QE\",\n  \"serialNumber\": \"SN-DELL-987654\",\n  \"category\": 2,\n  \"purchaseDate\": \"2026-01-10\",\n  \"warrantyDurationMonths\": 36,\n  \"purchaseStore\": \"Dell Direct Online\",\n  \"purchasePrice\": 579.99,\n  \"notes\": \"Purchased with extended 3-year premier replacement guarantee.\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/products",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "products"]
+            },
+            "description": "Registers a new purchased product for the customer."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Product",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{authToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Dell UltraSharp 27 4K Monitor (Office Setup)\",\n  \"brand\": \"Dell\",\n  \"modelNumber\": \"U2723QE\",\n  \"serialNumber\": \"SN-DELL-987654\",\n  \"category\": 2,\n  \"purchaseDate\": \"2026-01-10\",\n  \"warrantyDurationMonths\": 36,\n  \"purchaseStore\": \"Dell Direct Online\",\n  \"purchasePrice\": 579.99,\n  \"notes\": \"Calibrated sRGB color profile applied.\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/products/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "products", "1"]
+            },
+            "description": "Updates details of an existing registered product."
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Product",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{authToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/products/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "products", "1"]
+            },
+            "description": "Deletes a product if it has no active open service tickets."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "3. Service Requests API",
+      "item": [
+        {
+          "name": "Get All Service Requests",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{authToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/servicerequests",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "servicerequests"]
+            },
+            "description": "Retrieves service tickets (filtered by customer ownership or admin role)."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Service Request By ID",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{authToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/servicerequests/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "servicerequests", "1"]
+            },
+            "description": "Retrieves full ticket information by database ID."
+          },
+          "response": []
+        },
+        {
+          "name": "Create Service Request",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{authToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"productId\": 1,\n  \"category\": 1,\n  \"priority\": 2,\n  \"subject\": \"Intermittent display blackout over USB-C\",\n  \"description\": \"Monitor screen blanks out every few hours when connected via Thunderbolt/USB-C charging cable. HDMI connection works reliably.\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/servicerequests",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "servicerequests"]
+            },
+            "description": "Submits a new service ticket against an owned product and issues a unique PC-YYYYMMDD-XXXX ticket number."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Ticket Status (Admin)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{authToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"newStatus\": 2,\n  \"assignedTechnician\": \"Hardware Support Specialist\",\n  \"remarks\": \"Ticket acknowledged and forwarded to level 2 technician team.\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/servicerequests/1/status",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "servicerequests", "1", "status"]
+            },
+            "description": "Transitions ticket status in accordance with state machine validation rules (Admin role required)."
+          },
+          "response": []
+        },
+        {
+          "name": "Cancel Ticket (Customer)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{authToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/servicerequests/1/cancel?reason=Resolved+with+cable+replacement",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "servicerequests", "1", "cancel"],
+              "query": [
+                {
+                  "key": "reason",
+                  "value": "Resolved+with+cable+replacement"
+                }
+              ]
+            },
+            "description": "Cancels a ticket while still in Submitted state."
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,213 @@
+@model ProductCare.Web.ViewModels.Customer.ProductDetailsViewModel
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
+    <div>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-1">
+                <li class="breadcrumb-item"><a asp-action="Index">Products</a></li>
+                <li class="breadcrumb-item active" aria-current="page">@Model.Name</li>
+            </ol>
+        </nav>
+        <h2 class="fw-bold mb-0">@Model.Name</h2>
+    </div>
+    <div class="d-flex gap-2">
+        <a asp-controller="ServiceRequests" asp-action="Create" asp-route-productId="@Model.Id" class="btn btn-pc-teal">
+            <i class="bi bi-wrench me-1"></i> Request Service
+        </a>
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-outline-primary">
+            <i class="bi bi-pencil me-1"></i> Edit
+        </a>
+        <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteProductModal">
+            <i class="bi bi-trash me-1"></i> Delete
+        </button>
+    </div>
+</div>
+
+<div class="row g-4 mb-4">
+    <!-- Main Specification Card -->
+    <div class="col-lg-8">
+        <div class="card pc-card h-100">
+            <div class="pc-card-header d-flex justify-content-between align-items-center">
+                <span><i class="bi bi-info-circle me-2 text-primary"></i>Product Specifications</span>
+                <span class="badge bg-light text-dark border">@Model.CategoryName</span>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-sm-6">
+                        <label class="text-muted small text-uppercase fw-semibold">Brand / Manufacturer</label>
+                        <div class="fs-5 fw-bold text-dark">@Model.Brand</div>
+                    </div>
+                    <div class="col-sm-6">
+                        <label class="text-muted small text-uppercase fw-semibold">Model Number</label>
+                        <div class="fs-5 font-monospace text-dark">@Model.ModelNumber</div>
+                    </div>
+                    <div class="col-sm-6">
+                        <label class="text-muted small text-uppercase fw-semibold">Serial Identifier (S/N)</label>
+                        <div class="fs-5 font-monospace text-primary">@Model.SerialNumber</div>
+                    </div>
+                    <div class="col-sm-6">
+                        <label class="text-muted small text-uppercase fw-semibold">Purchase Store / Retailer</label>
+                        <div class="fs-5 text-dark">@(string.IsNullOrEmpty(Model.PurchaseStore) ? "Not Specified" : Model.PurchaseStore)</div>
+                    </div>
+                    <div class="col-sm-6">
+                        <label class="text-muted small text-uppercase fw-semibold">Purchase Price</label>
+                        <div class="fs-5 text-dark">@(Model.PurchasePrice.HasValue ? Model.PurchasePrice.Value.ToString("C") : "N/A")</div>
+                    </div>
+                    <div class="col-sm-6">
+                        <label class="text-muted small text-uppercase fw-semibold">Registration Date</label>
+                        <div class="fs-5 text-dark">@Model.CreatedAtUtc.ToString("MMM dd, yyyy")</div>
+                    </div>
+                </div>
+
+                @if (!string.IsNullOrEmpty(Model.Notes))
+                {
+                    <div class="mt-4 pt-3 border-top">
+                        <label class="text-muted small text-uppercase fw-semibold">Customer Notes</label>
+                        <p class="mb-0 text-secondary bg-light p-3 rounded-2 border">@Model.Notes</p>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Warranty & Invoice Side Cards -->
+    <div class="col-lg-4">
+        <div class="d-flex flex-column gap-3">
+            <!-- Dynamic Warranty Card -->
+            <div class="card pc-card border-top border-4 @(Model.Warranty.Status == ProductCare.Web.Models.Enums.WarrantyStatus.Active ? "border-success" : Model.Warranty.Status == ProductCare.Web.Models.Enums.WarrantyStatus.ExpiringSoon ? "border-warning" : "border-danger")">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="text-muted small text-uppercase fw-bold">Warranty Status</span>
+                        <span class="@Model.Warranty.StatusBadgeCssClass">@Model.Warranty.StatusDisplayText</span>
+                    </div>
+
+                    <div class="display-6 fw-bold mb-1">
+                        @if (Model.Warranty.Status == ProductCare.Web.Models.Enums.WarrantyStatus.Expired)
+                        {
+                            <span class="text-danger">Expired</span>
+                        }
+                        else
+                        {
+                            <span>@Model.Warranty.RemainingDays <small class="fs-6 text-muted">days left</small></span>
+                        }
+                    </div>
+
+                    <div class="small text-muted mb-3">
+                        Valid until: <strong>@Model.WarrantyExpiryDate.ToString("MMMM dd, yyyy")</strong>
+                    </div>
+
+                    <div class="p-2 bg-light rounded text-center small border">
+                        Purchase Date: <strong>@Model.PurchaseDate.ToString("yyyy-MM-dd")</strong> &middot; Duration: <strong>@Model.WarrantyDurationMonths mo</strong>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Invoice Document Card -->
+            <div class="card pc-card">
+                <div class="pc-card-header">
+                    <i class="bi bi-receipt me-2 text-info"></i>Purchase Invoice
+                </div>
+                <div class="card-body text-center py-4">
+                    @if (Model.HasInvoice)
+                    {
+                        <i class="bi bi-file-earmark-check-fill text-success display-4 mb-2 d-block"></i>
+                        <div class="fw-semibold text-truncate mb-1" title="@Model.InvoiceOriginalFileName">@Model.InvoiceOriginalFileName</div>
+                        <div class="text-muted small mb-3">@((Model.InvoiceFileSize ?? 0) / 1024) KB &middot; @Model.InvoiceContentType</div>
+                        <a asp-action="DownloadInvoice" asp-route-id="@Model.Id" class="btn btn-outline-success btn-sm w-100">
+                            <i class="bi bi-download me-1"></i> Download Invoice
+                        </a>
+                    }
+                    else
+                    {
+                        <i class="bi bi-file-earmark-x text-muted display-4 mb-2 d-block"></i>
+                        <p class="text-muted small mb-3">No invoice document uploaded for this product.</p>
+                        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-outline-secondary btn-sm">
+                            <i class="bi bi-upload me-1"></i> Upload Invoice
+                        </a>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Associated Service Requests Table -->
+<div class="card pc-card mb-4">
+    <div class="pc-card-header d-flex justify-content-between align-items-center">
+        <span><i class="bi bi-tools me-2 text-primary"></i>Service Requests for this Product</span>
+        <a asp-controller="ServiceRequests" asp-action="Create" asp-route-productId="@Model.Id" class="btn btn-sm btn-outline-primary">
+            <i class="bi bi-plus-lg me-1"></i> New Service Ticket
+        </a>
+    </div>
+    <div class="card-body p-0">
+        @if (Model.ServiceRequests.Any())
+        {
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Ticket #</th>
+                            <th>Subject</th>
+                            <th>Category</th>
+                            <th>Priority</th>
+                            <th>Status</th>
+                            <th>Created</th>
+                            <th class="text-end">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var sr in Model.ServiceRequests)
+                        {
+                            <tr>
+                                <td class="font-monospace fw-bold">@sr.TicketNumber</td>
+                                <td>@sr.Subject</td>
+                                <td><span class="badge bg-light text-dark border">@sr.Category</span></td>
+                                <td><span class="@sr.PriorityBadgeCssClass">@sr.Priority</span></td>
+                                <td><span class="@sr.StatusBadgeCssClass">@sr.Status</span></td>
+                                <td>@sr.CreatedAtUtc.ToString("yyyy-MM-dd")</td>
+                                <td class="text-end">
+                                    <a asp-controller="ServiceRequests" asp-action="Details" asp-route-id="@sr.Id" class="btn btn-sm btn-outline-secondary">
+                                        Track Ticket &rarr;
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <div class="text-center py-4 text-muted">
+                <i class="bi bi-check2-circle fs-2 d-block mb-1 text-success"></i>
+                <p class="mb-0 small">No service requests raised against this product. Device is running fine!</p>
+            </div>
+        }
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteProductModal" tabindex="-1" aria-labelledby="deleteProductModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold text-danger" id="deleteProductModalLabel"><i class="bi bi-exclamation-triangle-fill me-2"></i>Delete Product</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete <strong>@Model.Name</strong> (S/N: @Model.SerialNumber)?
+                <p class="text-danger small mt-2 mb-0">Note: Products with active open service requests cannot be deleted.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <form asp-action="Delete" asp-route-id="@Model.Id" method="post" class="d-inline">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn btn-danger">Confirm Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,204 @@
+@model ProductCare.Web.ViewModels.Customer.CustomerDashboardViewModel
+@{
+    ViewData["Title"] = "Customer Dashboard";
+}
+
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
+    <div>
+        <h2 class="fw-bold mb-1">Welcome back, @Model.CustomerName</h2>
+        <p class="text-muted mb-0">Overview of your registered products, active warranties, and service tickets.</p>
+    </div>
+    <div class="d-flex gap-2">
+        <a asp-action="Create" asp-controller="Products" class="btn btn-outline-primary">
+            <i class="bi bi-plus-circle me-1"></i> Add Product
+        </a>
+        <a asp-action="Create" asp-controller="ServiceRequests" class="btn btn-pc-teal">
+            <i class="bi bi-wrench me-1"></i> Raise Service Ticket
+        </a>
+    </div>
+</div>
+
+<!-- Metric Stat Cards -->
+<div class="row g-3 mb-4">
+    <div class="col-sm-6 col-xl-2">
+        <div class="pc-stat-card">
+            <div class="pc-stat-label">Total Products</div>
+            <div class="pc-stat-value">@Model.TotalProducts</div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-2">
+        <div class="pc-stat-card stat-success">
+            <div class="pc-stat-label">Active Warranties</div>
+            <div class="pc-stat-value text-success">@Model.ActiveWarranties</div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-2">
+        <div class="pc-stat-card stat-warning">
+            <div class="pc-stat-label">Expiring Soon</div>
+            <div class="pc-stat-value text-warning">@Model.ExpiringSoonWarranties</div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-2">
+        <div class="pc-stat-card stat-danger">
+            <div class="pc-stat-label">Expired</div>
+            <div class="pc-stat-value text-danger">@Model.ExpiredWarranties</div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-2">
+        <div class="pc-stat-card stat-info">
+            <div class="pc-stat-label">Open Tickets</div>
+            <div class="pc-stat-value text-info">@Model.OpenServiceRequests</div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-2">
+        <div class="pc-stat-card stat-teal">
+            <div class="pc-stat-label">Resolved / Closed</div>
+            <div class="pc-stat-value text-secondary">@Model.ResolvedServiceRequests</div>
+        </div>
+    </div>
+</div>
+
+<!-- Expiring Soon Alert Section -->
+@if (Model.ExpiringSoonProducts.Any())
+{
+    <div class="card border-warning border-2 shadow-sm mb-4">
+        <div class="card-header bg-warning-subtle text-dark fw-bold d-flex align-items-center">
+            <i class="bi bi-exclamation-triangle-fill text-warning fs-5 me-2"></i>
+            Warranties Expiring Soon (&le; 30 Days)
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Product</th>
+                            <th>Brand & Model</th>
+                            <th>Expiry Date</th>
+                            <th>Days Remaining</th>
+                            <th class="text-end">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var p in Model.ExpiringSoonProducts)
+                        {
+                            <tr>
+                                <td class="fw-semibold">
+                                    <a asp-controller="Products" asp-action="Details" asp-route-id="@p.Id" class="text-decoration-none">
+                                        @p.Name
+                                    </a>
+                                </td>
+                                <td>@p.Brand &middot; @p.ModelNumber</td>
+                                <td>@p.ExpiryDate.ToString("yyyy-MM-dd")</td>
+                                <td>
+                                    <span class="@p.StatusBadgeCssClass">@p.RemainingDays days left</span>
+                                </td>
+                                <td class="text-end">
+                                    <a asp-controller="ServiceRequests" asp-action="Create" asp-route-productId="@p.Id" class="btn btn-sm btn-outline-warning">
+                                        <i class="bi bi-wrench me-1"></i> Claim Warranty
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+}
+
+<!-- Recent Service Tickets and Quick Actions -->
+<div class="row g-4">
+    <div class="col-lg-8">
+        <div class="card pc-card h-100">
+            <div class="pc-card-header d-flex justify-content-between align-items-center">
+                <span><i class="bi bi-clock-history me-2 text-primary"></i>Recent Service Tickets</span>
+                <a asp-controller="ServiceRequests" asp-action="Index" class="small text-decoration-none">View All Tickets &rarr;</a>
+            </div>
+            <div class="card-body p-0">
+                @if (Model.RecentServiceRequests.Any())
+                {
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Ticket #</th>
+                                    <th>Product</th>
+                                    <th>Subject</th>
+                                    <th>Priority</th>
+                                    <th>Status</th>
+                                    <th class="text-end">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var t in Model.RecentServiceRequests)
+                                {
+                                    <tr>
+                                        <td class="fw-bold font-monospace">@t.TicketNumber</td>
+                                        <td>@t.ProductName</td>
+                                        <td>@t.Subject</td>
+                                        <td><span class="@t.PriorityBadgeCssClass">@t.PriorityText</span></td>
+                                        <td><span class="@t.StatusBadgeCssClass">@t.StatusText</span></td>
+                                        <td class="text-end">
+                                            <a asp-controller="ServiceRequests" asp-action="Details" asp-route-id="@t.Id" class="btn btn-sm btn-outline-primary">
+                                                Track
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <div class="text-center py-5 text-muted">
+                        <i class="bi bi-inbox fs-1 d-block mb-2 text-secondary"></i>
+                        <p class="mb-2">No service requests raised yet.</p>
+                        <a asp-controller="ServiceRequests" asp-action="Create" class="btn btn-sm btn-outline-primary">
+                            Raise Your First Request
+                        </a>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card pc-card h-100">
+            <div class="pc-card-header">
+                <i class="bi bi-lightning-charge me-2 text-warning"></i>Quick Shortcuts
+            </div>
+            <div class="card-body d-flex flex-column gap-3">
+                <a asp-controller="Products" asp-action="Create" class="p-3 border rounded-3 text-decoration-none text-dark bg-white hover-shadow d-flex align-items-center">
+                    <div class="p-2 rounded-circle bg-primary-subtle text-primary me-3">
+                        <i class="bi bi-plus-lg fs-5"></i>
+                    </div>
+                    <div>
+                        <div class="fw-bold">Register New Product</div>
+                        <small class="text-muted">Save product invoice and serial number</small>
+                    </div>
+                </a>
+
+                <a asp-controller="Warranty" asp-action="Index" class="p-3 border rounded-3 text-decoration-none text-dark bg-white hover-shadow d-flex align-items-center">
+                    <div class="p-2 rounded-circle bg-warning-subtle text-warning me-3">
+                        <i class="bi bi-award fs-5"></i>
+                    </div>
+                    <div>
+                        <div class="fw-bold">Warranty Timeline</div>
+                        <small class="text-muted">Check remaining coverage on all products</small>
+                    </div>
+                </a>
+
+                <a asp-controller="ServiceRequests" asp-action="Create" class="p-3 border rounded-3 text-decoration-none text-dark bg-white hover-shadow d-flex align-items-center">
+                    <div class="p-2 rounded-circle bg-teal-subtle text-success me-3">
+                        <i class="bi bi-tools fs-5"></i>
+                    </div>
+                    <div>
+                        <div class="fw-bold">Request Repair / Service</div>
+                        <small class="text-muted">Create a new service support ticket</small>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

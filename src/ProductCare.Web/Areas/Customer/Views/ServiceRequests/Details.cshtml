@@ -1,0 +1,162 @@
+@model ProductCare.Web.ViewModels.Customer.ServiceRequestDetailsViewModel
+@{
+    ViewData["Title"] = $"Ticket #{Model.TicketNumber}";
+}
+
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
+    <div>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-1">
+                <li class="breadcrumb-item"><a asp-action="Index">Service Requests</a></li>
+                <li class="breadcrumb-item active" aria-current="page">@Model.TicketNumber</li>
+            </ol>
+        </nav>
+        <div class="d-flex align-items-center gap-2">
+            <h2 class="fw-bold font-monospace mb-0">#@Model.TicketNumber</h2>
+            <span class="@Model.StatusBadgeCssClass fs-6">@Model.StatusDisplayText</span>
+            <span class="@Model.PriorityBadgeCssClass fs-6">@Model.Priority Priority</span>
+        </div>
+    </div>
+    <div class="d-flex gap-2">
+        <a asp-action="Index" class="btn btn-outline-secondary">
+            &larr; Back to Requests
+        </a>
+        @if (Model.CanCancel)
+        {
+            <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#cancelTicketModal">
+                <i class="bi bi-x-circle me-1"></i> Cancel Request
+            </button>
+        }
+    </div>
+</div>
+
+<div class="row g-4">
+    <!-- Ticket & Product Details -->
+    <div class="col-lg-7">
+        <div class="card pc-card mb-4">
+            <div class="pc-card-header d-flex justify-content-between align-items-center">
+                <span><i class="bi bi-file-text me-2 text-primary"></i>Ticket Information</span>
+                <span class="badge bg-light text-dark border">@Model.CategoryName</span>
+            </div>
+            <div class="card-body">
+                <h5 class="fw-bold text-dark mb-2">@Model.Subject</h5>
+                <p class="text-secondary bg-light p-3 rounded-2 border mb-4" style="white-space: pre-wrap;">@Model.Description</p>
+
+                <div class="row g-3">
+                    <div class="col-sm-6">
+                        <label class="text-muted small text-uppercase fw-semibold">Submitted On</label>
+                        <div class="fw-semibold">@Model.CreatedAtUtc.ToString("MMMM dd, yyyy HH:mm") UTC</div>
+                    </div>
+                    <div class="col-sm-6">
+                        <label class="text-muted small text-uppercase fw-semibold">Last Updated</label>
+                        <div class="fw-semibold">@(Model.UpdatedAtUtc?.ToString("MMMM dd, yyyy HH:mm") ?? "N/A")</div>
+                    </div>
+                    <div class="col-sm-6">
+                        <label class="text-muted small text-uppercase fw-semibold">Assigned Technician</label>
+                        <div class="fw-semibold text-primary">@(string.IsNullOrEmpty(Model.AssignedTechnician) ? "Unassigned (Awaiting Review)" : Model.AssignedTechnician)</div>
+                    </div>
+                    <div class="col-sm-6">
+                        <label class="text-muted small text-uppercase fw-semibold">Resolution Date</label>
+                        <div class="fw-semibold">@(Model.ResolvedAtUtc?.ToString("MMMM dd, yyyy") ?? "Pending Resolution")</div>
+                    </div>
+                </div>
+
+                @if (!string.IsNullOrEmpty(Model.AdminRemarks))
+                {
+                    <div class="mt-4 pt-3 border-top">
+                        <label class="text-muted small text-uppercase fw-bold text-info"><i class="bi bi-chat-left-quote me-1"></i> Official Administrative Remarks</label>
+                        <div class="alert alert-info border-info mb-0">
+                            @Model.AdminRemarks
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- Associated Product Card -->
+        <div class="card pc-card">
+            <div class="pc-card-header d-flex justify-content-between align-items-center">
+                <span><i class="bi bi-laptop me-2 text-primary"></i>Target Product</span>
+                <a asp-controller="Products" asp-action="Details" asp-route-id="@Model.ProductId" class="small text-decoration-none">View Product &rarr;</a>
+            </div>
+            <div class="card-body">
+                <div class="row g-2">
+                    <div class="col-sm-6">
+                        <span class="text-muted small">Name:</span> <strong class="text-dark">@Model.ProductName</strong>
+                    </div>
+                    <div class="col-sm-6">
+                        <span class="text-muted small">Brand / Model:</span> <strong>@Model.ProductBrand &middot; @Model.ProductModelNumber</strong>
+                    </div>
+                    <div class="col-sm-6">
+                        <span class="text-muted small">Serial Number:</span> <code class="text-dark">@Model.ProductSerialNumber</code>
+                    </div>
+                    <div class="col-sm-6">
+                        <span class="text-muted small">Warranty Expiry:</span> <strong>@Model.ProductWarrantyExpiryDate.ToString("yyyy-MM-dd")</strong>
+                        <span class="@Model.ProductWarrantyStatusBadge ms-1">@Model.ProductWarrantyStatusText</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chronological Status Audit Timeline -->
+    <div class="col-lg-5">
+        <div class="card pc-card h-100">
+            <div class="pc-card-header">
+                <i class="bi bi-clock-history me-2 text-primary"></i>Service Progression Timeline
+            </div>
+            <div class="card-body">
+                <div class="pc-timeline">
+                    @foreach (var step in Model.StatusHistory)
+                    {
+                        <div class="pc-timeline-item">
+                            <div class="pc-timeline-marker @(step.ToStatus == ProductCare.Web.Models.Enums.RequestStatus.Resolved ? "resolved" : step.ToStatus == ProductCare.Web.Models.Enums.RequestStatus.Closed || step.ToStatus == ProductCare.Web.Models.Enums.RequestStatus.Rejected ? "cancelled" : "")"></div>
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <span class="@step.ToStatusBadgeCssClass">@step.ToStatusText</span>
+                                <span class="text-muted small">@step.CreatedAtUtc.ToString("MMM dd, HH:mm")</span>
+                            </div>
+                            <div class="small text-secondary mb-1">
+                                Updated by <strong>@step.ChangedByUserName</strong>
+                            </div>
+                            @if (!string.IsNullOrEmpty(step.Remarks))
+                            {
+                                <div class="bg-light p-2 rounded-2 small text-dark border">
+                                    @step.Remarks
+                                </div>
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Cancel Ticket Modal (only accessible if Submitted) -->
+@if (Model.CanCancel)
+{
+    <div class="modal fade" id="cancelTicketModal" tabindex="-1" aria-labelledby="cancelTicketModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form asp-action="Cancel" asp-route-id="@Model.Id" method="post">
+                    @Html.AntiForgeryToken()
+                    <div class="modal-header">
+                        <h5 class="modal-title fw-bold text-danger" id="cancelTicketModalLabel">Cancel Service Request</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Are you sure you want to cancel ticket <strong>#@Model.TicketNumber</strong>? This action will set the status to Closed.</p>
+                        <div class="mb-3">
+                            <label for="cancelReason" class="form-label fw-semibold">Reason for Cancellation</label>
+                            <input type="text" name="reason" id="cancelReason" class="form-control" placeholder="e.g. Issue resolved on its own, duplicate ticket" required />
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-danger">Confirm Cancellation</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+}

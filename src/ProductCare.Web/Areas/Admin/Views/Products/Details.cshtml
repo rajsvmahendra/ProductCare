@@ -1,0 +1,179 @@
+@model ProductCare.Web.ViewModels.Admin.AdminProductDetailsViewModel
+@{
+    ViewData["Title"] = $"Product: {Model.Name}";
+}
+
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
+    <div>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-1">
+                <li class="breadcrumb-item"><a asp-action="Index">Products</a></li>
+                <li class="breadcrumb-item active" aria-current="page">@Model.Name</li>
+            </ol>
+        </nav>
+        <h2 class="fw-bold mb-0">@Model.Name</h2>
+    </div>
+    <a asp-action="Index" class="btn btn-outline-secondary">
+        &larr; Back to Products
+    </a>
+</div>
+
+<div class="row g-4 mb-4">
+    <!-- Main Specification Card -->
+    <div class="col-lg-8">
+        <div class="card pc-card h-100">
+            <div class="pc-card-header d-flex justify-content-between align-items-center">
+                <span><i class="bi bi-info-circle me-2 text-primary"></i>Product Specifications</span>
+                <span class="badge bg-light text-dark border">@Model.CategoryName</span>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-sm-6">
+                        <label class="text-muted small text-uppercase fw-semibold">Brand / Manufacturer</label>
+                        <div class="fs-5 fw-bold text-dark">@Model.Brand</div>
+                    </div>
+                    <div class="col-sm-6">
+                        <label class="text-muted small text-uppercase fw-semibold">Model Number</label>
+                        <div class="fs-5 font-monospace text-dark">@Model.ModelNumber</div>
+                    </div>
+                    <div class="col-sm-6">
+                        <label class="text-muted small text-uppercase fw-semibold">Serial Identifier (S/N)</label>
+                        <div class="fs-5 font-monospace text-primary">@Model.SerialNumber</div>
+                    </div>
+                    <div class="col-sm-6">
+                        <label class="text-muted small text-uppercase fw-semibold">Purchase Store / Retailer</label>
+                        <div class="fs-5 text-dark">@(string.IsNullOrEmpty(Model.PurchaseStore) ? "Not Specified" : Model.PurchaseStore)</div>
+                    </div>
+                    <div class="col-sm-6">
+                        <label class="text-muted small text-uppercase fw-semibold">Purchase Price</label>
+                        <div class="fs-5 text-dark">@(Model.PurchasePrice.HasValue ? Model.PurchasePrice.Value.ToString("C") : "N/A")</div>
+                    </div>
+                    <div class="col-sm-6">
+                        <label class="text-muted small text-uppercase fw-semibold">Customer Owner</label>
+                        <div class="fs-5 text-dark">
+                            <a asp-controller="Customers" asp-action="Details" asp-route-id="@Model.CustomerId" class="text-decoration-none">
+                                @Model.CustomerName
+                            </a>
+                            <small class="text-muted d-block fs-6">@Model.CustomerEmail</small>
+                        </div>
+                    </div>
+                </div>
+
+                @if (!string.IsNullOrEmpty(Model.Notes))
+                {
+                    <div class="mt-4 pt-3 border-top">
+                        <label class="text-muted small text-uppercase fw-semibold">Customer Notes</label>
+                        <p class="mb-0 text-secondary bg-light p-3 rounded-2 border">@Model.Notes</p>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Warranty & Invoice Side Cards -->
+    <div class="col-lg-4">
+        <div class="d-flex flex-column gap-3">
+            <!-- Dynamic Warranty Card -->
+            <div class="card pc-card border-top border-4 @(Model.Warranty.Status == ProductCare.Web.Models.Enums.WarrantyStatus.Active ? "border-success" : Model.Warranty.Status == ProductCare.Web.Models.Enums.WarrantyStatus.ExpiringSoon ? "border-warning" : "border-danger")">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="text-muted small text-uppercase fw-bold">Warranty Status</span>
+                        <span class="@Model.Warranty.StatusBadgeCssClass">@Model.Warranty.StatusDisplayText</span>
+                    </div>
+
+                    <div class="display-6 fw-bold mb-1">
+                        @if (Model.Warranty.Status == ProductCare.Web.Models.Enums.WarrantyStatus.Expired)
+                        {
+                            <span class="text-danger">Expired</span>
+                        }
+                        else
+                        {
+                            <span>@Model.Warranty.RemainingDays <small class="fs-6 text-muted">days left</small></span>
+                        }
+                    </div>
+
+                    <div class="small text-muted mb-3">
+                        Valid until: <strong>@Model.WarrantyExpiryDate.ToString("MMMM dd, yyyy")</strong>
+                    </div>
+
+                    <div class="p-2 bg-light rounded text-center small border">
+                        Purchase Date: <strong>@Model.PurchaseDate.ToString("yyyy-MM-dd")</strong> &middot; Duration: <strong>@Model.WarrantyDurationMonths mo</strong>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Customer Contact Card -->
+            <div class="card pc-card">
+                <div class="pc-card-header">
+                    <i class="bi bi-person-circle me-2 text-info"></i>Customer Information
+                </div>
+                <div class="card-body">
+                    <div class="fw-bold fs-6 mb-1">@Model.CustomerName</div>
+                    <div class="text-muted small mb-2"><i class="bi bi-envelope me-1"></i> @Model.CustomerEmail</div>
+                    @if (!string.IsNullOrEmpty(Model.CustomerPhone))
+                    {
+                        <div class="text-muted small mb-2"><i class="bi bi-telephone me-1"></i> @Model.CustomerPhone</div>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.CustomerCity))
+                    {
+                        <div class="text-muted small mb-3"><i class="bi bi-geo-alt me-1"></i> @Model.CustomerCity</div>
+                    }
+                    <a asp-controller="Customers" asp-action="Details" asp-route-id="@Model.CustomerId" class="btn btn-sm btn-outline-primary w-100">
+                        View Customer Profile &rarr;
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Associated Service Requests Table -->
+<div class="card pc-card mb-4">
+    <div class="pc-card-header d-flex justify-content-between align-items-center">
+        <span><i class="bi bi-tools me-2 text-primary"></i>Service Ticket History (@Model.ServiceRequests.Count)</span>
+    </div>
+    <div class="card-body p-0">
+        @if (Model.ServiceRequests.Any())
+        {
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Ticket #</th>
+                            <th>Subject</th>
+                            <th>Category</th>
+                            <th>Priority</th>
+                            <th>Status</th>
+                            <th>Created</th>
+                            <th class="text-end">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var sr in Model.ServiceRequests)
+                        {
+                            <tr>
+                                <td class="font-monospace fw-bold">@sr.TicketNumber</td>
+                                <td>@sr.Subject</td>
+                                <td><span class="badge bg-light text-dark border">@sr.Category</span></td>
+                                <td><span class="@sr.PriorityBadgeCssClass">@sr.Priority</span></td>
+                                <td><span class="@sr.StatusBadgeCssClass">@sr.Status</span></td>
+                                <td>@sr.CreatedAtUtc.ToString("yyyy-MM-dd")</td>
+                                <td class="text-end">
+                                    <a asp-controller="ServiceRequests" asp-action="Details" asp-route-id="@sr.Id" class="btn btn-sm btn-outline-primary">
+                                        Manage Ticket &rarr;
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <div class="text-center py-4 text-muted">
+                <p class="mb-0 small">No service requests recorded for this product.</p>
+            </div>
+        }
+    </div>
+</div>

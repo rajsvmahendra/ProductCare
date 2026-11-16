@@ -1,0 +1,196 @@
+@model ProductCare.Web.ViewModels.Admin.AdminReportsViewModel
+@{
+    ViewData["Title"] = "Reports & Analytics";
+}
+
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
+    <div>
+        <h2 class="fw-bold mb-1">Reports & Operational Intelligence</h2>
+        <p class="text-muted mb-0">Analytics aggregated via SQL Server Stored Procedure (<code class="text-dark">sp_GetServiceTicketStatistics</code>) and Database View (<code class="text-dark">vw_ProductWarrantySummary</code>).</p>
+    </div>
+</div>
+
+<!-- Date Range Filter Form -->
+<div class="card pc-card mb-4">
+    <div class="card-body">
+        <form method="get" class="row g-3 align-items-end">
+            <div class="col-md-4">
+                <label class="form-label small fw-semibold text-muted">Filter Start Date</label>
+                <input type="date" name="startDate" value="@(Model.FilterStartDate?.ToString("yyyy-MM-dd"))" class="form-control" />
+            </div>
+            <div class="col-md-4">
+                <label class="form-label small fw-semibold text-muted">Filter End Date</label>
+                <input type="date" name="endDate" value="@(Model.FilterEndDate?.ToString("yyyy-MM-dd"))" class="form-control" />
+            </div>
+            <div class="col-md-4 d-flex gap-2">
+                <button type="submit" class="btn btn-primary w-100">
+                    <i class="bi bi-funnel me-1"></i> Apply Range
+                </button>
+                <a asp-action="Index" class="btn btn-outline-secondary" title="Reset"><i class="bi bi-arrow-counterclockwise"></i></a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- KPI Summary Cards -->
+<div class="row g-3 mb-4">
+    <div class="col-md-3">
+        <div class="pc-stat-card stat-info">
+            <div class="pc-stat-label">Total Filtered Tickets</div>
+            <div class="pc-stat-value text-info">@Model.TotalTicketsCount</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="pc-stat-card stat-success">
+            <div class="pc-stat-label">Active Product Warranties</div>
+            <div class="pc-stat-value text-success">@Model.ActiveWarrantiesCount</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="pc-stat-card stat-warning">
+            <div class="pc-stat-label">Expiring Soon (&le;30 Days)</div>
+            <div class="pc-stat-value text-warning">@Model.ExpiringSoonWarrantiesCount</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="pc-stat-card stat-danger">
+            <div class="pc-stat-label">Expired Warranties</div>
+            <div class="pc-stat-value text-danger">@Model.ExpiredWarrantiesCount</div>
+        </div>
+    </div>
+</div>
+
+<!-- Section 1: Ticket Volume Statistics (Stored Procedure Output) -->
+<div class="card pc-card mb-4">
+    <div class="pc-card-header d-flex justify-content-between align-items-center">
+        <span>
+            <i class="bi bi-gear-wide-connected me-2 text-primary"></i>Service Ticket Statistics by Category
+            <span class="badge bg-secondary-subtle text-secondary ms-2 small">Stored Procedure: sp_GetServiceTicketStatistics</span>
+        </span>
+    </div>
+    <div class="card-body p-0">
+        @if (Model.TicketStatistics.Any())
+        {
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0 text-center">
+                    <thead class="table-light">
+                        <tr class="text-start">
+                            <th class="text-start">Category</th>
+                            <th>Total Tickets</th>
+                            <th>Submitted</th>
+                            <th>Under Review</th>
+                            <th>Assigned</th>
+                            <th>In Progress</th>
+                            <th>Waiting Customer</th>
+                            <th>Resolved</th>
+                            <th>Closed</th>
+                            <th>Rejected</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var s in Model.TicketStatistics)
+                        {
+                            <tr>
+                                <td class="text-start fw-bold">@s.CategoryName</td>
+                                <td><span class="badge bg-primary px-2 py-1">@s.TotalTickets</span></td>
+                                <td>@s.SubmittedCount</td>
+                                <td>@s.UnderReviewCount</td>
+                                <td>@s.AssignedCount</td>
+                                <td>@s.InProgressCount</td>
+                                <td>@s.WaitingForCustomerCount</td>
+                                <td><span class="text-success fw-bold">@s.ResolvedCount</span></td>
+                                <td>@s.ClosedCount</td>
+                                <td><span class="text-danger">@s.RejectedCount</span></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <div class="text-center py-4 text-muted">
+                <p class="mb-0">No ticket records found for the specified date range.</p>
+            </div>
+        }
+    </div>
+</div>
+
+<!-- Section 2: Warranty Intelligence (SQL View Output) -->
+<div class="card pc-card">
+    <div class="pc-card-header d-flex justify-content-between align-items-center">
+        <span>
+            <i class="bi bi-table me-2 text-primary"></i>Product Warranty Intelligence
+            <span class="badge bg-secondary-subtle text-secondary ms-2 small">SQL Server View: vw_ProductWarrantySummary</span>
+        </span>
+        <span class="badge bg-light text-dark border">@Model.WarrantySummaries.Count Records</span>
+    </div>
+    <div class="card-body p-0">
+        @if (Model.WarrantySummaries.Any())
+        {
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Product</th>
+                            <th>Category</th>
+                            <th>Serial Number</th>
+                            <th>Customer Name</th>
+                            <th>Customer Email</th>
+                            <th>Purchase Date</th>
+                            <th>Expiry Date</th>
+                            <th>Days Remaining</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var w in Model.WarrantySummaries)
+                        {
+                            <tr>
+                                <td class="fw-semibold">@w.ProductName <small class="text-muted">(@w.Brand)</small></td>
+                                <td><span class="badge bg-light text-dark border">@w.CategoryName</span></td>
+                                <td><code class="text-dark">@w.SerialNumber</code></td>
+                                <td>@w.CustomerName</td>
+                                <td class="text-muted small">@w.CustomerEmail</td>
+                                <td>@w.PurchaseDate.ToString("yyyy-MM-dd")</td>
+                                <td>@w.WarrantyExpiryDate.ToString("yyyy-MM-dd")</td>
+                                <td>
+                                    @if (w.DaysRemaining < 0)
+                                    {
+                                        <span class="text-danger small fw-bold">Expired</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="fw-bold @(w.DaysRemaining <= 30 ? "text-warning" : "text-success")">
+                                            @w.DaysRemaining days
+                                        </span>
+                                    }
+                                </td>
+                                <td>
+                                    @if (w.WarrantyStatusText == "Active")
+                                    {
+                                        <span class="badge bg-success">Active</span>
+                                    }
+                                    else if (w.WarrantyStatusText == "Expiring Soon")
+                                    {
+                                        <span class="badge bg-warning text-dark">Expiring Soon</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-danger">Expired</span>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <div class="text-center py-4 text-muted">
+                <p class="mb-0">No product warranty records available.</p>
+            </div>
+        }
+    </div>
+</div>

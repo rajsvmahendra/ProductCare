@@ -1,0 +1,116 @@
+@model ProductCare.Web.ViewModels.Customer.ProductCreateEditViewModel
+@{
+    ViewData["Title"] = "Register Product";
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card pc-card">
+            <div class="pc-card-header d-flex justify-content-between align-items-center">
+                <span><i class="bi bi-plus-circle me-2 text-primary"></i>Register Purchased Product</span>
+                <a asp-action="Index" class="btn btn-sm btn-outline-secondary">&larr; Back to Products</a>
+            </div>
+            <div class="card-body p-4">
+                <form asp-action="Create" method="post" enctype="multipart/form-data">
+                    @Html.AntiForgeryToken()
+
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                    <h6 class="text-uppercase text-muted fw-bold small border-bottom pb-2 mb-3">Product Specifications</h6>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label asp-for="Name" class="form-label fw-semibold"></label>
+                            <input asp-for="Name" class="form-control" placeholder="e.g. MacBook Pro 16-inch" />
+                            <span asp-validation-for="Name" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="Brand" class="form-label fw-semibold"></label>
+                            <input asp-for="Brand" class="form-control" placeholder="e.g. Apple, Samsung, Sony" />
+                            <span asp-validation-for="Brand" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label asp-for="ModelNumber" class="form-label fw-semibold"></label>
+                            <input asp-for="ModelNumber" class="form-control" placeholder="e.g. A2485" />
+                            <span asp-validation-for="ModelNumber" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="SerialNumber" class="form-label fw-semibold"></label>
+                            <input asp-for="SerialNumber" class="form-control" placeholder="e.g. C02G1234MD6R" />
+                            <span asp-validation-for="SerialNumber" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label asp-for="Category" class="form-label fw-semibold"></label>
+                        <select asp-for="Category" class="form-select" asp-items="Html.GetEnumSelectList<ProductCare.Web.Models.Enums.ProductCategory>()"></select>
+                        <span asp-validation-for="Category" class="text-danger small"></span>
+                    </div>
+
+                    <h6 class="text-uppercase text-muted fw-bold small border-bottom pb-2 mb-3">Purchase & Warranty Coverage</h6>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label asp-for="PurchaseDate" class="form-label fw-semibold"></label>
+                            <input asp-for="PurchaseDate" class="form-control" type="date" />
+                            <span asp-validation-for="PurchaseDate" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="WarrantyDurationMonths" class="form-label fw-semibold"></label>
+                            <div class="input-group">
+                                <input asp-for="WarrantyDurationMonths" class="form-control" type="number" min="1" max="120" />
+                                <span class="input-group-text">Months</span>
+                            </div>
+                            <span asp-validation-for="WarrantyDurationMonths" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label asp-for="PurchaseStore" class="form-label fw-semibold"></label>
+                            <input asp-for="PurchaseStore" class="form-control" placeholder="e.g. Best Buy, Amazon, Apple Store" />
+                            <span asp-validation-for="PurchaseStore" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="PurchasePrice" class="form-label fw-semibold"></label>
+                            <div class="input-group">
+                                <span class="input-group-text">$</span>
+                                <input asp-for="PurchasePrice" class="form-control" type="number" step="0.01" placeholder="0.00" />
+                            </div>
+                            <span asp-validation-for="PurchasePrice" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <h6 class="text-uppercase text-muted fw-bold small border-bottom pb-2 mb-3">Invoice & Verification (Optional)</h6>
+
+                    <div class="mb-3">
+                        <label asp-for="InvoiceFile" class="form-label fw-semibold"></label>
+                        <input asp-for="InvoiceFile" class="form-control" type="file" accept=".pdf,.jpg,.jpeg,.png" />
+                        <div class="form-text small">Accepted formats: PDF, JPG, PNG (Max 5 MB). File is stored securely outside web root.</div>
+                        <span asp-validation-for="InvoiceFile" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-4">
+                        <label asp-for="Notes" class="form-label fw-semibold">Additional Notes</label>
+                        <textarea asp-for="Notes" class="form-control" rows="3" placeholder="Condition at purchase, included accessories, or retailer warranty policy..."></textarea>
+                        <span asp-validation-for="Notes" class="text-danger small"></span>
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2">
+                        <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+                        <button type="submit" class="btn btn-primary px-4">
+                            <i class="bi bi-check-lg me-1"></i> Save Product
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

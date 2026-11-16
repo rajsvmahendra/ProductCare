@@ -1,0 +1,214 @@
+/* ============================================================================
+   PRODUCTCARE — SaaS Theme Stylesheet
+   Palette: Deep Navy (#0f172a), Vibrant Blue (#2563eb), Fresh Teal (#0d9488)
+   ============================================================================ */
+
+:root {
+    --pc-navy: #0f172a;
+    --pc-navy-light: #1e293b;
+    --pc-blue: #2563eb;
+    --pc-blue-hover: #1d4ed8;
+    --pc-teal: #0d9488;
+    --pc-teal-light: #14b8a6;
+    --pc-bg: #f8fafc;
+    --pc-card-bg: #ffffff;
+    --pc-border: #e2e8f0;
+    --pc-text-main: #1e293b;
+    --pc-text-muted: #64748b;
+}
+
+body {
+    background-color: var(--pc-bg);
+    color: var(--pc-text-main);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1 0 auto;
+}
+
+/* Navbar */
+.navbar-productcare {
+    background-color: var(--pc-navy) !important;
+    border-bottom: 3px solid var(--pc-teal);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-brand-pc {
+    font-weight: 700;
+    font-size: 1.35rem;
+    letter-spacing: -0.5px;
+    color: #ffffff !important;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.navbar-brand-badge {
+    background: linear-gradient(135deg, var(--pc-blue), var(--pc-teal));
+    color: white;
+    font-size: 0.75rem;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.nav-link-pc {
+    color: #cbd5e1 !important;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    padding: 0.5rem 0.85rem !important;
+    border-radius: 6px;
+}
+
+.nav-link-pc:hover, .nav-link-pc.active {
+    color: #ffffff !important;
+    background-color: rgba(255, 255, 255, 0.08);
+}
+
+/* Cards & Surfaces */
+.pc-card {
+    background: var(--pc-card-bg);
+    border: 1px solid var(--pc-border);
+    border-radius: 10px;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px 0 rgba(0, 0, 0, 0.03);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.pc-card:hover {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -1px rgba(0, 0, 0, 0.04);
+}
+
+.pc-card-header {
+    background-color: #ffffff;
+    border-bottom: 1px solid var(--pc-border);
+    padding: 1rem 1.25rem;
+    font-weight: 600;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+/* Stat Metric Cards */
+.pc-stat-card {
+    border-left: 4px solid var(--pc-blue);
+    padding: 1.25rem;
+    border-radius: 8px;
+    background: white;
+    border: 1px solid var(--pc-border);
+    border-left-width: 4px;
+}
+
+.pc-stat-card.stat-teal {
+    border-left-color: var(--pc-teal);
+}
+
+.pc-stat-card.stat-warning {
+    border-left-color: #f59e0b;
+}
+
+.pc-stat-card.stat-danger {
+    border-left-color: #ef4444;
+}
+
+.pc-stat-card.stat-info {
+    border-left-color: #06b6d4;
+}
+
+.pc-stat-card.stat-success {
+    border-left-color: #10b981;
+}
+
+.pc-stat-value {
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1.1;
+    color: var(--pc-navy);
+}
+
+.pc-stat-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--pc-text-muted);
+}
+
+/* Buttons */
+.btn-pc-primary {
+    background-color: var(--pc-blue);
+    border-color: var(--pc-blue);
+    color: white;
+    font-weight: 500;
+}
+
+.btn-pc-primary:hover {
+    background-color: var(--pc-blue-hover);
+    border-color: var(--pc-blue-hover);
+    color: white;
+}
+
+.btn-pc-teal {
+    background-color: var(--pc-teal);
+    border-color: var(--pc-teal);
+    color: white;
+    font-weight: 500;
+}
+
+.btn-pc-teal:hover {
+    background-color: #0f766e;
+    border-color: #0f766e;
+    color: white;
+}
+
+/* Timeline component */
+.pc-timeline {
+    position: relative;
+    padding-left: 2rem;
+}
+
+.pc-timeline::before {
+    content: '';
+    position: absolute;
+    left: 8px;
+    top: 5px;
+    bottom: 5px;
+    width: 2px;
+    background-color: var(--pc-border);
+}
+
+.pc-timeline-item {
+    position: relative;
+    margin-bottom: 1.5rem;
+}
+
+.pc-timeline-marker {
+    position: absolute;
+    left: -2rem;
+    top: 2px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background-color: var(--pc-blue);
+    border: 3px solid #ffffff;
+    box-shadow: 0 0 0 1px var(--pc-border);
+}
+
+.pc-timeline-marker.resolved {
+    background-color: #10b981;
+}
+
+.pc-timeline-marker.cancelled {
+    background-color: #ef4444;
+}
+
+/* Footer */
+.footer-productcare {
+    background-color: #ffffff;
+    border-top: 1px solid var(--pc-border);
+    color: var(--pc-text-muted);
+    font-size: 0.875rem;
+}

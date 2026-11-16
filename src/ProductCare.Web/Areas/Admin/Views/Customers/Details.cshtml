@@ -1,0 +1,154 @@
+@model ProductCare.Web.ViewModels.Admin.AdminCustomerDetailsViewModel
+@{
+    ViewData["Title"] = $"Customer Profile: {Model.FullName}";
+}
+
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
+    <div>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-1">
+                <li class="breadcrumb-item"><a asp-action="Index">Customers</a></li>
+                <li class="breadcrumb-item active" aria-current="page">@Model.FullName</li>
+            </ol>
+        </nav>
+        <h2 class="fw-bold mb-0">@Model.FullName</h2>
+    </div>
+    <a asp-action="Index" class="btn btn-outline-secondary">
+        &larr; Back to Directory
+    </a>
+</div>
+
+<div class="row g-4 mb-4">
+    <div class="col-lg-4">
+        <div class="card pc-card h-100">
+            <div class="pc-card-header">
+                <i class="bi bi-person-badge me-2 text-primary"></i>Customer Profile
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label class="text-muted small text-uppercase fw-semibold">Email Address</label>
+                    <div class="fw-bold">@Model.Email</div>
+                </div>
+                <div class="mb-3">
+                    <label class="text-muted small text-uppercase fw-semibold">Phone Number</label>
+                    <div>@(string.IsNullOrEmpty(Model.PhoneNumber) ? "Not Provided" : Model.PhoneNumber)</div>
+                </div>
+                <div class="mb-3">
+                    <label class="text-muted small text-uppercase fw-semibold">Address / City</label>
+                    <div>@(string.IsNullOrEmpty(Model.Address) ? "" : Model.Address + ", ")@(string.IsNullOrEmpty(Model.City) ? "N/A" : Model.City) @Model.PostalCode</div>
+                </div>
+                <div class="mb-3">
+                    <label class="text-muted small text-uppercase fw-semibold">Account Status</label>
+                    <div>
+                        @if (Model.IsActive)
+                        {
+                            <span class="badge bg-success">Active Customer</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-danger">Deactivated</span>
+                        }
+                    </div>
+                </div>
+                <div>
+                    <label class="text-muted small text-uppercase fw-semibold">Member Since</label>
+                    <div class="text-muted">@Model.CreatedAtUtc.ToString("MMMM dd, yyyy")</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-8">
+        <!-- Products Table -->
+        <div class="card pc-card mb-4">
+            <div class="pc-card-header d-flex justify-content-between align-items-center">
+                <span><i class="bi bi-laptop me-2 text-primary"></i>Registered Products (@Model.Products.Count)</span>
+            </div>
+            <div class="card-body p-0">
+                @if (Model.Products.Any())
+                {
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Model & S/N</th>
+                                    <th>Category</th>
+                                    <th>Expiry Date</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var p in Model.Products)
+                                {
+                                    <tr>
+                                        <td class="fw-semibold">@p.Name <span class="text-muted small">(@p.Brand)</span></td>
+                                        <td>@p.ModelNumber &middot; <code class="text-dark">@p.SerialNumber</code></td>
+                                        <td><span class="badge bg-light text-dark border">@p.CategoryName</span></td>
+                                        <td>@p.WarrantyExpiryDate.ToString("yyyy-MM-dd")</td>
+                                        <td><span class="@p.StatusBadgeCssClass">@p.StatusDisplayText</span></td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <div class="text-center py-4 text-muted small">
+                        No registered products recorded for this customer.
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- Service Requests Table -->
+        <div class="card pc-card">
+            <div class="pc-card-header d-flex justify-content-between align-items-center">
+                <span><i class="bi bi-ticket-detailed me-2 text-primary"></i>Service Ticket History (@Model.ServiceRequests.Count)</span>
+            </div>
+            <div class="card-body p-0">
+                @if (Model.ServiceRequests.Any())
+                {
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Ticket #</th>
+                                    <th>Product</th>
+                                    <th>Subject</th>
+                                    <th>Priority</th>
+                                    <th>Status</th>
+                                    <th class="text-end">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var sr in Model.ServiceRequests)
+                                {
+                                    <tr>
+                                        <td class="font-monospace fw-bold">@sr.TicketNumber</td>
+                                        <td>@sr.ProductName</td>
+                                        <td>@sr.Subject</td>
+                                        <td><span class="@sr.PriorityBadgeCssClass">@sr.Priority</span></td>
+                                        <td><span class="@sr.StatusBadgeCssClass">@sr.Status</span></td>
+                                        <td class="text-end">
+                                            <a asp-controller="ServiceRequests" asp-action="Details" asp-route-id="@sr.Id" class="btn btn-sm btn-outline-primary">
+                                                Manage &rarr;
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <div class="text-center py-4 text-muted small">
+                        No service tickets submitted by this customer.
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
