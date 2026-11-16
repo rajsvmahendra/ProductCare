@@ -293,8 +293,18 @@ Testing was conducted across three dimensions:
 ### Test Execution Result
 ```text
 Test run for .../ProductCare.Tests.dll (.NETCoreApp,Version=v10.0)
-Passed! - Failed: 0, Passed: 50, Skipped: 0, Total: 50, Duration: 139 ms
+Passed! - Failed: 0, Passed: 50, Skipped: 0, Total: 50, Duration: 100 ms
 ```
+
+### Application Startup and Smoke Testing
+The ASP.NET Core Kestrel web server was launched and probed across major routes:
+- `GET /` &rarr; HTTP 200 OK (`X-Correlation-ID`, `X-Content-Type-Options: nosniff`, `X-Frame-Options: SAMEORIGIN` verified)
+- `GET /Account/Login` &rarr; HTTP 200 OK
+- `GET /Account/Register` &rarr; HTTP 200 OK
+- `GET /Home/Privacy` &rarr; HTTP 200 OK
+- `GET /Account/AccessDenied` &rarr; HTTP 200 OK
+- `GET /swagger/v1/swagger.json` &rarr; HTTP 200 OK (27,449 bytes of OpenAPI v1 specification generated)
+- `GET /css/site.css` &rarr; HTTP 200 OK (4,599 bytes of static assets served)
 
 ---
 
