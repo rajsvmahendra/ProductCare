@@ -2,35 +2,37 @@
     ViewData["Title"] = "Access Denied";
 }
 
-<div class="row justify-content-center py-5">
-    <div class="col-md-6 text-center">
-        <div class="p-4 bg-white rounded-4 shadow-sm border">
-            <div class="d-inline-flex p-3 rounded-circle bg-danger-subtle text-danger mb-3">
-                <i class="bi bi-shield-x fs-1"></i>
-            </div>
-            <h2 class="fw-bold text-danger">Access Denied</h2>
-            <p class="text-secondary mb-4">
-                You do not have the required permissions or administrative role to access this restricted resource.
-            </p>
-            <div class="d-flex justify-content-center gap-2">
-                <a asp-area="" asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary">
-                    <i class="bi bi-house me-1"></i> Return Home
-                </a>
-                @if (User.Identity?.IsAuthenticated == true)
-                {
-                    if (User.IsInRole("Admin"))
+<div class="container-xl px-3 px-md-4 py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-7 col-lg-5 text-center">
+            <div class="pc-card p-5">
+                <div class="d-inline-flex p-3 rounded-circle mb-3" style="background: var(--pc-danger-soft); color: var(--pc-danger);">
+                    <i class="bi bi-shield-x fs-1"></i>
+                </div>
+                <h2 class="h3 fw-bold text-ink mb-2">Access Denied</h2>
+                <p class="text-muted mb-4">
+                    You do not have the required permissions or administrative role to access this restricted resource.
+                </p>
+                <div class="d-flex justify-content-center gap-2 flex-wrap">
+                    <a asp-area="" asp-controller="Home" asp-action="Index" class="btn-pc-secondary btn-pc-sm">
+                        <i class="bi bi-house me-1"></i> Return Home
+                    </a>
+                    @if (User.Identity?.IsAuthenticated == true)
                     {
-                        <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index" class="btn btn-primary">
-                            <i class="bi bi-speedometer2 me-1"></i> Admin Dashboard
-                        </a>
+                        if (User.IsInRole("Admin"))
+                        {
+                            <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index" class="btn-pc-primary btn-pc-sm">
+                                <i class="bi bi-speedometer2 me-1"></i> Admin Portal
+                            </a>
+                        }
+                        else
+                        {
+                            <a asp-area="Customer" asp-controller="Dashboard" asp-action="Index" class="btn-pc-primary btn-pc-sm">
+                                <i class="bi bi-grid me-1"></i> My Dashboard
+                            </a>
+                        }
                     }
-                    else
-                    {
-                        <a asp-area="Customer" asp-controller="Dashboard" asp-action="Index" class="btn btn-primary">
-                            <i class="bi bi-grid-1x2 me-1"></i> Customer Dashboard
-                        </a>
-                    }
-                }
+                </div>
             </div>
         </div>
     </div>

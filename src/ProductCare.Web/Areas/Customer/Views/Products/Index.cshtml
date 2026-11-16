@@ -1,60 +1,62 @@
 @model ProductCare.Web.ViewModels.Customer.ProductListViewModel
 @{
-    ViewData["Title"] = "My Registered Products";
+    ViewData["Title"] = "My Products";
 }
 
+<!-- Page Header -->
 <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
     <div>
-        <h2 class="fw-bold mb-1">My Registered Products</h2>
-        <p class="text-muted mb-0">Manage your purchased appliances, electronics, warranty records, and invoices.</p>
+        <h1 class="h3 fw-bold text-ink mb-1 font-heading">My Registered Products</h1>
+        <p class="text-muted mb-0">Manage your product records, warranty statuses, and purchase invoices in one place.</p>
     </div>
-    <a asp-action="Create" class="btn btn-primary">
-        <i class="bi bi-plus-circle me-1"></i> Add Product
+    <a asp-action="Create" class="btn-pc-primary btn-pc-sm">
+        <i class="bi bi-plus-lg"></i>
+        <span>Add Product</span>
     </a>
 </div>
 
 <!-- Filters & Search Toolbar -->
-<div class="card pc-card mb-4">
-    <div class="card-body">
-        <form method="get" class="row g-2 align-items-center">
-            <div class="col-md-4">
-                <div class="input-group">
-                    <span class="input-group-text"><i class="bi bi-search"></i></span>
-                    <input type="text" name="search" value="@Model.SearchTerm" class="form-control" placeholder="Search by name, brand, model, S/N..." />
-                </div>
+<div class="pc-card mb-4 p-3">
+    <form method="get" class="row g-2 align-items-center">
+        <div class="col-md-5">
+            <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-search"></i></span>
+                <input type="text" name="search" value="@Model.SearchTerm" class="form-control" placeholder="Search by name, brand, model, S/N..." />
             </div>
-            <div class="col-md-3">
-                <select name="category" class="form-select" asp-for="FilterCategory" asp-items="Html.GetEnumSelectList<ProductCare.Web.Models.Enums.ProductCategory>()">
-                    <option value="">-- All Categories --</option>
-                </select>
-            </div>
-            <div class="col-md-3">
-                <select name="status" class="form-select" asp-for="FilterStatus" asp-items="Html.GetEnumSelectList<ProductCare.Web.Models.Enums.WarrantyStatus>()">
-                    <option value="">-- All Warranty Statuses --</option>
-                </select>
-            </div>
-            <div class="col-md-2 d-flex gap-2">
-                <button type="submit" class="btn btn-outline-primary w-100">Filter</button>
-                <a asp-action="Index" class="btn btn-outline-secondary" title="Reset Filters"><i class="bi bi-arrow-counterclockwise"></i></a>
-            </div>
-        </form>
-    </div>
+        </div>
+        <div class="col-md-3">
+            <select name="category" class="form-select" asp-for="FilterCategory" asp-items="Html.GetEnumSelectList<ProductCare.Web.Models.Enums.ProductCategory>()">
+                <option value="">-- All Categories --</option>
+            </select>
+        </div>
+        <div class="col-md-2">
+            <select name="status" class="form-select" asp-for="FilterStatus" asp-items="Html.GetEnumSelectList<ProductCare.Web.Models.Enums.WarrantyStatus>()">
+                <option value="">-- All Statuses --</option>
+            </select>
+        </div>
+        <div class="col-md-2 d-flex gap-2">
+            <button type="submit" class="btn-pc-secondary w-100 btn-pc-sm">Filter</button>
+            <a asp-action="Index" class="btn btn-light border btn-pc-sm d-flex align-items-center justify-content-center" title="Reset Filters">
+                <i class="bi bi-arrow-counterclockwise"></i>
+            </a>
+        </div>
+    </form>
 </div>
 
-<!-- Product Table -->
-<div class="card pc-card">
+<!-- Products Table Card -->
+<div class="pc-card overflow-hidden">
     <div class="pc-card-header d-flex justify-content-between align-items-center">
-        <span><i class="bi bi-laptop me-2 text-primary"></i>Products Inventory</span>
-        <span class="badge bg-light text-dark border">Showing @Model.TotalCount items</span>
+        <span><i class="bi bi-laptop me-2 text-primary-pc"></i>Registered Device Inventory</span>
+        <span class="badge bg-light text-muted border">Showing @Model.TotalCount items</span>
     </div>
-    <div class="card-body p-0">
+    <div class="p-0">
         @if (Model.Products.Any())
         {
             <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0">
-                    <thead class="table-light">
+                <table class="pc-table">
+                    <thead>
                         <tr>
-                            <th>Product Name</th>
+                            <th>Product</th>
                             <th>Brand & Model</th>
                             <th>Serial Number</th>
                             <th>Category</th>
@@ -69,23 +71,23 @@
                         @foreach (var p in Model.Products)
                         {
                             <tr>
-                                <td class="fw-semibold">
-                                    <a asp-action="Details" asp-route-id="@p.Id" class="text-decoration-none">
+                                <td class="fw-bold text-ink">
+                                    <a asp-action="Details" asp-route-id="@p.Id" class="text-ink text-decoration-none">
                                         @p.Name
                                     </a>
                                 </td>
-                                <td>@p.Brand &middot; @p.ModelNumber</td>
-                                <td><code class="text-dark">@p.SerialNumber</code></td>
+                                <td class="text-muted">@p.Brand &middot; @p.ModelNumber</td>
+                                <td><code class="text-ink num-tabular">@p.SerialNumber</code></td>
                                 <td><span class="badge bg-light text-dark border">@p.CategoryName</span></td>
-                                <td>@p.PurchaseDate.ToString("yyyy-MM-dd")</td>
-                                <td>@p.WarrantyExpiryDate.ToString("yyyy-MM-dd")</td>
+                                <td class="num-tabular">@p.PurchaseDate.ToString("yyyy-MM-dd")</td>
+                                <td class="num-tabular">@p.WarrantyExpiryDate.ToString("yyyy-MM-dd")</td>
                                 <td>
-                                    <span class="@p.StatusBadgeCssClass">@p.StatusDisplayText</span>
+                                    <span class="pc-badge @p.StatusBadgeCssClass">@p.StatusDisplayText</span>
                                 </td>
                                 <td>
                                     @if (p.HasInvoice)
                                     {
-                                        <a asp-action="DownloadInvoice" asp-route-id="@p.Id" class="text-success" title="Download Stored Invoice">
+                                        <a asp-action="DownloadInvoice" asp-route-id="@p.Id" class="text-success" title="Download Verified Invoice">
                                             <i class="bi bi-file-earmark-check-fill fs-5"></i>
                                         </a>
                                     }
@@ -96,14 +98,11 @@
                                 </td>
                                 <td class="text-end">
                                     <div class="btn-group btn-group-sm">
-                                        <a asp-action="Details" asp-route-id="@p.Id" class="btn btn-outline-secondary" title="View Details">
+                                        <a asp-action="Details" asp-route-id="@p.Id" class="btn btn-light border" title="View Details">
                                             <i class="bi bi-eye"></i>
                                         </a>
-                                        <a asp-action="Edit" asp-route-id="@p.Id" class="btn btn-outline-primary" title="Edit Product">
+                                        <a asp-action="Edit" asp-route-id="@p.Id" class="btn btn-light border" title="Edit Product">
                                             <i class="bi bi-pencil"></i>
-                                        </a>
-                                        <a asp-controller="ServiceRequests" asp-action="Create" asp-route-productId="@p.Id" class="btn btn-outline-info" title="Raise Service Request">
-                                            <i class="bi bi-wrench"></i>
                                         </a>
                                     </div>
                                 </td>
@@ -115,12 +114,12 @@
         }
         else
         {
-            <div class="text-center py-5">
-                <i class="bi bi-inbox fs-1 d-block text-secondary mb-2"></i>
-                <h5 class="fw-bold">No Products Found</h5>
-                <p class="text-muted small mb-3">You haven't registered any products matching this criteria yet.</p>
-                <a asp-action="Create" class="btn btn-primary">
-                    <i class="bi bi-plus-circle me-1"></i> Register Your First Product
+            <div class="p-5 text-center text-muted">
+                <i class="bi bi-boxes fs-1 text-muted opacity-50 mb-3 d-block"></i>
+                <p class="mb-2 fw-medium text-ink">Your product shelf is ready.</p>
+                <p class="small text-muted mb-3">Add your first purchase to keep its details, receipts, and warranty in one place.</p>
+                <a asp-action="Create" class="btn-pc-primary btn-pc-sm">
+                    <i class="bi bi-plus-lg me-1"></i> Add First Product
                 </a>
             </div>
         }

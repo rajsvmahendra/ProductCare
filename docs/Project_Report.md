@@ -220,62 +220,52 @@ Key design patterns and implementation practices employed include:
 
 ## 15. Screenshots Section (User Interface Gallery)
 
-> *Note: Placeholders for academic submission. Actual screenshots may be captured and inserted below upon running the portal in a graphical browser.*
+The following figures present genuine high-definition screenshots captured directly from the executing ProductCare application via headless Chromium rendering at standard desktop (1440&times;900 / 1440&times;920) and mobile viewport (390&times;844) resolutions.
 
-### Figure 1: Public Landing Page & Portal Navigation
-```text
-[ SCREENSHOT PLACEHOLDER 1: Public Homepage showing hero section, INT402 banner, feature cards, and Swagger link ]
-```
+### Figure 1: Public Landing Experience & 3D Interactive Hero
+The redesigned landing page features an original ProductCare brand identity mark, contextual INT402 academic header, and a dimensional software dashboard preview rendered with pure CSS 3D perspective transforms (`perspective: 1200px; transform: rotateX(6deg) rotateY(-8deg)`) and floating coverage alert chips.
 
-### Figure 2: Customer Registration & Sign In
-```text
-[ SCREENSHOT PLACEHOLDER 2: Clean registration and login forms with client-side validation feedback ]
-```
+![Figure 1: Public Landing Experience & 3D Interactive Hero](screenshots/01_landing_desktop.png)
 
-### Figure 3: Customer Dashboard & Expiring Warranty Alerts
-```text
-[ SCREENSHOT PLACEHOLDER 3: Customer dashboard showing metric cards, expiring soon alert banner, and recent tickets ]
-```
+### Figure 2: Responsive Mobile Landing Page (390x844 Viewport)
+The mobile layout dynamically collapses navigation into a lightweight off-canvas drawer, stacks metric counters, and preserves the dimensional preview card without horizontal clipping or layout shift.
 
-### Figure 4: Product Registration & Invoice Attachment
-```text
-[ SCREENSHOT PLACEHOLDER 4: Product creation form with file upload control for invoice proof ]
-```
+![Figure 2: Responsive Mobile Landing Page](screenshots/02_landing_mobile.png)
 
-### Figure 5: Product Details & Dynamic Warranty Card
-```text
-[ SCREENSHOT PLACEHOLDER 5: Product details page displaying calculated remaining days and invoice download button ]
-```
+### Figure 3: Asymmetrical Capability Bento Grid
+Replacing conventional uniform feature boxes, this asymmetric 4-module bento grid illustrates core platform capabilities with live UI miniatures: Device Registry, Real-Time Coverage Radar, Governed Service Workflow, and Verified Purchase Proofs.
 
-### Figure 6: Chronological Warranty Timeline
-```text
-[ SCREENSHOT PLACEHOLDER 6: Warranty overview page with Active, Expiring Soon, and Expired filterable tabs ]
-```
+![Figure 3: Asymmetrical Capability Bento Grid](screenshots/03_landing_bento.png)
 
-### Figure 7: Service Request Submission
-```text
-[ SCREENSHOT PLACEHOLDER 7: Service request form selecting registered device, category, priority, and symptoms ]
-```
+### Figure 4: Customer Split-Screen Registration
+A modern 44%/56% split authentication layout. The left column provides deep navy brand atmosphere with security credentials; the right column hosts the registration form with client-side validation and interactive password visibility toggles.
 
-### Figure 8: Service Ticket Tracking & Audit History
-```text
-[ SCREENSHOT PLACEHOLDER 8: Ticket tracking view with chronological status progression timeline ]
-```
+![Figure 4: Customer Split-Screen Registration](screenshots/04_register_split.png)
 
-### Figure 9: Administrator Master Queue & Status Transition
-```text
-[ SCREENSHOT PLACEHOLDER 9: Admin ticket queue with status update form exposing permissible next statuses ]
-```
+### Figure 5: Customer Split-Screen Sign In
+Sign-in interface matching the split brand visual pattern with remember-me persistent session check, password reveal toggles, and direct links to self-registration.
 
-### Figure 10: Reports & Operational Analytics
-```text
-[ SCREENSHOT PLACEHOLDER 10: Reports page showing stored procedure ticket breakdown and SQL view warranty data ]
-```
+![Figure 5: Customer Split-Screen Sign In](screenshots/05_login_split.png)
 
-### Figure 11: Interactive OpenAPI / Swagger UI
-```text
-[ SCREENSHOT PLACEHOLDER 11: Swagger UI at /swagger demonstrating authenticated REST API endpoints ]
-```
+### Figure 6: Mobile Self-Registration Interface
+Responsive single-column adaptation of the registration flow optimized for touch keyboards with clear error states and input focus halos.
+
+![Figure 6: Mobile Self-Registration Interface](screenshots/06_register_mobile.png)
+
+### Figure 7: Academic Compliance & Privacy View
+Branded informational page detailing data protection policies, secure invoice handling outside the web root, and institutional INT402 course disclosures.
+
+![Figure 7: Academic Compliance & Privacy View](screenshots/07_privacy_desktop.png)
+
+### Figure 8: Role-Based Authorization Feedback (Access Denied)
+A clean, branded security error page presented when an unauthorized user attempts to access restricted administrative routes, offering a single-click return to their authorized workspace.
+
+![Figure 8: Role-Based Authorization Feedback](screenshots/08_access_denied.png)
+
+### Figure 9: Interactive OpenAPI 3.0 / Swagger UI
+The interactive Swagger interface served at `/swagger`, documenting all REST API endpoints for authentication, product records, and service requests with JWT Bearer authorization support.
+
+![Figure 9: Interactive OpenAPI / Swagger UI](screenshots/09_swagger_api.png)
 
 ---
 

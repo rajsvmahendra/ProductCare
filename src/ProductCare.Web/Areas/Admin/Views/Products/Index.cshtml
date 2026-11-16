@@ -1,55 +1,56 @@
 @model ProductCare.Web.ViewModels.Admin.AdminProductListViewModel
 @{
-    ViewData["Title"] = "All Registered Products";
+    ViewData["Title"] = "Global Inventory";
 }
 
+<!-- Page Header & Counts -->
 <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
     <div>
-        <h2 class="fw-bold mb-1">Global Product Inventory</h2>
+        <h1 class="h3 fw-bold text-ink mb-1 font-heading">Global Product Inventory</h1>
         <p class="text-muted mb-0">System-wide inventory of customer-registered appliances, electronics, and warranty terms.</p>
     </div>
-    <span class="badge bg-primary px-3 py-2 fs-6">Total: @Model.TotalProducts Products</span>
+    <span class="pc-badge pc-badge-primary">Total: @Model.TotalProducts Devices</span>
 </div>
 
 <!-- Filters Toolbar -->
-<div class="card pc-card mb-4">
-    <div class="card-body">
-        <form method="get" class="row g-2 align-items-center">
-            <div class="col-md-4">
-                <div class="input-group">
-                    <span class="input-group-text"><i class="bi bi-search"></i></span>
-                    <input type="text" name="search" value="@Model.SearchTerm" class="form-control" placeholder="Search by name, brand, model, S/N, customer..." />
-                </div>
+<div class="pc-card mb-4 p-3">
+    <form method="get" class="row g-2 align-items-center">
+        <div class="col-md-4">
+            <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-search"></i></span>
+                <input type="text" name="search" value="@Model.SearchTerm" class="form-control" placeholder="Search by name, brand, model, S/N, customer..." />
             </div>
-            <div class="col-md-3">
-                <select name="category" class="form-select" asp-for="FilterCategory" asp-items="Html.GetEnumSelectList<ProductCare.Web.Models.Enums.ProductCategory>()">
-                    <option value="">-- All Categories --</option>
-                </select>
-            </div>
-            <div class="col-md-3">
-                <select name="status" class="form-select" asp-for="FilterStatus" asp-items="Html.GetEnumSelectList<ProductCare.Web.Models.Enums.WarrantyStatus>()">
-                    <option value="">-- All Warranty Statuses --</option>
-                </select>
-            </div>
-            <div class="col-md-2 d-flex gap-2">
-                <button type="submit" class="btn btn-primary w-100">Filter</button>
-                <a asp-action="Index" class="btn btn-outline-secondary" title="Reset"><i class="bi bi-arrow-counterclockwise"></i></a>
-            </div>
-        </form>
-    </div>
+        </div>
+        <div class="col-md-3">
+            <select name="category" class="form-select" asp-for="FilterCategory" asp-items="Html.GetEnumSelectList<ProductCare.Web.Models.Enums.ProductCategory>()">
+                <option value="">-- All Categories --</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <select name="status" class="form-select" asp-for="FilterStatus" asp-items="Html.GetEnumSelectList<ProductCare.Web.Models.Enums.WarrantyStatus>()">
+                <option value="">-- All Warranty Statuses --</option>
+            </select>
+        </div>
+        <div class="col-md-2 d-flex gap-2">
+            <button type="submit" class="btn-pc-secondary w-100 btn-pc-sm">Filter</button>
+            <a asp-action="Index" class="btn btn-light border btn-pc-sm d-flex align-items-center justify-content-center" title="Reset Filters">
+                <i class="bi bi-arrow-counterclockwise"></i>
+            </a>
+        </div>
+    </form>
 </div>
 
-<!-- Products Table -->
-<div class="card pc-card">
+<!-- Products Table Card -->
+<div class="pc-card overflow-hidden">
     <div class="pc-card-header d-flex justify-content-between align-items-center">
-        <span><i class="bi bi-boxes me-2 text-primary"></i>All System Products</span>
+        <span><i class="bi bi-boxes me-2 text-primary-pc"></i>Global Device Directory</span>
     </div>
-    <div class="card-body p-0">
+    <div class="p-0">
         @if (Model.Products.Any())
         {
             <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0">
-                    <thead class="table-light">
+                <table class="pc-table">
+                    <thead>
                         <tr>
                             <th>Product Name</th>
                             <th>Brand & Model</th>
@@ -67,27 +68,27 @@
                         @foreach (var p in Model.Products)
                         {
                             <tr>
-                                <td class="fw-semibold">
-                                    <a asp-action="Details" asp-route-id="@p.Id" class="text-decoration-none">
+                                <td class="fw-bold text-ink">
+                                    <a asp-action="Details" asp-route-id="@p.Id" class="text-ink text-decoration-none">
                                         @p.Name
                                     </a>
                                 </td>
-                                <td>@p.Brand &middot; @p.ModelNumber</td>
-                                <td><code class="text-dark">@p.SerialNumber</code></td>
+                                <td class="text-muted">@p.Brand &middot; @p.ModelNumber</td>
+                                <td><code class="text-ink num-tabular">@p.SerialNumber</code></td>
                                 <td>
-                                    <a asp-controller="Customers" asp-action="Details" asp-route-id="@p.CustomerId" class="text-decoration-none fw-semibold">
+                                    <a asp-controller="Customers" asp-action="Details" asp-route-id="@p.CustomerId" class="text-primary-pc text-decoration-none fw-semibold">
                                         @p.CustomerName
                                     </a>
                                     <div class="text-muted small">@p.CustomerEmail</div>
                                 </td>
                                 <td><span class="badge bg-light text-dark border">@p.CategoryName</span></td>
-                                <td>@p.PurchaseDate.ToString("yyyy-MM-dd")</td>
-                                <td>@p.WarrantyExpiryDate.ToString("yyyy-MM-dd")</td>
-                                <td><span class="@p.StatusBadgeCssClass">@p.StatusDisplayText</span></td>
-                                <td>
+                                <td class="num-tabular">@p.PurchaseDate.ToString("yyyy-MM-dd")</td>
+                                <td class="num-tabular">@p.WarrantyExpiryDate.ToString("yyyy-MM-dd")</td>
+                                <td><span class="pc-badge @p.StatusBadgeCssClass">@p.StatusDisplayText</span></td>
+                                <td class="num-tabular">
                                     @if (p.ServiceRequestsCount > 0)
                                     {
-                                        <span class="badge bg-info text-dark">@p.ServiceRequestsCount</span>
+                                        <span class="pc-badge pc-badge-info">@p.ServiceRequestsCount</span>
                                     }
                                     else
                                     {
@@ -95,8 +96,9 @@
                                     }
                                 </td>
                                 <td class="text-end">
-                                    <a asp-action="Details" asp-route-id="@p.Id" class="btn btn-sm btn-outline-primary">
-                                        Details &rarr;
+                                    <a asp-action="Details" asp-route-id="@p.Id" class="btn-pc-secondary btn-pc-sm">
+                                        <span>Details</span>
+                                        <i class="bi bi-arrow-right ms-1"></i>
                                     </a>
                                 </td>
                             </tr>
@@ -107,10 +109,9 @@
         }
         else
         {
-            <div class="text-center py-5 text-muted">
-                <i class="bi bi-boxes fs-1 d-block mb-2 text-secondary"></i>
-                <h5 class="fw-bold">No Products Found</h5>
-                <p class="small">No products match your filter criteria.</p>
+            <div class="p-5 text-center text-muted">
+                <i class="bi bi-boxes fs-1 text-muted opacity-50 mb-3 d-block"></i>
+                <p class="mb-0 fw-medium text-ink">No products found matching the criteria.</p>
             </div>
         }
     </div>

@@ -1,50 +1,51 @@
 @model ProductCare.Web.ViewModels.Admin.AdminCustomerListViewModel
 @{
-    ViewData["Title"] = "Customer Accounts Directory";
+    ViewData["Title"] = "Customer Accounts";
 }
 
+<!-- Page Header & Counts -->
 <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
     <div>
-        <h2 class="fw-bold mb-1">Customer Accounts Directory</h2>
+        <h1 class="h3 fw-bold text-ink mb-1 font-heading">Customer Directory</h1>
         <p class="text-muted mb-0">Overview of all registered customers, associated products, and open support tickets.</p>
     </div>
-    <span class="badge bg-primary px-3 py-2 fs-6">Total Customers: @Model.TotalCustomers</span>
+    <span class="pc-badge pc-badge-primary">Total Customers: @Model.TotalCustomers</span>
 </div>
 
 <!-- Search Bar -->
-<div class="card pc-card mb-4">
-    <div class="card-body">
-        <form method="get" class="row g-2 align-items-center">
-            <div class="col-md-10">
-                <div class="input-group">
-                    <span class="input-group-text"><i class="bi bi-search"></i></span>
-                    <input type="text" name="search" value="@Model.SearchTerm" class="form-control" placeholder="Search customer by name, email, or city..." />
-                </div>
+<div class="pc-card mb-4 p-3">
+    <form method="get" class="row g-2 align-items-center">
+        <div class="col-md-10">
+            <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-search"></i></span>
+                <input type="text" name="search" value="@Model.SearchTerm" class="form-control" placeholder="Search customer by name, email, or city..." />
             </div>
-            <div class="col-md-2 d-flex gap-2">
-                <button type="submit" class="btn btn-primary w-100">Search</button>
-                <a asp-action="Index" class="btn btn-outline-secondary" title="Reset"><i class="bi bi-arrow-counterclockwise"></i></a>
-            </div>
-        </form>
-    </div>
+        </div>
+        <div class="col-md-2 d-flex gap-2">
+            <button type="submit" class="btn-pc-secondary w-100 btn-pc-sm">Search</button>
+            <a asp-action="Index" class="btn btn-light border btn-pc-sm d-flex align-items-center justify-content-center" title="Reset">
+                <i class="bi bi-arrow-counterclockwise"></i>
+            </a>
+        </div>
+    </form>
 </div>
 
-<!-- Customer Table -->
-<div class="card pc-card">
+<!-- Customer Table Card -->
+<div class="pc-card overflow-hidden">
     <div class="pc-card-header d-flex justify-content-between align-items-center">
-        <span><i class="bi bi-people me-2 text-primary"></i>Customer Directory</span>
+        <span><i class="bi bi-people me-2 text-primary-pc"></i>Registered Customer Accounts</span>
     </div>
-    <div class="card-body p-0">
+    <div class="p-0">
         @if (Model.Customers.Any())
         {
             <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0">
-                    <thead class="table-light">
+                <table class="pc-table">
+                    <thead>
                         <tr>
                             <th>Customer Name</th>
                             <th>Email Address</th>
                             <th>City</th>
-                            <th>Registered Products</th>
+                            <th>Registered Devices</th>
                             <th>Total Tickets</th>
                             <th>Open Tickets</th>
                             <th>Member Since</th>
@@ -55,27 +56,28 @@
                         @foreach (var c in Model.Customers)
                         {
                             <tr>
-                                <td class="fw-semibold">@c.FullName</td>
-                                <td>@c.Email</td>
+                                <td class="fw-bold text-ink">@c.FullName</td>
+                                <td class="text-muted">@c.Email</td>
                                 <td>@(string.IsNullOrEmpty(c.City) ? "—" : c.City)</td>
                                 <td>
                                     <span class="badge bg-light text-dark border">@c.RegisteredProductsCount devices</span>
                                 </td>
-                                <td>@c.TotalServiceRequestsCount</td>
+                                <td class="num-tabular">@c.TotalServiceRequestsCount</td>
                                 <td>
                                     @if (c.OpenServiceRequestsCount > 0)
                                     {
-                                        <span class="badge bg-warning text-dark">@c.OpenServiceRequestsCount Open</span>
+                                        <span class="pc-badge pc-badge-warning">@c.OpenServiceRequestsCount Open</span>
                                     }
                                     else
                                     {
                                         <span class="text-muted small">0</span>
                                     }
                                 </td>
-                                <td>@c.CreatedAtUtc.ToString("MMM yyyy")</td>
+                                <td class="num-tabular small text-muted">@c.CreatedAtUtc.ToString("MMM yyyy")</td>
                                 <td class="text-end">
-                                    <a asp-action="Details" asp-route-id="@c.Id" class="btn btn-sm btn-outline-primary">
-                                        View Profile &rarr;
+                                    <a asp-action="Details" asp-route-id="@c.Id" class="btn-pc-secondary btn-pc-sm">
+                                        <span>View Profile</span>
+                                        <i class="bi bi-arrow-right ms-1"></i>
                                     </a>
                                 </td>
                             </tr>
@@ -86,10 +88,9 @@
         }
         else
         {
-            <div class="text-center py-5 text-muted">
-                <i class="bi bi-people fs-1 d-block mb-2 text-secondary"></i>
-                <h5 class="fw-bold">No Customers Found</h5>
-                <p class="small">No customer accounts matched your search criteria.</p>
+            <div class="p-5 text-center text-muted">
+                <i class="bi bi-people fs-1 text-muted opacity-50 mb-3 d-block"></i>
+                <p class="mb-0 fw-medium text-ink">No customer accounts matched your search criteria.</p>
             </div>
         }
     </div>

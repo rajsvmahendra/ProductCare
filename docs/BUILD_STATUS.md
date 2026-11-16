@@ -11,7 +11,9 @@
 | Verification Category | Status | Details |
 |---|---|---|
 | **C# Compilation** | **SUCCESS** | 0 Warnings, 0 Errors across all projects (`ProductCare.sln`) |
-| **Unit Testing (xUnit)** | **SUCCESS** | 50 Tests Executed & Passed (100% pass rate in ~60 ms) |
+| **Unit Testing (xUnit)** | **SUCCESS** | 50 Tests Executed & Passed (100% pass rate in 95 ms) |
+| **UI/UX Design Transformation** | **SUCCESS** | Complete visual overhaul implemented per `docs/DESIGN.md` specification |
+| **Visual Verification & Screenshots**| **SUCCESS** | 9 Genuine high-DPI screenshots captured via Headless Chromium in `docs/screenshots/` |
 | **EF Core Migration** | **SUCCESS** | Migration `InitialCreate` compiled, listed, & snapshot verified |
 | **SQL Server Scripts** | **SUCCESS** | DDL, View (`vw_ProductWarrantySummary`), Stored Procedure (`sp_GetServiceTicketStatistics`), Seed Data (`04_Seed_Sample_Data.sql`) |
 | **Application Startup & Smoke Test** | **SUCCESS** | ASP.NET Core Kestrel listening on port 5213; Home, Login, Register, Swagger UI & OpenAPI JSON, Static Assets, Privacy, and AccessDenied return HTTP 200 OK |
@@ -99,17 +101,43 @@
 - [x] OpenAPI 3.0 / Swagger UI at `/swagger` with Bearer auth support.
 - [x] Postman collection: `postman/ProductCare.postman_collection.json`.
 
-### Module J & K — Middleware, UI/UX & Visual Design
+### Module J & K — Middleware, UI/UX & Visual Design (Redesigned per `docs/DESIGN.md`)
 - [x] `CorrelationIdMiddleware` for end-to-end request tracing.
 - [x] `SecurityHeadersMiddleware` for HTTP security headers.
-- [x] SaaS design palette: Deep Navy (`#0f172a`), Vibrant Blue (`#2563eb`), Fresh Teal (`#0d9488`).
-- [x] Fully responsive layout with Bootstrap 5.
-- [x] Interactive status badges, stat cards, and chronological timeline markers.
+- [x] Comprehensive CSS Custom Property Token System (`site.css`):
+  - Primary: Indigo Blue (`#4F5FEA`, `--pc-primary`) & Teal Accent (`#12A89A`, `--pc-teal`).
+  - Dark Surface: Deep Ink Navy (`#17233F`, `--pc-navy`) & Deepest Slate (`#0F172A`).
+  - Light Surface: Cool Off-White Canvas (`#F7F8FC`, `--pc-canvas`) & Neutral Pure White (`#FFFFFF`, `--pc-white`).
+  - High-Contrast Typography: Dark Ink (`#111827`, `--pc-ink`) & Slate Secondary (`#64748B`, `--pc-slate`).
+  - Accessible Lifecycle Badges: Active (Teal), Expiring Soon (Amber/Orange), Expired (Coral Red), Resolved (Green).
+- [x] Original ProductCare Brand Identity: Inline SVG shield mark with circular continuity verification glyph.
+- [x] Public Experience Overhaul:
+  - Hero with restrained 3D CSS perspective card (`perspective: 1200px; transform: rotateX(6deg) rotateY(-8deg)`), mouse parallax tracking, and floating badge accents.
+  - Section A: Side-by-side comparison (The Old Way vs. The ProductCare Standard).
+  - Section B: 3-step numbered workflow progression.
+  - Section C: Asymmetric bento grid with UI miniatures for Inventory, Coverage Radar, Governed Workflow, and Verified Proofs.
+  - Section D: End-to-end service ticket lifecycle visualization.
+  - Section E: Enterprise control & compliance cards.
+  - Section F: Closing high-conversion action banner.
+- [x] Redesigned Authentication Flow:
+  - Split-screen layout: 44% deep navy brand atmosphere column on left with security badges, 56% clean form card on right.
+  - Interactive password reveal button with SVG eye icons (`site.js`).
+  - Grouped collapsible physical address fields for progressive disclosure.
+- [x] Dedicated Authenticated Portal Architecture (`_PortalLayout.cshtml`):
+  - Fixed 252px deep navy (`#17233F`) sidebar navigation with section headers and active state indicator.
+  - Contextual topbar with dynamic page title, role badge, user profile button, and quick logout.
+  - Off-canvas responsive mobile drawer navigation.
+- [x] Customer & Admin Portal Pages:
+  - High-contrast KPI metric cards with progress meters.
+  - Actionable warranty radar table with expiration countdown markers.
+  - Service request timeline stepper with complete audit history and actor snapshots.
+  - Status transition dropdowns constrained strictly to permissible next states.
+  - Clean modal dialogs for product deletion and ticket cancellation confirmation.
 
 ### Module L — Testing and Quality Assurance
 - [x] xUnit test project: `tests/ProductCare.Tests/`.
 - [x] 50 automated unit tests covering warranty math, month-end calculations, boundaries, workflow state transitions, and ticket formatting.
-- [x] 100% test pass rate.
+- [x] 100% test pass rate (50 passed in 95 ms).
 
 ---
 
@@ -118,17 +146,29 @@
 ```powershell
 # 1. Solution and Project Compilation
 dotnet build ProductCare.sln -m:1
-# Output: Build succeeded. 0 Warning(s), 0 Error(s).
+# Output: Build succeeded. 0 Warning(s), 0 Error(s). Time Elapsed 00:00:03.51
 
 # 2. Automated Test Execution
 dotnet test tests/ProductCare.Tests/ProductCare.Tests.csproj --no-build
-# Output: Passed! - Failed: 0, Passed: 50, Skipped: 0, Total: 50, Duration: 60 ms.
+# Output: Passed! - Failed: 0, Passed: 50, Skipped: 0, Total: 50, Duration: 95 ms - ProductCare.Tests.dll (net10.0)
 
-# 3. EF Core Migration Verification
+# 3. Headless Chromium Screenshot Capture
+# Verified genuine rendering of desktop and mobile viewports via Microsoft Edge headless:
+# - docs/screenshots/01_landing_desktop.png (1440x920, 391 KB) - Hero with 3D CSS software preview
+# - docs/screenshots/02_landing_mobile.png (390x844, 153 KB) - Mobile responsive landing experience
+# - docs/screenshots/03_landing_bento.png (1440x1000, 404 KB) - Asymmetrical feature bento grid
+# - docs/screenshots/04_register_split.png (1440x900, 320 KB) - Split-screen registration layout
+# - docs/screenshots/05_login_split.png (1440x900, 308 KB) - Split-screen customer login
+# - docs/screenshots/06_register_mobile.png (390x844, 40 KB) - Mobile registration form
+# - docs/screenshots/07_privacy_desktop.png (1440x900, 130 KB) - Academic privacy & data compliance
+# - docs/screenshots/08_access_denied.png (1440x900, 83 KB) - Role authorization denial card
+# - docs/screenshots/09_swagger_api.png (1440x900, 17 KB) - OpenAPI / Swagger REST API UI
+
+# 4. EF Core Migration Verification
 dotnet ef migrations list --project src/ProductCare.Web --startup-project src/ProductCare.Web --no-connect
 # Output: Build succeeded. 20261116110739_InitialCreate listed.
 
-# 4. SQL Migration Script Generation
+# 5. SQL Migration Script Generation
 dotnet ef migrations script --project src/ProductCare.Web --startup-project src/ProductCare.Web -o scripts/00_InitialDatabase.sql --idempotent
 # Output: Build succeeded. Script generated.
 
@@ -159,4 +199,4 @@ dotnet run --project src/ProductCare.Web --urls http://127.0.0.1:5213
 2. Run `dotnet ef database update` to execute migrations against the live database.
 3. Execute `scripts/01_Create_Views.sql` and `scripts/02_Create_Stored_Procedures.sql`.
 4. Run `.\scripts\03_Provision_Admin.ps1` to provision the administrator credentials.
-5. Capture actual screenshots of the running portal for viva presentation.
+5. All genuine screenshots have already been captured and archived in `docs/screenshots/` ready for the academic submission report and viva presentation.

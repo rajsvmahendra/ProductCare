@@ -96,6 +96,7 @@ ProductCare_INT402/
 │       └── TicketNumberFormatTests.cs
 │
 ├── docs/                                # Technical & Academic Documentation
+│   ├── DESIGN.md                        # Authoritative UI/UX design & interaction spec
 │   ├── ARCHITECTURE.md                  # System architecture & data flow
 │   ├── DATABASE.md                      # Database design, tables, view, stored proc
 │   ├── ER_DIAGRAM.md                    # Entity-Relationship diagram (Mermaid)
@@ -103,7 +104,17 @@ ProductCare_INT402/
 │   ├── INT402_COURSE_MAPPING.md         # Syllabus mapping (CO1 to CO6)
 │   ├── TEST_PLAN.md                     # QA test plan & execution outcomes
 │   ├── BUILD_STATUS.md                  # Comprehensive build & verification log
-│   └── Project_Report.md                # Full academic project report draft
+│   ├── Project_Report.md                # Full academic project report draft
+│   └── screenshots/                     # Genuine high-DPI application screenshots
+│       ├── 01_landing_desktop.png       # 3D CSS perspective hero preview
+│       ├── 02_landing_mobile.png        # Mobile responsive landing view
+│       ├── 03_landing_bento.png         # Asymmetric capability bento grid
+│       ├── 04_register_split.png        # Split-screen registration layout
+│       ├── 05_login_split.png           # Split-screen customer sign in
+│       ├── 06_register_mobile.png       # Mobile registration layout
+│       ├── 07_privacy_desktop.png       # Branded compliance & privacy
+│       ├── 08_access_denied.png         # Role authorization denial card
+│       └── 09_swagger_api.png           # Interactive Swagger OpenAPI UI
 │
 ├── scripts/                             # Database & Provisioning Scripts
 │   ├── 00_InitialDatabase.sql           # Complete idempotent SQL Server DDL
@@ -232,7 +243,29 @@ The application will bind to:
 
 ---
 
-## 11. Testing and Verification
+## 11. Visual & UX Transformation (Design System)
+
+ProductCare features a visual and interactive design system implemented in accordance with [`docs/DESIGN.md`](docs/DESIGN.md):
+
+- **Palette & Design Tokens:** Indigo Blue (`#4F5FEA`), Deep Navy (`#17233F`), Off-White Canvas (`#F7F8FC`), and Teal Accent (`#12A89A`).
+- **Interactive 3D Hero:** CSS 3D perspective transforms (`perspective: 1200px; transform: rotateX(6deg) rotateY(-8deg)`) paired with floating coverage alert badges.
+- **Asymmetrical Bento Grid:** Capability highlights with live UI miniatures for inventory, coverage radar, workflow engine, and verified invoice proofs.
+- **Split-Screen Authentication:** Modern 44%/56% split auth interface with interactive password reveal toggles.
+- **Dedicated Authenticated Portal:** 252px deep navy navigation sidebar with contextual breadcrumbs and role indicators (`_PortalLayout.cshtml`).
+
+### Application Screenshot Gallery
+
+| View | Desktop (1440&times;900) | Mobile (390&times;844) |
+|---|---|---|
+| **Public Landing Page** | ![Landing Desktop](docs/screenshots/01_landing_desktop.png) | ![Landing Mobile](docs/screenshots/02_landing_mobile.png) |
+| **Capability Bento Grid** | ![Bento Grid](docs/screenshots/03_landing_bento.png) | — |
+| **Customer Registration** | ![Register Desktop](docs/screenshots/04_register_split.png) | ![Register Mobile](docs/screenshots/06_register_mobile.png) |
+| **Customer Sign In** | ![Login Desktop](docs/screenshots/05_login_split.png) | — |
+| **Swagger OpenAPI 3.0** | ![Swagger UI](docs/screenshots/09_swagger_api.png) | — |
+
+---
+
+## 12. Testing and Verification
 
 Run the automated xUnit unit test suite:
 ```powershell

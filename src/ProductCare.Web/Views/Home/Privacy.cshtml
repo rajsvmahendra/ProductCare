@@ -1,6 +1,47 @@
 ﻿@{
-    ViewData["Title"] = "Privacy Policy";
+    ViewData["Title"] = "Data Privacy & Security";
 }
-<h1>@ViewData["Title"]</h1>
 
-<p>Use this page to detail your site's privacy policy.</p>
+<div class="container-xl px-3 px-md-4 py-5">
+    <div class="max-w-800 mx-auto">
+        <div class="mb-4">
+            <span class="pc-eyebrow">TRUST & TRANSPARENCY</span>
+            <h1 class="display-6 fw-bold text-ink mb-2">Data Privacy & Security at ProductCare</h1>
+            <p class="text-muted">How your personal information, purchase records, and invoice receipts are protected.</p>
+        </div>
+
+        <div class="pc-card p-4 p-md-5 mb-4">
+            <h2 class="h5 fw-bold text-ink mb-3"><i class="bi bi-shield-check text-primary-pc me-2"></i>Customer Ownership & Data Isolation</h2>
+            <p class="text-muted">
+                At ProductCare, your product purchases, warranty dates, and service tickets are strictly private to your customer account. Every database query enforces authenticated ownership filters, ensuring no other user or customer can view, search, or alter your assets.
+            </p>
+
+            <hr class="my-4" />
+
+            <h2 class="h5 fw-bold text-ink mb-3"><i class="bi bi-file-earmark-lock text-teal-pc me-2"></i>Protected Invoice Storage</h2>
+            <p class="text-muted">
+                Uploaded proof-of-purchase receipts (PDF, JPG, PNG) are stored in secure file directories outside the public web root (`Uploads/Invoices/`). Direct URL guessing or traversal is prevented by randomized cryptographic GUID identifiers. Files are delivered exclusively via authorized streaming controllers that verify ownership before transmitting bytes.
+            </p>
+
+            <hr class="my-4" />
+
+            <h2 class="h5 fw-bold text-ink mb-3"><i class="bi bi-key text-warning me-2"></i>Credential Security & Authentication</h2>
+            <p class="text-muted">
+                User passwords are protected with ASP.NET Core Identity utilizing salted PBKDF2 hashing. Sessions are maintained through encrypted HTTP-only cookies, and external REST API integrations rely on signed HMAC-SHA256 JWT Bearer tokens.
+            </p>
+
+            <hr class="my-4" />
+
+            <h2 class="h5 fw-bold text-ink mb-3"><i class="bi bi-mortarboard text-info me-2"></i>Academic Project Declaration</h2>
+            <p class="text-muted mb-0">
+                ProductCare is designed as an academic demonstration for course INT402: Modern Web Programming Tools and Techniques. No tracking cookies or commercial third-party advertising analytics are used.
+            </p>
+        </div>
+
+        <div class="text-center">
+            <a asp-controller="Home" asp-action="Index" class="btn-pc-secondary">
+                <i class="bi bi-arrow-left me-1"></i> Back to Homepage
+            </a>
+        </div>
+    </div>
+</div>

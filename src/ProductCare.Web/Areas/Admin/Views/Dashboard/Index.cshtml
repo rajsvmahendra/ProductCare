@@ -1,78 +1,107 @@
 @model ProductCare.Web.ViewModels.Admin.AdminDashboardViewModel
 @{
-    ViewData["Title"] = "Administrator Portal";
+    ViewData["Title"] = "Admin Overview";
 }
 
+<!-- Page Header & Action Controls -->
 <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
     <div>
-        <div class="d-flex align-items-center gap-2">
-            <h2 class="fw-bold mb-1">Administrative Overview</h2>
-            <span class="badge bg-danger px-2 py-1">Admin Portal</span>
+        <div class="d-flex align-items-center gap-2 mb-1">
+            <span class="pc-badge pc-badge-danger">ADMINISTRATOR WORKSPACE</span>
         </div>
-        <p class="text-muted mb-0">System-wide monitoring of customer accounts, product warranties, and support ticket queues.</p>
+        <h1 class="h3 fw-bold text-ink mb-0 font-heading">Operations Dashboard</h1>
     </div>
-    <div class="d-flex gap-2">
-        <a asp-action="Index" asp-controller="ServiceRequests" class="btn btn-primary">
-            <i class="bi bi-ticket-detailed me-1"></i> Open Tickets Queue
+    <div class="d-flex align-items-center gap-2">
+        <a asp-action="Index" asp-controller="ServiceRequests" class="btn-pc-primary btn-pc-sm">
+            <i class="bi bi-inbox me-1"></i>
+            <span>Ticket Queue</span>
         </a>
-        <a asp-action="Index" asp-controller="Reports" class="btn btn-outline-dark">
-            <i class="bi bi-bar-chart-line me-1"></i> View Reports
+        <a asp-action="Index" asp-controller="Reports" class="btn-pc-secondary btn-pc-sm">
+            <i class="bi bi-bar-chart-line me-1"></i>
+            <span>Reports & Analytics</span>
         </a>
     </div>
 </div>
 
-<!-- Key Performance Metrics -->
+<!-- 4 Primary Operational KPI Cards -->
 <div class="row g-3 mb-4">
-    <div class="col-sm-6 col-xl-2">
+    <!-- Total Customers -->
+    <div class="col-sm-6 col-xl-3">
         <div class="pc-stat-card">
-            <div class="pc-stat-label">Total Customers</div>
+            <div class="pc-stat-top">
+                <span class="pc-stat-label">Customer Accounts</span>
+                <div class="pc-stat-icon-wrap bg-primary-soft">
+                    <i class="bi bi-people"></i>
+                </div>
+            </div>
             <div class="pc-stat-value">@Model.TotalCustomers</div>
+            <div class="small text-muted mt-2 d-flex align-items-center gap-1">
+                <i class="bi bi-person-check text-primary-pc"></i> Registered portal users
+            </div>
         </div>
     </div>
-    <div class="col-sm-6 col-xl-2">
-        <div class="pc-stat-card stat-teal">
-            <div class="pc-stat-label">Total Products</div>
-            <div class="pc-stat-value text-teal">@Model.TotalProducts</div>
+
+    <!-- Total Products -->
+    <div class="col-sm-6 col-xl-3">
+        <div class="pc-stat-card">
+            <div class="pc-stat-top">
+                <span class="pc-stat-label">Global Devices Monitored</span>
+                <div class="pc-stat-icon-wrap bg-teal-soft">
+                    <i class="bi bi-boxes"></i>
+                </div>
+            </div>
+            <div class="pc-stat-value text-teal-pc">@Model.TotalProducts</div>
+            <div class="small text-muted mt-2 d-flex align-items-center gap-1">
+                <i class="bi bi-shield-check text-teal-pc"></i> Products in database
+            </div>
         </div>
     </div>
-    <div class="col-sm-6 col-xl-2">
-        <div class="pc-stat-card stat-info">
-            <div class="pc-stat-label">Total Requests</div>
-            <div class="pc-stat-value text-info">@Model.TotalServiceRequests</div>
-        </div>
-    </div>
-    <div class="col-sm-6 col-xl-2">
-        <div class="pc-stat-card stat-warning">
-            <div class="pc-stat-label">Pending Action</div>
+
+    <!-- Pending Action -->
+    <div class="col-sm-6 col-xl-3">
+        <div class="pc-stat-card">
+            <div class="pc-stat-top">
+                <span class="pc-stat-label">Pending Triage</span>
+                <div class="pc-stat-icon-wrap bg-warning-soft">
+                    <i class="bi bi-hourglass-split"></i>
+                </div>
+            </div>
             <div class="pc-stat-value text-warning">@Model.PendingRequests</div>
+            <div class="small text-muted mt-2 d-flex align-items-center gap-1">
+                <i class="bi bi-exclamation-circle text-warning"></i> Awaiting review / assignment
+            </div>
         </div>
     </div>
-    <div class="col-sm-6 col-xl-2">
-        <div class="pc-stat-card stat-primary">
-            <div class="pc-stat-label">In Progress</div>
-            <div class="pc-stat-value text-primary">@Model.InProgressRequests</div>
-        </div>
-    </div>
-    <div class="col-sm-6 col-xl-2">
-        <div class="pc-stat-card stat-success">
-            <div class="pc-stat-label">Resolved / Closed</div>
+
+    <!-- Resolved Tickets -->
+    <div class="col-sm-6 col-xl-3">
+        <div class="pc-stat-card">
+            <div class="pc-stat-top">
+                <span class="pc-stat-label">Resolved / Closed</span>
+                <div class="pc-stat-icon-wrap bg-info-soft">
+                    <i class="bi bi-check2-all"></i>
+                </div>
+            </div>
             <div class="pc-stat-value text-success">@(Model.ResolvedRequests + Model.ClosedRequests)</div>
+            <div class="small text-muted mt-2 d-flex align-items-center gap-1">
+                <i class="bi bi-check-circle text-success"></i> Successfully serviced
+            </div>
         </div>
     </div>
 </div>
 
-<!-- Master Queue Table -->
-<div class="card pc-card mb-4">
+<!-- Master Queue Table Card -->
+<div class="pc-card overflow-hidden mb-4">
     <div class="pc-card-header d-flex justify-content-between align-items-center">
-        <span><i class="bi bi-clock-history me-2 text-primary"></i>Recent Ticket Submissions</span>
-        <a asp-controller="ServiceRequests" asp-action="Index" class="small text-decoration-none">Manage All Tickets &rarr;</a>
+        <span><i class="bi bi-clock-history me-2 text-primary-pc"></i>Recent Ticket Submissions</span>
+        <a asp-controller="ServiceRequests" asp-action="Index" class="small text-primary-pc fw-semibold">Manage All Tickets &rarr;</a>
     </div>
-    <div class="card-body p-0">
+    <div class="p-0">
         @if (Model.RecentTickets.Any())
         {
             <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0">
-                    <thead class="table-light">
+                <table class="pc-table">
+                    <thead>
                         <tr>
                             <th>Ticket #</th>
                             <th>Customer</th>
@@ -80,7 +109,7 @@
                             <th>Category</th>
                             <th>Priority</th>
                             <th>Current Status</th>
-                            <th>Submitted At</th>
+                            <th>Submitted</th>
                             <th class="text-end">Action</th>
                         </tr>
                     </thead>
@@ -88,19 +117,24 @@
                         @foreach (var t in Model.RecentTickets)
                         {
                             <tr>
-                                <td class="font-monospace fw-bold">@t.TicketNumber</td>
+                                <td class="fw-bold text-primary-pc num-tabular">
+                                    <a asp-controller="ServiceRequests" asp-action="Details" asp-route-id="@t.Id" class="text-primary-pc text-decoration-none">
+                                        @t.TicketNumber
+                                    </a>
+                                </td>
                                 <td>
-                                    <strong>@t.CustomerName</strong>
+                                    <div class="fw-bold text-ink">@t.CustomerName</div>
                                     <div class="text-muted small">@t.CustomerEmail</div>
                                 </td>
-                                <td>@t.ProductName</td>
+                                <td class="text-ink fw-medium">@t.ProductName</td>
                                 <td><span class="badge bg-light text-dark border">@t.CategoryText</span></td>
-                                <td><span class="@t.PriorityBadgeCssClass">@t.PriorityText</span></td>
-                                <td><span class="@t.StatusBadgeCssClass">@t.StatusText</span></td>
-                                <td>@t.CreatedAtUtc.ToString("yyyy-MM-dd HH:mm")</td>
+                                <td><span class="badge badge-priority-@t.PriorityText.ToLower()">@t.PriorityText</span></td>
+                                <td><span class="pc-badge @t.StatusBadgeCssClass">@t.StatusText</span></td>
+                                <td class="num-tabular small text-muted">@t.CreatedAtUtc.ToString("MMM dd, yyyy HH:mm")</td>
                                 <td class="text-end">
-                                    <a asp-controller="ServiceRequests" asp-action="Details" asp-route-id="@t.Id" class="btn btn-sm btn-outline-primary">
-                                        Manage &rarr;
+                                    <a asp-controller="ServiceRequests" asp-action="Details" asp-route-id="@t.Id" class="btn-pc-secondary btn-pc-sm">
+                                        <span>Manage</span>
+                                        <i class="bi bi-arrow-right ms-1"></i>
                                     </a>
                                 </td>
                             </tr>
@@ -111,9 +145,9 @@
         }
         else
         {
-            <div class="text-center py-5 text-muted">
-                <i class="bi bi-inbox fs-1 d-block mb-2 text-secondary"></i>
-                <p class="mb-0">No service requests recorded in the system.</p>
+            <div class="p-5 text-center text-muted">
+                <i class="bi bi-inbox fs-1 text-muted opacity-50 mb-3 d-block"></i>
+                <p class="mb-0 fw-medium text-ink">No service tickets recorded in the portal queue.</p>
             </div>
         }
     </div>
