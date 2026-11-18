@@ -6,13 +6,14 @@
 <!-- Page Header & Queue Counts -->
 <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
     <div>
-        <h1 class="h3 fw-bold text-ink mb-1 font-heading">Master Service Queue</h1>
-        <p class="text-muted mb-0">Triage incoming repair tickets, assign staff, and advance workflow lifecycles.</p>
+        <span class="d-inline-block text-uppercase fw-bold small text-muted mb-1" style="letter-spacing: 0.08em; font-size: 0.72rem;">ADMINISTRATIVE TRIAGE</span>
+        <h1 class="h3 fw-bold text-dark mb-1 font-serif">Master Service Queue</h1>
+        <p class="text-muted small mb-0">Triage incoming repair tickets, assign staff, and advance workflow lifecycles.</p>
     </div>
     <div class="d-flex align-items-center gap-2 flex-wrap">
-        <span class="pc-badge pc-badge-warning">Pending: @Model.PendingCount</span>
-        <span class="pc-badge pc-badge-primary">In Progress: @Model.InProgressCount</span>
-        <span class="pc-badge pc-badge-success">Resolved: @Model.ResolvedCount</span>
+        <span class="pc-badge pc-badge-expiring">Pending: @Model.PendingCount</span>
+        <span class="pc-badge pc-badge-progress">In Progress: @Model.InProgressCount</span>
+        <span class="pc-badge pc-badge-active">Resolved: @Model.ResolvedCount</span>
     </div>
 </div>
 
@@ -41,8 +42,8 @@
             </select>
         </div>
         <div class="col-md-2 d-flex gap-2">
-            <button type="submit" class="btn-pc-secondary w-100 btn-pc-sm">Filter</button>
-            <a asp-action="Index" class="btn btn-light border btn-pc-sm d-flex align-items-center justify-content-center" title="Reset Filters">
+            <button type="submit" class="btn btn-forest w-100 btn-sm">Filter</button>
+            <a asp-action="Index" class="btn btn-stone btn-sm d-flex align-items-center justify-content-center" title="Reset Filters">
                 <i class="bi bi-arrow-counterclockwise"></i>
             </a>
         </div>
@@ -50,26 +51,27 @@
 </div>
 
 <!-- Master Queue Table Card -->
-<div class="pc-card overflow-hidden">
-    <div class="pc-card-header d-flex justify-content-between align-items-center">
-        <span><i class="bi bi-inbox me-2 text-primary-pc"></i>Active Operational Queue</span>
-        <span class="badge bg-light text-muted border">Total: @Model.TotalTickets</span>
+<div class="pc-card p-0 overflow-hidden">
+    <div class="pc-demo-topbar">
+        <span class="small fw-semibold text-dark"><i class="bi bi-inbox me-2 text-forest"></i>Active Operational Queue</span>
+        <span class="badge bg-light text-muted border small">Total: @Model.TotalTickets</span>
     </div>
-    <div class="p-0">
+    <div>
         @if (Model.Tickets.Any())
         {
-            <div class="table-responsive">
+            <div class="pc-table-wrapper border-0">
                 <table class="pc-table">
                     <thead>
                         <tr>
                             <th>Ticket #</th>
                             <th>Customer</th>
-                            <th>Target Device</th>
+                            <th>Product</th>
+                            <th>Category</th>
                             <th>Subject</th>
                             <th>Priority</th>
                             <th>Status</th>
                             <th>Technician</th>
-                            <th>Submitted</th>
+                            <th>Received</th>
                             <th class="text-end">Action</th>
                         </tr>
                     </thead>
@@ -77,28 +79,30 @@
                         @foreach (var t in Model.Tickets)
                         {
                             <tr>
-                                <td class="fw-bold num-tabular">
-                                    <a asp-action="Details" asp-route-id="@t.Id" class="text-primary-pc text-decoration-none">
-                                        @t.TicketNumber
+                                <td class="font-monospace fw-bold small text-dark">
+                                    <a asp-action="Details" asp-route-id="@t.Id" class="text-dark text-decoration-none">
+                                        #@t.TicketNumber
                                     </a>
                                 </td>
                                 <td>
-                                    <div class="fw-bold text-ink">@t.CustomerName</div>
-                                    <div class="text-muted small">@t.CustomerEmail</div>
+                                    <div class="fw-semibold text-dark small">@t.CustomerName</div>
+                                    <div class="small text-muted" style="font-size: 11px;">@t.CustomerEmail</div>
                                 </td>
                                 <td>
-                                    <div class="text-ink fw-medium">@t.ProductName</div>
-                                    <div class="text-muted small">@t.ProductBrand</div>
+                                    <div class="fw-semibold text-dark small">@t.ProductName</div>
+                                    <div class="small text-muted font-monospace" style="font-size: 11px;">@t.ProductBrand</div>
                                 </td>
-                                <td class="text-truncate max-w-200" title="@t.Subject">@t.Subject</td>
-                                <td><span class="badge badge-priority-@t.Priority.ToString().ToLower()">@t.Priority</span></td>
-                                <td><span class="pc-badge @t.StatusBadgeCssClass">@t.StatusDisplayText</span></td>
-                                <td class="small text-muted">@(string.IsNullOrEmpty(t.AssignedTechnician) ? "—" : t.AssignedTechnician)</td>
-                                <td class="num-tabular small text-muted">@t.CreatedAtUtc.ToString("yyyy-MM-dd")</td>
+                                <td><span class="badge bg-light text-dark border small">@t.CategoryName</span></td>
+                                <td class="fw-semibold text-dark small text-truncate" style="max-width: 180px;">@t.Subject</td>
+                                <td><span class="@t.PriorityBadgeCssClass" style="font-size: 11px;">@t.Priority</span></td>
+                                <td><span class="@t.StatusBadgeCssClass" style="font-size: 11px;">@t.StatusDisplayText</span></td>
+                                <td class="small text-muted">
+                                    @(string.IsNullOrEmpty(t.AssignedTechnician) ? "Unassigned" : t.AssignedTechnician)
+                                </td>
+                                <td class="small text-muted tabular-nums">@t.CreatedAtUtc.ToString("dd MMM HH:mm")</td>
                                 <td class="text-end">
-                                    <a asp-action="Details" asp-route-id="@t.Id" class="btn-pc-secondary btn-pc-sm">
-                                        <span>Manage</span>
-                                        <i class="bi bi-arrow-right ms-1"></i>
+                                    <a asp-action="Details" asp-route-id="@t.Id" class="btn btn-forest btn-sm" style="font-size: 11px; padding: 4px 8px;">
+                                        Manage &rarr;
                                     </a>
                                 </td>
                             </tr>
@@ -110,8 +114,9 @@
         else
         {
             <div class="p-5 text-center text-muted">
-                <i class="bi bi-inbox fs-1 text-muted opacity-50 mb-3 d-block"></i>
-                <p class="mb-0 fw-medium text-ink">No tickets match the selected filters.</p>
+                <i class="bi bi-inbox fs-1 text-muted mb-3 d-block"></i>
+                <h5 class="fw-bold text-dark font-serif">Queue is empty</h5>
+                <p class="small text-muted mb-0">No tickets match your active filter criteria.</p>
             </div>
         }
     </div>

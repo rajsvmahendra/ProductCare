@@ -8,13 +8,13 @@
     <div>
         <div class="d-flex align-items-center gap-2 mb-1">
             <span class="pc-badge @Model.StatusBadgeCssClass">@Model.StatusDisplayText</span>
-            <span class="badge badge-priority-@Model.Priority.ToString().ToLower()">@Model.Priority Priority</span>
-            <span class="badge bg-light text-muted border">@Model.CategoryName</span>
+            <span class="badge @Model.PriorityBadgeCssClass" style="font-size: 11px;">@Model.Priority Priority</span>
+            <span class="badge bg-light text-dark border small">@Model.CategoryName</span>
         </div>
-        <h1 class="h3 fw-bold text-ink mb-0 font-heading num-tabular">Ticket #@Model.TicketNumber</h1>
+        <h1 class="h3 fw-bold text-dark mb-0 font-serif tabular-nums">Manage Ticket #@Model.TicketNumber</h1>
     </div>
-    <a asp-action="Index" class="btn-pc-secondary btn-pc-sm">
-        <i class="bi bi-arrow-left me-1"></i> Back to Queue
+    <a asp-action="Index" class="btn btn-stone btn-sm">
+        <i class="bi bi-arrow-left me-1"></i> Back to Master Queue
     </a>
 </div>
 
@@ -23,167 +23,149 @@
     <div class="col-lg-7">
         <!-- Main Service Ticket Card -->
         <div class="pc-card mb-4">
-            <div class="pc-card-header d-flex justify-content-between align-items-center">
-                <span><i class="bi bi-file-text me-2 text-primary-pc"></i>Service Ticket Overview</span>
-                <span class="small text-muted num-tabular">Submitted: @Model.CreatedAtUtc.ToString("MMM dd, yyyy HH:mm") UTC</span>
+            <div class="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom" style="border-color: var(--pc-stone) !important;">
+                <h5 class="fw-bold text-dark mb-0 font-serif">Service Ticket Overview</h5>
+                <span class="small text-muted tabular-nums">Submitted: @Model.CreatedAtUtc.ToString("dd MMM yyyy HH:mm") UTC</span>
             </div>
-            <div class="pc-card-body">
-                <h2 class="h5 fw-bold text-ink mb-2">@Model.Subject</h2>
-                <div class="p-3 bg-light rounded-3 border mb-4 text-secondary small" style="white-space: pre-wrap; line-height: 1.6;">@Model.Description</div>
+            
+            <h6 class="fw-bold text-dark mb-2">@Model.Subject</h6>
+            <div class="p-3 rounded-3 mb-4 small" style="background-color: var(--pc-surface-inset); border: 1px solid var(--pc-stone); white-space: pre-wrap; line-height: 1.6;">@Model.Description</div>
 
-                <div class="row g-3">
-                    <div class="col-sm-6">
-                        <div class="text-muted small fw-semibold text-uppercase letter-spacing-1">Customer Account</div>
-                        <div class="fw-bold text-ink">@Model.CustomerName</div>
-                        <div class="text-muted small">@Model.CustomerEmail</div>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="text-muted small fw-semibold text-uppercase letter-spacing-1">Assigned Technician</div>
-                        <div class="fw-bold text-ink">
-                            @(string.IsNullOrEmpty(Model.CurrentAssignedTechnician) ? "Unassigned (Awaiting Review)" : Model.CurrentAssignedTechnician)
-                        </div>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="text-muted small fw-semibold text-uppercase letter-spacing-1">Submission Date</div>
-                        <div class="fw-semibold text-ink num-tabular">@Model.CreatedAtUtc.ToString("MMMM dd, yyyy HH:mm")</div>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="text-muted small fw-semibold text-uppercase letter-spacing-1">Resolution Date</div>
-                        <div class="fw-semibold text-ink num-tabular">
-                            @(Model.ResolvedAtUtc?.ToString("MMMM dd, yyyy HH:mm") ?? "Pending Resolution")
-                        </div>
+            <div class="row g-3">
+                <div class="col-sm-6">
+                    <div class="text-muted small fw-semibold text-uppercase" style="letter-spacing: 0.05em; font-size: 0.72rem;">Customer Account</div>
+                    <div class="fw-bold text-dark">@Model.CustomerName</div>
+                    <div class="text-muted small">@Model.CustomerEmail</div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="text-muted small fw-semibold text-uppercase" style="letter-spacing: 0.05em; font-size: 0.72rem;">Assigned Technician</div>
+                    <div class="fw-bold text-dark">
+                        @(string.IsNullOrEmpty(Model.CurrentAssignedTechnician) ? "Unassigned (Awaiting Review)" : Model.CurrentAssignedTechnician)
                     </div>
                 </div>
-
-                @if (!string.IsNullOrEmpty(Model.CurrentAdminRemarks))
-                {
-                    <div class="mt-4 pt-3 border-top">
-                        <div class="d-flex align-items-center gap-2 text-primary-pc fw-bold small mb-2">
-                            <i class="bi bi-chat-quote-fill"></i>
-                            <span>Current Administrator Remarks</span>
-                        </div>
-                        <div class="p-3 rounded-3 border" style="background: #EEF0FF; border-color: #DDE3FC !important; color: var(--pc-ink);">
-                            @Model.CurrentAdminRemarks
-                        </div>
-                    </div>
-                }
-            </div>
-        </div>
-
-        <!-- Target Product Card -->
-        <div class="pc-card mb-4">
-            <div class="pc-card-header d-flex justify-content-between align-items-center">
-                <span><i class="bi bi-laptop me-2 text-primary-pc"></i>Target Product Specifications</span>
-                <span class="small text-muted">Serial: <code class="text-ink">@Model.ProductSerialNumber</code></span>
-            </div>
-            <div class="pc-card-body">
-                <div class="row g-3">
-                    <div class="col-sm-6">
-                        <span class="text-muted small">Device Name:</span> <strong class="text-ink">@Model.ProductName</strong>
-                    </div>
-                    <div class="col-sm-6">
-                        <span class="text-muted small">Brand & Model:</span> <strong class="text-ink">@Model.ProductBrand &middot; @Model.ProductModelNumber</strong>
-                    </div>
-                    <div class="col-sm-6">
-                        <span class="text-muted small">Warranty Expiry:</span> <strong class="text-ink num-tabular">@Model.ProductWarrantyExpiryDate.ToString("yyyy-MM-dd")</strong>
-                    </div>
-                    <div class="col-sm-6">
-                        <span class="text-muted small">Coverage:</span>
-                        <span class="pc-badge @Model.ProductWarrantyStatusBadge">@Model.ProductWarrantyStatusText</span>
+                <div class="col-sm-6">
+                    <div class="text-muted small fw-semibold text-uppercase" style="letter-spacing: 0.05em; font-size: 0.72rem;">Submission Date</div>
+                    <div class="fw-semibold text-dark tabular-nums">@Model.CreatedAtUtc.ToString("dd MMMM yyyy HH:mm")</div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="text-muted small fw-semibold text-uppercase" style="letter-spacing: 0.05em; font-size: 0.72rem;">Resolution Date</div>
+                    <div class="fw-semibold text-dark tabular-nums">
+                        @(Model.ResolvedAtUtc.HasValue ? Model.ResolvedAtUtc.Value.ToString("dd MMMM yyyy HH:mm") : "Pending Resolution")
                     </div>
                 </div>
             </div>
+
+            @if (!string.IsNullOrEmpty(Model.CurrentAdminRemarks))
+            {
+                <div class="mt-4 pt-3 border-top" style="border-color: var(--pc-stone) !important;">
+                    <div class="d-flex align-items-center gap-2 text-forest fw-bold small mb-2">
+                        <i class="bi bi-chat-quote-fill"></i>
+                        <span>Current Administrator Remarks</span>
+                    </div>
+                    <div class="p-3 rounded-3 small" style="background-color: var(--pc-forest-soft); border: 1px solid rgba(49, 93, 80, 0.2); color: var(--pc-graphite);">
+                        @Model.CurrentAdminRemarks
+                    </div>
+                </div>
+            }
         </div>
 
-        <!-- Chronological Audit Timeline -->
+        <!-- Target Product Summary -->
         <div class="pc-card">
-            <div class="pc-card-header">
-                <i class="bi bi-clock-history me-2 text-primary-pc"></i>Lifecycle Audit Progression
+            <div class="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom" style="border-color: var(--pc-stone) !important;">
+                <h6 class="fw-bold text-dark mb-0 font-serif">Customer Device Information</h6>
+                <span class="pc-badge @Model.ProductWarrantyStatusBadge" style="font-size: 10px;">@Model.ProductWarrantyStatusText</span>
             </div>
-            <div class="pc-card-body">
-                <div class="pc-stepper">
-                    @foreach (var step in Model.StatusHistory)
-                    {
-                        var isResolved = step.ToStatus == ProductCare.Web.Models.Enums.RequestStatus.Resolved || step.ToStatus == ProductCare.Web.Models.Enums.RequestStatus.Closed;
-                        var isCancelled = step.ToStatus == ProductCare.Web.Models.Enums.RequestStatus.Rejected;
-                        var isCurrent = step == Model.StatusHistory.Last();
-
-                        <div class="pc-step-item @(isCurrent ? "is-active" : "") @(isResolved ? "is-resolved" : "") @(isCancelled ? "is-cancelled" : "")">
-                            <span class="pc-step-dot"></span>
-                            <div class="d-flex justify-content-between align-items-baseline mb-1">
-                                <span class="fw-bold text-ink small">@step.ToStatusText</span>
-                                <span class="num-tabular text-muted" style="font-size: 11px;">@step.CreatedAtUtc.ToString("MMM dd, HH:mm") UTC</span>
-                            </div>
-                            <div class="small text-muted" style="font-size: 12px;">By: @step.ChangedByUserName</div>
-                            @if (!string.IsNullOrEmpty(step.Remarks))
-                            {
-                                <div class="mt-1 p-2 rounded-2 bg-light small text-secondary border" style="font-size: 12px;">
-                                    @step.Remarks
-                                </div>
-                            }
-                        </div>
-                    }
+            <div class="row g-3">
+                <div class="col-sm-6">
+                    <div class="text-muted small" style="font-size: 11px;">Device Name:</div>
+                    <div class="fw-semibold text-dark">@Model.ProductName</div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="text-muted small" style="font-size: 11px;">Brand &amp; Model:</div>
+                    <div class="text-dark">@Model.ProductBrand (@Model.ProductModelNumber)</div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="text-muted small" style="font-size: 11px;">Serial Number:</div>
+                    <div class="font-monospace fw-bold text-forest">@Model.ProductSerialNumber</div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="text-muted small" style="font-size: 11px;">Warranty Expiration:</div>
+                    <div class="text-dark tabular-nums">@Model.ProductWarrantyExpiryDate.ToString("dd MMM yyyy")</div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Right Column: Administrative Workflow Action Form -->
+    <!-- Right Column: Status Transition Engine & Audit History -->
     <div class="col-lg-5">
-        <div class="pc-card p-4">
-            <div class="d-flex align-items-center gap-2 mb-3">
-                <span class="pc-badge pc-badge-primary">WORKFLOW ENGINE</span>
-                <h2 class="h5 fw-bold text-ink mb-0 font-heading">Advance Ticket Workflow</h2>
-            </div>
-            <p class="text-muted small mb-4">
-                Update the diagnostic stage, assign staff, and provide notes for the customer.
-            </p>
+        <!-- Status Transition Form -->
+        <div class="pc-card mb-4" style="border-color: var(--pc-forest); box-shadow: 0 0 0 1px var(--pc-forest-soft);">
+            <h5 class="fw-bold text-dark mb-3 pb-2 border-bottom font-serif" style="border-color: var(--pc-stone) !important;">
+                <i class="bi bi-diagram-2 text-forest me-2"></i>Update Workflow State
+            </h5>
 
             @if (Model.AllowedNextStatuses.Any())
             {
-                <form asp-action="UpdateStatus" asp-route-id="@Model.Id" method="post">
+                <form asp-action="UpdateStatus" method="post">
                     @Html.AntiForgeryToken()
+                    <input type="hidden" name="id" value="@Model.Id" />
 
                     <div class="mb-3">
-                        <label class="form-label text-muted small text-uppercase fw-bold letter-spacing-1">Current State</label>
-                        <div><span class="pc-badge @Model.StatusBadgeCssClass fs-6">@Model.StatusDisplayText</span></div>
+                        <label class="form-label">Next Permissible Status</label>
+                        <select name="newStatus" class="form-select" asp-items="Model.AllowedNextStatuses" required></select>
+                        <div class="form-text small text-muted">Constrained strictly by the backend state machine workflow engine.</div>
                     </div>
 
                     <div class="mb-3">
-                        <label asp-for="NewStatus" class="form-label">Permissible Next Status</label>
-                        <select asp-for="NewStatus" class="form-select" asp-items="Model.AllowedNextStatuses" required>
-                            <option value="">-- Select Permissible Next Status --</option>
-                        </select>
-                        <span asp-validation-for="NewStatus" class="text-danger small"></span>
-                        <div class="form-text small text-muted">Only valid state machine transitions are permitted by the workflow service.</div>
-                    </div>
-
-                    <div class="mb-3">
-                        <label asp-for="NewAssignedTechnician" class="form-label">Assign Technician</label>
-                        <input asp-for="NewAssignedTechnician" value="@Model.CurrentAssignedTechnician" class="form-control" placeholder="e.g. Alex Tech, Service Team A" />
-                        <span asp-validation-for="NewAssignedTechnician" class="text-danger small"></span>
+                        <label class="form-label">Assign Technician (Optional)</label>
+                        <input type="text" name="newAssignedTechnician" value="@Model.CurrentAssignedTechnician" class="form-control" placeholder="e.g. Lead Tech Marcus Vance" />
                     </div>
 
                     <div class="mb-4">
-                        <label asp-for="NewRemarks" class="form-label">Administrative Remarks</label>
-                        <textarea asp-for="NewRemarks" class="form-control" rows="4" placeholder="Enter diagnostic findings, repair progress, or instructions for the customer..."></textarea>
-                        <span asp-validation-for="NewRemarks" class="text-danger small"></span>
+                        <label class="form-label">Technician / Administrative Remarks</label>
+                        <textarea name="newRemarks" class="form-control" rows="3" placeholder="Diagnostic conclusions, repair ETA, or customer instructions..." required></textarea>
                     </div>
 
-                    <button type="submit" class="btn-pc-primary w-100">
-                        <i class="bi bi-check2-circle me-1"></i>
-                        <span>Apply Status Transition</span>
+                    <button type="submit" class="btn btn-forest w-100 py-2">
+                        <i class="bi bi-arrow-repeat me-1"></i> Commit Status Transition
                     </button>
                 </form>
             }
             else
             {
-                <div class="text-center py-4 text-muted">
-                    <i class="bi bi-lock-fill fs-1 text-muted opacity-50 mb-2 d-block"></i>
-                    <h6 class="fw-bold text-ink">Terminal Workflow State</h6>
-                    <p class="small mb-0">This ticket has reached its terminal lifecycle status (<strong>@Model.StatusDisplayText</strong>) and cannot be advanced further.</p>
+                <div class="p-3 rounded-3 text-center" style="background-color: var(--pc-surface-inset); border: 1px solid var(--pc-stone);">
+                    <i class="bi bi-lock-fill fs-3 text-muted mb-2 d-block"></i>
+                    <div class="fw-semibold text-dark small">Terminal Workflow State</div>
+                    <div class="small text-muted">This ticket is in state <em>@Model.Status</em> and cannot transition further.</div>
                 </div>
             }
+        </div>
+
+        <!-- Audit Log History -->
+        <div class="pc-card">
+            <h5 class="fw-bold text-dark mb-3 pb-2 border-bottom font-serif" style="border-color: var(--pc-stone) !important;">Immutable Audit History</h5>
+
+            <div class="pc-stepper mt-3">
+                @foreach (var log in Model.StatusHistory)
+                {
+                    <div class="pc-step-item completed">
+                        <div class="pc-step-dot"></div>
+                        <div>
+                            <div class="d-flex align-items-center justify-content-between">
+                                <span class="fw-bold text-dark small">@log.FromStatusText &rarr; @log.ToStatusText</span>
+                                <span class="small text-muted tabular-nums" style="font-size: 11px;">@log.CreatedAtUtc.ToString("dd MMM HH:mm")</span>
+                            </div>
+                            <div class="small text-muted" style="font-size: 11px;">Actor: @log.ChangedByUserName</div>
+                            @if (!string.IsNullOrEmpty(log.Remarks))
+                            {
+                                <div class="p-2 rounded mt-1 small" style="background-color: var(--pc-surface-inset); font-size: 11px;">
+                                    @log.Remarks
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
         </div>
     </div>
 </div>

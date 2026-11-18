@@ -8,18 +8,18 @@
     <div>
         <div class="d-flex align-items-center gap-2 mb-1">
             <span class="pc-badge @Model.StatusBadgeCssClass">@Model.StatusDisplayText</span>
-            <span class="badge badge-priority-@Model.Priority.ToString().ToLower()">@Model.Priority Priority</span>
-            <span class="badge bg-light text-muted border">@Model.CategoryName</span>
+            <span class="badge @Model.PriorityBadgeCssClass" style="font-size: 11px;">@Model.Priority Priority</span>
+            <span class="badge bg-light text-dark border small">@Model.CategoryName</span>
         </div>
-        <h1 class="h3 fw-bold text-ink mb-0 font-heading num-tabular">Ticket #@Model.TicketNumber</h1>
+        <h1 class="h3 fw-bold text-dark mb-0 font-serif tabular-nums">Ticket #@Model.TicketNumber</h1>
     </div>
     <div class="d-flex align-items-center gap-2">
-        <a asp-action="Index" class="btn-pc-secondary btn-pc-sm">
+        <a asp-action="Index" class="btn btn-stone btn-sm">
             <i class="bi bi-arrow-left me-1"></i> Back to Queue
         </a>
         @if (Model.CanCancel)
         {
-            <button type="button" class="btn btn-outline-danger btn-pc-sm" data-bs-toggle="modal" data-bs-target="#cancelTicketModal">
+            <button type="button" class="btn btn-danger-restrained btn-sm" data-bs-toggle="modal" data-bs-target="#cancelTicketModal">
                 <i class="bi bi-x-circle me-1"></i> Cancel Request
             </button>
         }
@@ -31,132 +31,117 @@
     <div class="col-lg-7">
         <!-- Main Ticket Information Card -->
         <div class="pc-card mb-4">
-            <div class="pc-card-header d-flex justify-content-between align-items-center">
-                <span><i class="bi bi-file-text me-2 text-primary-pc"></i>Reported Issue</span>
-                <span class="small text-muted num-tabular">Submitted: @Model.CreatedAtUtc.ToString("MMM dd, yyyy HH:mm") UTC</span>
+            <div class="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom" style="border-color: var(--pc-stone) !important;">
+                <h5 class="fw-bold text-dark mb-0 font-serif">Reported Problem</h5>
+                <span class="small text-muted tabular-nums">Submitted: @Model.CreatedAtUtc.ToString("dd MMM yyyy HH:mm") UTC</span>
             </div>
-            <div class="pc-card-body">
-                <h2 class="h5 fw-bold text-ink mb-2">@Model.Subject</h2>
-                <div class="p-3 bg-light rounded-3 border mb-4 text-secondary small" style="white-space: pre-wrap; line-height: 1.6;">@Model.Description</div>
+            
+            <h6 class="fw-bold text-dark mb-2">@Model.Subject</h6>
+            <div class="p-3 rounded-3 mb-4 small" style="background-color: var(--pc-surface-inset); border: 1px solid var(--pc-stone); white-space: pre-wrap; line-height: 1.6;">@Model.Description</div>
 
-                <div class="row g-3">
-                    <div class="col-sm-6">
-                        <div class="text-muted small fw-semibold text-uppercase letter-spacing-1">Assigned Technician</div>
-                        <div class="fw-bold text-ink">
-                            @(string.IsNullOrEmpty(Model.AssignedTechnician) ? "Awaiting Review / Triage" : Model.AssignedTechnician)
-                        </div>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="text-muted small fw-semibold text-uppercase letter-spacing-1">Resolution Status</div>
-                        <div class="fw-bold text-ink">
-                            @(Model.ResolvedAtUtc?.ToString("MMMM dd, yyyy") ?? "In Progress")
-                        </div>
+            <div class="row g-3">
+                <div class="col-sm-6">
+                    <div class="text-muted small fw-semibold text-uppercase" style="letter-spacing: 0.05em; font-size: 0.72rem;">Assigned Technician</div>
+                    <div class="fw-bold text-dark">
+                        @(string.IsNullOrEmpty(Model.AssignedTechnician) ? "Awaiting Review / Triage" : Model.AssignedTechnician)
                     </div>
                 </div>
+                <div class="col-sm-6">
+                    <div class="text-muted small fw-semibold text-uppercase" style="letter-spacing: 0.05em; font-size: 0.72rem;">Resolution Status</div>
+                    <div class="fw-bold text-dark">
+                        @(Model.ResolvedAtUtc.HasValue ? Model.ResolvedAtUtc.Value.ToString("dd MMMM yyyy") : "In Progress")
+                    </div>
+                </div>
+            </div>
 
-                @if (!string.IsNullOrEmpty(Model.AdminRemarks))
+            @if (!string.IsNullOrEmpty(Model.AdminRemarks))
+            {
+                <div class="mt-4 pt-3 border-top" style="border-color: var(--pc-stone) !important;">
+                    <div class="d-flex align-items-center gap-2 text-forest fw-bold small mb-2">
+                        <i class="bi bi-chat-quote-fill"></i>
+                        <span>Technician &amp; Service Remarks</span>
+                    </div>
+                    <div class="p-3 rounded-3 small" style="background-color: var(--pc-forest-soft); border: 1px solid rgba(49, 93, 80, 0.2); color: var(--pc-graphite);">
+                        @Model.AdminRemarks
+                    </div>
+                </div>
+            }
+        </div>
+
+        <!-- Target Product Card -->
+        <div class="pc-card">
+            <div class="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom" style="border-color: var(--pc-stone) !important;">
+                <h6 class="fw-bold text-dark mb-0 font-serif">Registered Equipment</h6>
+                <a asp-controller="Products" asp-action="Details" asp-route-id="@Model.ProductId" class="small fw-semibold text-forest">
+                    View Record &rarr;
+                </a>
+            </div>
+            <div class="d-flex align-items-center justify-content-between">
+                <div>
+                    <div class="fw-bold text-dark">@Model.ProductName</div>
+                    <div class="text-muted small font-monospace" style="font-size: 11px;">@Model.ProductBrand &middot; S/N: @Model.ProductSerialNumber</div>
+                </div>
+                <div class="text-end">
+                    <span class="pc-badge @Model.ProductWarrantyStatusBadge" style="font-size: 10px;">@Model.ProductWarrantyStatusText</span>
+                    <div class="small text-muted tabular-nums mt-1" style="font-size: 11px;">Exp: @Model.ProductWarrantyExpiryDate.ToString("dd MMM yyyy")</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Right Column: Status Progression Timeline Stepper -->
+    <div class="col-lg-5">
+        <div class="pc-card">
+            <h5 class="fw-bold text-dark mb-3 pb-2 border-bottom font-serif" style="border-color: var(--pc-stone) !important;">Service Progress History</h5>
+            
+            <div class="pc-stepper mt-3">
+                @foreach (var log in Model.StatusHistory)
                 {
-                    <div class="mt-4 pt-3 border-top">
-                        <div class="d-flex align-items-center gap-2 text-primary-pc fw-bold small mb-2">
-                            <i class="bi bi-chat-quote-fill"></i>
-                            <span>Official Service Team Remark</span>
-                        </div>
-                        <div class="p-3 rounded-3 border" style="background: #EEF0FF; border-color: #DDE3FC !important; color: var(--pc-ink);">
-                            @Model.AdminRemarks
+                    <div class="pc-step-item completed">
+                        <div class="pc-step-dot"></div>
+                        <div>
+                            <div class="d-flex align-items-center justify-content-between">
+                                <span class="fw-bold text-dark small">@log.ToStatusText</span>
+                                <span class="small text-muted tabular-nums" style="font-size: 11px;">@log.CreatedAtUtc.ToString("dd MMM HH:mm")</span>
+                            </div>
+                            <div class="small text-muted" style="font-size: 11px;">By: @log.ChangedByUserName</div>
+                            @if (!string.IsNullOrEmpty(log.Remarks))
+                            {
+                                <div class="p-2 rounded mt-1 small" style="background-color: var(--pc-surface-inset); font-size: 11px;">
+                                    @log.Remarks
+                                </div>
+                            }
                         </div>
                     </div>
                 }
             </div>
         </div>
-
-        <!-- Associated Product Card -->
-        <div class="pc-card">
-            <div class="pc-card-header d-flex justify-content-between align-items-center">
-                <span><i class="bi bi-laptop me-2 text-primary-pc"></i>Target Product</span>
-                <a asp-controller="Products" asp-action="Details" asp-route-id="@Model.ProductId" class="small text-primary-pc text-decoration-none fw-semibold">View Device &rarr;</a>
-            </div>
-            <div class="pc-card-body">
-                <div class="row g-3">
-                    <div class="col-sm-6">
-                        <span class="text-muted small">Device:</span> <strong class="text-ink">@Model.ProductName</strong>
-                    </div>
-                    <div class="col-sm-6">
-                        <span class="text-muted small">Brand & Model:</span> <strong class="text-ink">@Model.ProductBrand &middot; @Model.ProductModelNumber</strong>
-                    </div>
-                    <div class="col-sm-6">
-                        <span class="text-muted small">Serial:</span> <code class="text-ink num-tabular">@Model.ProductSerialNumber</code>
-                    </div>
-                    <div class="col-sm-6">
-                        <span class="text-muted small">Warranty Expiry:</span> <strong class="text-ink num-tabular">@Model.ProductWarrantyExpiryDate.ToString("yyyy-MM-dd")</strong>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Stepper Timeline: Audit History -->
-    <div class="col-lg-5">
-        <div class="pc-card">
-            <div class="pc-card-header">
-                <span><i class="bi bi-clock-history me-2 text-primary-pc"></i>Lifecycle Audit Progression</span>
-            </div>
-            <div class="pc-card-body">
-                <div class="pc-stepper">
-                    @foreach (var h in Model.StatusHistory)
-                    {
-                        var isResolved = h.ToStatus == ProductCare.Web.Models.Enums.RequestStatus.Resolved || h.ToStatus == ProductCare.Web.Models.Enums.RequestStatus.Closed;
-                        var isCancelled = h.ToStatus == ProductCare.Web.Models.Enums.RequestStatus.Rejected;
-                        var isCurrent = h == Model.StatusHistory.Last();
-
-                        <div class="pc-step-item @(isCurrent ? "is-active" : "") @(isResolved ? "is-resolved" : "") @(isCancelled ? "is-cancelled" : "")">
-                            <span class="pc-step-dot"></span>
-                            <div class="d-flex justify-content-between align-items-baseline mb-1">
-                                <span class="fw-bold text-ink small">@h.ToStatusText</span>
-                                <span class="num-tabular text-muted" style="font-size: 11px;">@h.CreatedAtUtc.ToString("MMM dd, HH:mm")</span>
-                            </div>
-                            <div class="small text-muted" style="font-size: 12px;">By: @h.ChangedByUserName</div>
-                            @if (!string.IsNullOrEmpty(h.Remarks))
-                            {
-                                <div class="mt-1 p-2 rounded-2 bg-light small text-secondary border" style="font-size: 12px;">
-                                    @h.Remarks
-                                </div>
-                            }
-                        </div>
-                    }
-                </div>
-            </div>
-        </div>
     </div>
 </div>
 
-<!-- Modal: Cancel Ticket Confirmation -->
+<!-- Cancellation Modal -->
 @if (Model.CanCancel)
 {
-    <div class="modal fade" id="cancelTicketModal" tabindex="-1" aria-labelledby="cancelModalLabel" aria-hidden="true">
+    <div class="modal fade" id="cancelTicketModal" tabindex="-1" aria-labelledby="cancelTicketModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content border-0 shadow-lg rounded-4">
-                <form asp-action="Cancel" asp-route-id="@Model.Id" method="post">
-                    @Html.AntiForgeryToken()
-                    <div class="modal-header border-bottom">
-                        <h5 class="modal-title fw-bold text-danger" id="cancelModalLabel">
-                            <i class="bi bi-x-circle-fill me-2"></i>Cancel Service Request
-                        </h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="modal-content" style="background-color: var(--pc-surface); border: 1px solid var(--pc-stone); border-radius: var(--pc-radius-lg);">
+                <div class="modal-header border-bottom" style="border-color: var(--pc-stone) !important;">
+                    <h5 class="modal-title font-serif text-dark" id="cancelTicketModalLabel">Cancel Service Request</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="text-dark">Are you certain you wish to cancel ticket <strong class="text-dark">#@Model.TicketNumber</strong>?</p>
+                    <div class="p-3 rounded-3 small" style="background-color: var(--pc-surface-inset); border: 1px solid var(--pc-stone);">
+                        <i class="bi bi-info-circle me-1"></i> You may cancel tickets while in the <em>Submitted</em> state before administrative triage has commenced.
                     </div>
-                    <div class="modal-body p-4">
-                        <p class="text-ink mb-3">
-                            Are you sure you want to cancel ticket <strong>#@Model.TicketNumber</strong>? This action will set the request status to Cancelled.
-                        </p>
-                        <div class="mb-3">
-                            <label class="form-label" for="cancelReason">Reason for Cancellation</label>
-                            <textarea id="cancelReason" name="reason" class="form-control" rows="3" placeholder="e.g. Issue resolved independently, or submitted by mistake..." required></textarea>
-                        </div>
-                    </div>
-                    <div class="modal-footer border-top">
-                        <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Keep Ticket Open</button>
-                        <button type="submit" class="btn btn-danger btn-sm">Confirm Cancellation</button>
-                    </div>
-                </form>
+                </div>
+                <div class="modal-footer border-top" style="border-color: var(--pc-stone) !important;">
+                    <button type="button" class="btn btn-stone btn-sm" data-bs-dismiss="modal">Keep Ticket Active</button>
+                    <form asp-action="Cancel" asp-route-id="@Model.Id" method="post">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-danger-restrained btn-sm">Confirm Cancellation</button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>

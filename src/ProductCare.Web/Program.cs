@@ -207,7 +207,12 @@ else
 app.UseMiddleware<CorrelationIdMiddleware>();
 app.UseMiddleware<SecurityHeadersMiddleware>();
 
-app.UseHttpsRedirection();
+// Enforce HTTPS redirection in production (avoids port warning on local development HTTP profiles)
+if (!app.Environment.IsDevelopment())
+{
+    app.UseHttpsRedirection();
+}
+
 app.UseStaticFiles();
 
 // Swagger API documentation

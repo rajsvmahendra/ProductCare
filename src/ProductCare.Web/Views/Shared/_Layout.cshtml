@@ -8,48 +8,50 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
-<body>
-    <!-- Public & Marketing Navigation -->
-    <header class="pc-navbar">
-        <div class="container-xl h-100 d-flex align-items-center justify-content-between px-3 px-md-4">
-            <!-- Brand Logo -->
-            <a class="pc-logo" asp-area="" asp-controller="Home" asp-action="Index">
-                <svg class="pc-logo-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                    <rect width="32" height="32" rx="8" fill="#EEF0FF" />
-                    <path d="M16 6L8 9.5V16C8 21 11.5 25.5 16 27C20.5 25.5 24 21 24 16V9.5L16 6Z" stroke="#4F5FEA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                    <path d="M12 16.5L15 19.5L20.5 13.5" stroke="#12A89A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+<body class="d-flex flex-column min-vh-100">
+    <!-- Public Header -->
+    <header class="pc-public-header">
+        <div class="container-xl d-flex align-items-center justify-content-between px-3 px-md-4">
+            <!-- Brand Mark & Logotype -->
+            <a class="pc-brand-logo" asp-area="" asp-controller="Home" asp-action="Index">
+                <svg class="pc-brand-mark" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <rect width="32" height="32" rx="8" fill="#E7EFEA" />
+                    <!-- Protective Shield Contour -->
+                    <path d="M16 5.5L8 9.2V15.8C8 20.8 11.4 25.4 16 26.8C20.6 25.4 24 20.8 24 15.8V9.2L16 5.5Z" stroke="#315D50" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    <!-- Continuity knot & verification mark -->
+                    <path d="M12 16.2L14.8 19L20.2 13.2" stroke="#D69A51" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
                 </svg>
-                <span class="pc-logo-text">Product<span class="text-primary-pc">Care</span></span>
+                <span class="pc-brand-title font-sans">ProductCare</span>
             </a>
 
-            <!-- Desktop Nav Links -->
+            <!-- Navigation Links -->
             <nav class="d-none d-md-flex align-items-center gap-1" aria-label="Main Navigation">
                 <a class="pc-nav-link" asp-area="" asp-controller="Home" asp-action="Index">Overview</a>
-                <a class="pc-nav-link" href="/#problem">The Problem</a>
-                <a class="pc-nav-link" href="/#how-it-works">How It Works</a>
-                <a class="pc-nav-link" href="/#features">Features</a>
-                <a class="pc-nav-link" href="/#trust">Security & Trust</a>
+                <a class="pc-nav-link" href="/#demonstration">Ownership Journey</a>
+                <a class="pc-nav-link" href="/#dilemmas">Why ProductCare</a>
+                <a class="pc-nav-link" href="/#capabilities">Capabilities</a>
+                <a class="pc-nav-link" href="/#security">Security & Proof</a>
             </nav>
 
-            <!-- Auth Action Controls -->
+            <!-- Authentication Actions -->
             <div class="d-flex align-items-center gap-2">
                 @if (User.Identity?.IsAuthenticated == true)
                 {
                     @if (User.IsInRole("Admin"))
                     {
-                        <a class="btn-pc-primary btn-pc-sm" asp-area="Admin" asp-controller="Dashboard" asp-action="Index">
+                        <a class="btn btn-forest btn-sm" asp-area="Admin" asp-controller="Dashboard" asp-action="Index">
                             <i class="bi bi-shield-lock me-1"></i> Admin Portal
                         </a>
                     }
                     else
                     {
-                        <a class="btn-pc-primary btn-pc-sm" asp-area="Customer" asp-controller="Dashboard" asp-action="Index">
-                            <i class="bi bi-grid-fill me-1"></i> My Dashboard
+                        <a class="btn btn-forest btn-sm" asp-area="Customer" asp-controller="Dashboard" asp-action="Index">
+                            <i class="bi bi-folder-check me-1"></i> My Product Vault
                         </a>
                     }
 
                     <div class="dropdown">
-                        <button class="btn btn-pc-ghost btn-pc-sm dropdown-toggle" type="button" id="userMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                        <button class="btn btn-stone btn-sm dropdown-toggle" type="button" id="userMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="bi bi-person-circle"></i>
                         </button>
                         <ul class="dropdown-menu dropdown-menu-end shadow-sm" aria-labelledby="userMenuButton">
@@ -68,11 +70,11 @@
                 }
                 else
                 {
-                    <a class="btn-pc-ghost" asp-area="" asp-controller="Account" asp-action="Login">
+                    <a class="btn btn-stone btn-sm" asp-area="" asp-controller="Account" asp-action="Login">
                         Sign In
                     </a>
-                    <a class="btn-pc-primary btn-pc-sm" asp-area="" asp-controller="Account" asp-action="Register">
-                        Get Started
+                    <a class="btn btn-forest btn-sm" asp-area="" asp-controller="Account" asp-action="Register">
+                        Open Ownership Desk
                     </a>
                 }
             </div>
@@ -81,7 +83,7 @@
 
     <!-- Main Content Canvas -->
     <main class="flex-grow-1">
-        <!-- Toast Alerts -->
+        <!-- Toast & Feedback Notifications -->
         <div class="container-xl px-3 px-md-4 mt-3">
             @if (TempData["SuccessMessage"] != null)
             {
@@ -110,59 +112,56 @@
     </main>
 
     <!-- Public Footer -->
-    <footer class="bg-white border-top py-5 mt-auto">
+    <footer class="pc-public-footer">
         <div class="container-xl px-3 px-md-4">
             <div class="row g-4 mb-4">
                 <div class="col-lg-5">
-                    <div class="pc-logo mb-3">
-                        <svg class="pc-logo-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                            <rect width="32" height="32" rx="8" fill="#EEF0FF" />
-                            <path d="M16 6L8 9.5V16C8 21 11.5 25.5 16 27C20.5 25.5 24 21 24 16V9.5L16 6Z" stroke="#4F5FEA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                            <path d="M12 16.5L15 19.5L20.5 13.5" stroke="#12A89A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+                    <div class="pc-brand-logo mb-3">
+                        <svg class="pc-brand-mark" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                            <rect width="32" height="32" rx="8" fill="#E7EFEA" />
+                            <path d="M16 5.5L8 9.2V15.8C8 20.8 11.4 25.4 16 26.8C20.6 25.4 24 20.8 24 15.8V9.2L16 5.5Z" stroke="#315D50" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                            <path d="M12 16.2L14.8 19L20.2 13.2" stroke="#D69A51" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
                         </svg>
-                        <span class="pc-logo-text">Product<span class="text-primary-pc">Care</span></span>
+                        <span class="pc-brand-title font-sans">ProductCare</span>
                     </div>
                     <p class="text-muted small pe-lg-5">
-                        Everything you own. Everything covered. All in one place. Keep product purchase records organized, stay ahead of expiring warranties, and follow every service request.
+                        ProductCare is the ownership management platform that keeps every product record, warranty commitment and service journey connected in one place.
                     </p>
                 </div>
 
                 <div class="col-6 col-md-3 col-lg-2">
-                    <h6 class="fw-bold text-ink mb-3 font-heading small text-uppercase">Platform</h6>
-                    <ul class="list-unstyled small d-flex flex-column gap-2 mb-0">
-                        <li><a href="/#how-it-works" class="text-muted">How It Works</a></li>
-                        <li><a href="/#features" class="text-muted">Product Library</a></li>
-                        <li><a href="/#features" class="text-muted">Warranty Engine</a></li>
-                        <li><a href="/#features" class="text-muted">Service Tracker</a></li>
+                    <div class="pc-footer-title">Platform</div>
+                    <ul class="pc-footer-list">
+                        <li><a href="/#demonstration">Ownership Journey</a></li>
+                        <li><a href="/#dilemmas">Why ProductCare</a></li>
+                        <li><a href="/#capabilities">Digital Product Vault</a></li>
+                        <li><a href="/#capabilities">Warranty Intelligence</a></li>
                     </ul>
                 </div>
 
                 <div class="col-6 col-md-3 col-lg-2">
-                    <h6 class="fw-bold text-ink mb-3 font-heading small text-uppercase">Access</h6>
-                    <ul class="list-unstyled small d-flex flex-column gap-2 mb-0">
-                        <li><a asp-area="" asp-controller="Account" asp-action="Register" class="text-muted">Register Customer</a></li>
-                        <li><a asp-area="" asp-controller="Account" asp-action="Login" class="text-muted">Sign In</a></li>
-                        <li><a asp-area="" asp-controller="Home" asp-action="Privacy" class="text-muted">Data & Privacy</a></li>
+                    <div class="pc-footer-title">Access</div>
+                    <ul class="pc-footer-list">
+                        <li><a asp-area="" asp-controller="Account" asp-action="Register">Open Ownership Desk</a></li>
+                        <li><a asp-area="" asp-controller="Account" asp-action="Login">Sign In to Vault</a></li>
+                        <li><a asp-area="" asp-controller="Home" asp-action="Privacy">Data & Security</a></li>
                     </ul>
                 </div>
 
                 <div class="col-md-6 col-lg-3">
-                    <h6 class="fw-bold text-ink mb-3 font-heading small text-uppercase">Academic Project</h6>
-                    <div class="p-3 rounded-3 bg-light border small text-muted">
-                        <div class="fw-semibold text-ink mb-1">INT402: Modern Web Programming</div>
-                        <div>ASP.NET Core 10 &middot; EF Core 10 &middot; SQL Server</div>
-                        <div class="mt-2">
-                            <a href="/swagger" target="_blank" class="text-primary-pc fw-semibold d-inline-flex align-items-center gap-1">
-                                <i class="bi bi-code-slash"></i> OpenAPI / Swagger Docs
-                            </a>
-                        </div>
-                    </div>
+                    <div class="pc-footer-title">Integration & APIs</div>
+                    <p class="small text-muted mb-3">
+                        Fully documented OpenAPI 3.0 REST endpoints secured via JWT Bearer tokens and ASP.NET Core Identity.
+                    </p>
+                    <a href="/swagger" target="_blank" class="btn btn-stone btn-sm d-inline-flex align-items-center gap-2">
+                        <i class="bi bi-code-slash text-forest"></i> Swagger REST API
+                    </a>
                 </div>
             </div>
 
-            <div class="border-top pt-4 d-flex flex-column flex-sm-row justify-content-between align-items-center gap-2 small text-muted">
-                <div>&copy; 2026 ProductCare. All rights reserved.</div>
-                <div>Designed with clarity, reassurance, and precision.</div>
+            <div class="border-top pt-4 d-flex flex-column flex-sm-row justify-content-between align-items-center gap-2 small text-muted" style="border-color: var(--pc-stone) !important;">
+                <div>&copy; 2026 ProductCare. The Ownership Continuity Experience.</div>
+                <div>Engineered with ASP.NET Core 10, Entity Framework Core 10 & SQL Server.</div>
             </div>
         </div>
     </footer>

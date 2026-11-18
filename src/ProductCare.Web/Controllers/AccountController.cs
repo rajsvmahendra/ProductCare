@@ -48,48 +48,57 @@ public class AccountController : Controller
             return View(model);
         }
 
-        var existingUser = await _userManager.FindByEmailAsync(model.Email);
-        if (existingUser != null)
+        try
         {
-            ModelState.AddModelError(nameof(model.Email), "An account with this email address already exists.");
-            return View(model);
-        }
-
-        var user = new ApplicationUser
-        {
-            UserName = model.Email,
-            Email = model.Email,
-            FullName = model.FullName.Trim(),
-            Address = model.Address?.Trim(),
-            City = model.City?.Trim(),
-            PostalCode = model.PostalCode?.Trim(),
-            IsActive = true,
-            CreatedAtUtc = DateTime.UtcNow
-        };
-
-        var result = await _userManager.CreateAsync(user, model.Password);
-        if (result.Succeeded)
-        {
-            // Ensure Customer role exists and assign it automatically
-            if (!await _roleManager.RoleExistsAsync(DbInitializerService.RoleCustomer))
+            var existingUser = await _userManager.FindByEmailAsync(model.Email);
+            if (existingUser != null)
             {
-                await _roleManager.CreateAsync(new IdentityRole(DbInitializerService.RoleCustomer));
+                ModelState.AddModelError(nameof(model.Email), "An account with this email address already exists.");
+                return View(model);
             }
 
-            await _userManager.AddToRoleAsync(user, DbInitializerService.RoleCustomer);
+            var user = new ApplicationUser
+            {
+                UserName = model.Email,
+                Email = model.Email,
+                FullName = model.FullName.Trim(),
+                Address = model.Address?.Trim(),
+                City = model.City?.Trim(),
+                PostalCode = model.PostalCode?.Trim(),
+                IsActive = true,
+                CreatedAtUtc = DateTime.UtcNow
+            };
 
-            _logger.LogInformation("New customer account registered: {Email}", user.Email);
+            var result = await _userManager.CreateAsync(user, model.Password);
+            if (result.Succeeded)
+            {
+                // Ensure Customer role exists and assign it automatically
+                if (!await _roleManager.RoleExistsAsync(DbInitializerService.RoleCustomer))
+                {
+                    await _roleManager.CreateAsync(new IdentityRole(DbInitializerService.RoleCustomer));
+                }
 
-            await _signInManager.SignInAsync(user, isPersistent: false);
-            return RedirectToAction("Index", "Dashboard", new { area = "Customer" });
+                await _userManager.AddToRoleAsync(user, DbInitializerService.RoleCustomer);
+
+                _logger.LogInformation("New customer account registered: {Email}", user.Email);
+
+                await _signInManager.SignInAsync(user, isPersistent: false);
+                return RedirectToAction("Index", "Dashboard", new { area = "Customer" });
+            }
+
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError(string.Empty, error.Description);
+            }
+
+            return View(model);
         }
-
-        foreach (var error in result.Errors)
+        catch (Exception ex)
         {
-            ModelState.AddModelError(string.Empty, error.Description);
+            _logger.LogError(ex, "Database connection or internal error during customer registration for {Email}", model.Email);
+            ModelState.AddModelError(string.Empty, "We are currently experiencing a connection issue with the database service. Please try again shortly or contact support.");
+            return View(model);
         }
-
-        return View(model);
     }
 
     [HttpGet]
@@ -114,27 +123,36 @@ public class AccountController : Controller
             return View(model);
         }
 
-        var user = await _userManager.FindByEmailAsync(model.Email);
-        if (user == null || !user.IsActive)
+        try
         {
-            ModelState.AddModelError(string.Empty, "Invalid login credentials or account is deactivated.");
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            if (user == null || !user.IsActive)
+            {
+                ModelState.AddModelError(string.Empty, "Invalid login credentials or account is deactivated.");
+                return View(model);
+            }
+
+            var result = await _signInManager.PasswordSignInAsync(
+                user.UserName ?? model.Email,
+                model.Password,
+                model.RememberMe,
+                lockoutOnFailure: false);
+
+            if (result.Succeeded)
+            {
+                _logger.LogInformation("User logged in: {Email}", user.Email);
+                return RedirectToLocal(model.ReturnUrl);
+            }
+
+            ModelState.AddModelError(string.Empty, "Invalid email or password.");
             return View(model);
         }
-
-        var result = await _signInManager.PasswordSignInAsync(
-            user.UserName ?? model.Email,
-            model.Password,
-            model.RememberMe,
-            lockoutOnFailure: false);
-
-        if (result.Succeeded)
+        catch (Exception ex)
         {
-            _logger.LogInformation("User logged in: {Email}", user.Email);
-            return RedirectToLocal(model.ReturnUrl);
+            _logger.LogError(ex, "Database connection or internal error during login for {Email}", model.Email);
+            ModelState.AddModelError(string.Empty, "We are currently experiencing a connection issue with the database service. Please try again shortly or contact support.");
+            return View(model);
         }
-
-        ModelState.AddModelError(string.Empty, "Invalid email or password.");
-        return View(model);
     }
 
     [HttpPost]

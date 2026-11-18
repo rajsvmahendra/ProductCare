@@ -1,24 +1,26 @@
 @{
-    ViewData["Title"] = "ProductCare — Product Warranty & Service Management";
+    ViewData["Title"] = "The Ownership Continuity Experience";
 }
 
 <!-- =========================================================================
-     1. PRODUCT HERO SECTION WITH 3D INTERACTIVE SOFTWARE MOCKUP
+     1. EDITORIAL HERO & GROUNDED PRODUCT DEMONSTRATION
      ========================================================================= -->
 <section class="pc-hero-section">
     <div class="container-xl px-3 px-md-4">
         <div class="row align-items-center g-5">
-            <!-- Left Hero Content -->
+            <!-- Left Editorial Text -->
             <div class="col-lg-6">
-                <div class="pc-eyebrow">
-                    <i class="bi bi-shield-check"></i> PRODUCT RECORDS &middot; WARRANTY &middot; SERVICE
+                <div class="d-inline-flex align-items-center gap-2 px-3 py-1 rounded-pill mb-3" style="background-color: var(--pc-forest-soft); color: var(--pc-forest); font-size: 0.8rem; font-weight: 600; letter-spacing: 0.04em;">
+                    <i class="bi bi-shield-check"></i> THE OWNERSHIP CONTINUITY PLATFORM
                 </div>
-                <h1 class="pc-hero-h1">
-                    Know what’s covered. <br />
-                    <span class="text-primary-pc">Stay ahead</span> of what’s next.
+                <h1 class="pc-hero-headline">
+                    Everything you own.<br />
+                    Every warranty.<br />
+                    Every service journey.<br />
+                    <span style="color: var(--pc-forest); font-style: italic;">One place.</span>
                 </h1>
                 <p class="pc-hero-lead">
-                    Keep every product, warranty and service request organised in one calm, easy-to-use place. Add a purchase once, see your coverage at a glance, and follow repairs without losing the details.
+                    A centralized ownership management platform that preserves purchase proofs, monitors warranty coverage, and tracks after-sales repair journeys with complete clarity.
                 </p>
 
                 <div class="d-flex flex-wrap align-items-center gap-3 mb-4">
@@ -26,132 +28,127 @@
                     {
                         @if (User.IsInRole("Admin"))
                         {
-                            <a class="btn-pc-primary" asp-area="Admin" asp-controller="Dashboard" asp-action="Index">
-                                <span>Open Admin Portal</span>
+                            <a class="btn btn-forest" asp-area="Admin" asp-controller="Dashboard" asp-action="Index">
+                                <span>Open Administrator Portal</span>
                                 <i class="bi bi-arrow-right"></i>
                             </a>
                         }
                         else
                         {
-                            <a class="btn-pc-primary" asp-area="Customer" asp-controller="Dashboard" asp-action="Index">
-                                <span>Go to My Dashboard</span>
+                            <a class="btn btn-forest" asp-area="Customer" asp-controller="Dashboard" asp-action="Index">
+                                <span>Enter My Product Vault</span>
                                 <i class="bi bi-arrow-right"></i>
                             </a>
                         }
                     }
                     else
                     {
-                        <a class="btn-pc-primary" asp-area="" asp-controller="Account" asp-action="Register">
-                            <span>Create your account</span>
+                        <a class="btn btn-forest" asp-area="" asp-controller="Account" asp-action="Register">
+                            <span>Open Your Ownership Desk</span>
                             <i class="bi bi-arrow-right"></i>
                         </a>
-                        <a class="btn-pc-secondary" href="#how-it-works">
-                            <i class="bi bi-play-circle me-1 text-primary-pc"></i>
-                            <span>See how it works</span>
+                        <a class="btn btn-stone" href="#demonstration">
+                            <i class="bi bi-eye me-1"></i>
+                            <span>Explore Demonstration</span>
                         </a>
                     }
                 </div>
 
                 <div class="d-flex align-items-center gap-4 text-muted small pt-2">
                     <div class="d-flex align-items-center gap-2">
-                        <i class="bi bi-check2-circle text-teal-pc fs-5"></i>
-                        <span>Zero subscription fees</span>
+                        <i class="bi bi-check2 text-success fw-bold"></i>
+                        <span>Zero Subscription Fees</span>
                     </div>
                     <div class="d-flex align-items-center gap-2">
-                        <i class="bi bi-check2-circle text-teal-pc fs-5"></i>
-                        <span>Private invoice storage</span>
+                        <i class="bi bi-check2 text-success fw-bold"></i>
+                        <span>Secure Invoice Vault</span>
+                    </div>
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="bi bi-check2 text-success fw-bold"></i>
+                        <span>8-Stage Service Machine</span>
                     </div>
                 </div>
             </div>
 
-            <!-- Right Hero 3D Dimensional Mockup -->
-            <div class="col-lg-6">
-                <div class="pc-mockup-stage">
-                    <!-- Floating Badge Top -->
-                    <div class="pc-floating-chip pc-chip-top">
-                        <div class="rounded-circle d-flex align-items-center justify-content-center" style="width: 24px; height: 24px; background: #E5F7F4; color: #12A89A;">
-                            <i class="bi bi-shield-fill-check"></i>
+            <!-- Right: Grounded Ownership Lifecycle Demonstration -->
+            <div class="col-lg-6" id="demonstration">
+                <div class="pc-demo-container">
+                    <div class="pc-demo-topbar">
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="rounded-circle" style="width: 10px; height: 10px; background-color: var(--pc-stone-dark);"></span>
+                            <span class="rounded-circle" style="width: 10px; height: 10px; background-color: var(--pc-stone);"></span>
+                            <span class="rounded-circle" style="width: 10px; height: 10px; background-color: var(--pc-stone);"></span>
+                            <span class="small fw-semibold ms-2 text-dark font-sans" style="font-size: 0.82rem;">VAULT RECORD &middot; DEMONSTRATION</span>
                         </div>
-                        <div>
-                            <div class="text-ink fw-bold" style="font-size: 12px; line-height: 1.2;">Active Coverage</div>
-                            <div class="text-muted" style="font-size: 11px;">Verified Warranty Proof</div>
-                        </div>
+                        <span class="pc-badge pc-badge-active">
+                            <i class="bi bi-check-circle-fill"></i> ACTIVE COVERAGE
+                        </span>
                     </div>
 
-                    <!-- Main Dimensional Window -->
-                    <div class="pc-mockup-window">
-                        <!-- Window Titlebar -->
-                        <div class="pc-mockup-header">
-                            <div class="pc-window-dots">
-                                <span class="pc-window-dot dot-red"></span>
-                                <span class="pc-window-dot dot-yellow"></span>
-                                <span class="pc-window-dot dot-green"></span>
+                    <div class="pc-demo-body">
+                        <!-- Product Identification -->
+                        <div class="d-flex align-items-start justify-content-between mb-4 pb-3 border-bottom" style="border-color: var(--pc-stone) !important;">
+                            <div>
+                                <span class="badge bg-light text-dark border mb-1">Computers</span>
+                                <h4 class="mb-1 fw-bold text-dark">Apple MacBook Pro 16" (M3 Max)</h4>
+                                <div class="small text-muted font-monospace">S/N: C02G1001MD6R &middot; Model: A2485</div>
                             </div>
-                            <div class="small fw-semibold text-muted d-flex align-items-center gap-1">
-                                <i class="bi bi-lock-fill text-muted" style="font-size: 11px;"></i>
-                                productcare.portal/customer/overview
+                            <div class="text-end">
+                                <div class="small text-muted">Purchase Date</div>
+                                <div class="fw-semibold text-dark tabular-nums">14 Oct 2025</div>
                             </div>
-                            <span class="badge bg-light text-muted border" style="font-size: 10px;">SAMPLE PREVIEW</span>
                         </div>
 
-                        <!-- Mockup Interior -->
-                        <div class="pc-mockup-body">
-                            <!-- Coverage Header Card -->
-                            <div class="d-flex align-items-center justify-content-between p-3 rounded-3 mb-3" style="background: #F8F9FE; border: 1px solid #E8ECF8;">
-                                <div>
-                                    <div class="text-muted small fw-medium">Coverage Health</div>
-                                    <div class="h5 fw-bold text-ink mb-0">8 Products Monitored</div>
-                                </div>
-                                <div class="text-end">
-                                    <span class="pc-badge pc-badge-success mb-1">7 Active</span>
-                                    <div class="small text-muted">1 Expiring in 18d</div>
-                                </div>
-                            </div>
-
-                            <!-- Showcase Product Item -->
-                            <div class="p-3 rounded-3 mb-3 bg-white border">
-                                <div class="d-flex justify-content-between align-items-start mb-2">
-                                    <div class="d-flex align-items-center gap-3">
-                                        <div class="rounded-3 p-2 d-flex align-items-center justify-content-center" style="width: 44px; height: 44px; background: #EEF0FF; color: #4F5FEA;">
-                                            <i class="bi bi-laptop fs-4"></i>
-                                        </div>
-                                        <div>
-                                            <div class="fw-bold text-ink">MacBook Pro 16" M3 Max</div>
-                                            <div class="small text-muted">Apple &middot; Serial: C02G1234MD6R</div>
-                                        </div>
+                        <!-- Real Lifecycle Details Grid -->
+                        <div class="row g-3 mb-4">
+                            <!-- Invoice Record -->
+                            <div class="col-sm-6">
+                                <div class="p-3 rounded-3" style="background-color: var(--pc-surface-inset); border: 1px solid var(--pc-stone);">
+                                    <div class="small text-muted mb-1 d-flex align-items-center justify-content-between">
+                                        <span>PURCHASE PROOF</span>
+                                        <i class="bi bi-file-earmark-pdf text-danger"></i>
                                     </div>
-                                    <span class="pc-badge pc-badge-success">Active</span>
-                                </div>
-                                <div class="mt-2 pt-2 border-top d-flex justify-content-between align-items-center small">
-                                    <span class="text-muted"><i class="bi bi-calendar3 me-1"></i> Valid until Dec 14, 2027</span>
-                                    <span class="fw-bold text-primary-pc">248 days remaining</span>
-                                </div>
-                            </div>
-
-                            <!-- Mockup Sub-item: Service Ticket In-Progress -->
-                            <div class="p-3 rounded-3 bg-white border">
-                                <div class="d-flex justify-content-between align-items-center mb-1">
-                                    <div class="d-flex align-items-center gap-2">
-                                        <span class="pc-badge pc-badge-primary">PC-202611-0421</span>
-                                        <span class="small fw-semibold text-ink">Display Calibration</span>
+                                    <div class="fw-semibold text-dark small text-truncate">AppleStore_Invoice_2025.pdf</div>
+                                    <div class="small text-success mt-1" style="font-size: 11px;">
+                                        <i class="bi bi-shield-check"></i> 2.4 MB Verified &amp; Encrypted
                                     </div>
-                                    <span class="pc-badge pc-badge-info">In Progress</span>
                                 </div>
-                                <div class="small text-muted mt-1">
-                                    Assigned to Senior Technician &middot; Diagnostic check passed
+                            </div>
+
+                            <!-- Warranty Countdown Radar -->
+                            <div class="col-sm-6">
+                                <div class="p-3 rounded-3" style="background-color: var(--pc-surface-inset); border: 1px solid var(--pc-stone);">
+                                    <div class="small text-muted mb-1 d-flex align-items-center justify-content-between">
+                                        <span>WARRANTY COMMITMENT</span>
+                                        <span class="badge" style="background-color: var(--pc-forest-soft); color: var(--pc-forest); font-size: 10px;">36 Months</span>
+                                    </div>
+                                    <div class="fw-bold text-dark tabular-nums">695 Days Remaining</div>
+                                    <div class="small text-muted" style="font-size: 11px;">
+                                        Expires: 14 Oct 2028
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- Floating Badge Bottom -->
-                    <div class="pc-floating-chip pc-chip-bottom">
-                        <div class="rounded-circle d-flex align-items-center justify-content-center" style="width: 24px; height: 24px; background: #EEF0FF; color: #4F5FEA;">
-                            <i class="bi bi-arrow-repeat"></i>
-                        </div>
-                        <div>
-                            <div class="text-ink fw-bold" style="font-size: 12px; line-height: 1.2;">Live Service Triage</div>
-                            <div class="text-muted" style="font-size: 11px;">8-Stage Workflow Engine</div>
+                        <!-- Connected Active Service Ticket -->
+                        <div class="p-3 rounded-3" style="background-color: #FAF8F2; border: 1px solid #E5DEC9;">
+                            <div class="d-flex align-items-center justify-content-between mb-2">
+                                <div class="d-flex align-items-center gap-2">
+                                    <span class="pc-badge pc-badge-progress">
+                                        <i class="bi bi-arrow-repeat"></i> IN PROGRESS
+                                    </span>
+                                    <span class="small fw-bold text-dark font-monospace">PC-20261118-4091</span>
+                                </div>
+                                <span class="badge bg-warning text-dark" style="font-size: 10px;">Priority: High</span>
+                            </div>
+                            <div class="fw-semibold text-dark small mb-1">Keyboard Backlight Failure &amp; Sensor Calibration</div>
+                            <p class="small text-muted mb-2" style="font-size: 12px;">
+                                Diagnostics confirmed sensor continuity failure. Authorized replacement logic board dispatched.
+                            </p>
+                            <div class="d-flex align-items-center justify-content-between pt-2 border-top small" style="border-color: #E5DEC9 !important; font-size: 11px;">
+                                <span class="text-muted"><i class="bi bi-person-badge"></i> Tech: Marcus Vance</span>
+                                <span class="text-muted"><i class="bi bi-clock"></i> Updated 2 hours ago</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -161,64 +158,80 @@
 </section>
 
 <!-- =========================================================================
-     2. SECTION A: THE EVERYDAY PROBLEM & VISUAL CONTRAST
+     2. THE REALITY OF MODERN OWNERSHIP (HUMAN DILEMMAS & SOLUTIONS)
      ========================================================================= -->
-<section id="problem" class="py-5 bg-white border-top border-bottom">
+<section class="py-5" id="dilemmas" style="border-top: 1px solid var(--pc-stone); background-color: var(--pc-surface);">
     <div class="container-xl px-3 px-md-4 py-4">
         <div class="text-center max-w-700 mx-auto mb-5">
-            <span class="pc-eyebrow">THE EVERYDAY CHALLENGE</span>
-            <h2 class="display-6 fw-bold text-ink mb-3">Purchase details shouldn’t disappear into a drawer.</h2>
-            <p class="text-muted lead">
-                When consumer electronics malfunction, tracking warranty deadlines and proving purchase history shouldn't require searching through shoeboxes and lost emails.
+            <span class="d-inline-block text-uppercase fw-bold small text-muted mb-2" style="letter-spacing: 0.08em;">THE OWNERSHIP PROBLEM</span>
+            <h2 class="pc-section-title">The reality of modern product ownership</h2>
+            <p class="pc-section-subtitle mx-auto">
+                People acquire valuable devices and appliances every year, but the administrative burden of ownership is broken across physical receipts and disconnected service centers.
             </p>
         </div>
 
-        <div class="row g-4 align-items-stretch">
-            <!-- Problem: The Old Way -->
-            <div class="col-md-6">
-                <div class="p-4 p-lg-5 rounded-4 h-100 border" style="background: #FFFBFB; border-color: #F8D7DA !important;">
-                    <div class="d-flex align-items-center gap-2 text-danger fw-bold mb-3 small text-uppercase letter-spacing-1">
-                        <i class="bi bi-x-circle-fill fs-5"></i> The Scattered Reality
+        <div class="row g-4">
+            <!-- Dilemma 1 -->
+            <div class="col-md-6 col-lg-3">
+                <div class="pc-dilemma-card">
+                    <div class="pc-dilemma-icon">
+                        <i class="bi bi-receipt-cutoff fs-5"></i>
                     </div>
-                    <h3 class="h4 fw-bold text-ink mb-3">Losing track of warranties costs time and money</h3>
-                    <ul class="list-unstyled d-flex flex-column gap-3 text-muted mb-0">
-                        <li class="d-flex align-items-start gap-2">
-                            <i class="bi bi-dash text-danger fs-5"></i>
-                            <span>Thermal paper receipts fade to blank within months, voiding claim eligibility.</span>
-                        </li>
-                        <li class="d-flex align-items-start gap-2">
-                            <i class="bi bi-dash text-danger fs-5"></i>
-                            <span>Warranty deadlines expire unnoticed with no early heads-up or visibility.</span>
-                        </li>
-                        <li class="d-flex align-items-start gap-2">
-                            <i class="bi bi-dash text-danger fs-5"></i>
-                            <span>Repair requests lack structure, leaving customers guessing what stage service is in.</span>
-                        </li>
-                    </ul>
+                    <h5 class="fw-bold text-dark mb-2">The Disappearing Receipt</h5>
+                    <p class="text-muted small mb-0">
+                        Thermal paper receipts fade to illegible white sheets within months. When a claim arises, consumers cannot produce proof of purchase.
+                    </p>
+                    <div class="mt-3 pt-3 border-top small text-forest fw-semibold" style="border-color: var(--pc-stone) !important;">
+                        <i class="bi bi-check-circle me-1"></i> ProductCare stores verified PDFs outside web root.
+                    </div>
                 </div>
             </div>
 
-            <!-- Solution: The ProductCare Way -->
-            <div class="col-md-6">
-                <div class="p-4 p-lg-5 rounded-4 h-100 border" style="background: #F6FBF9; border-color: #D1E7DD !important;">
-                    <div class="d-flex align-items-center gap-2 text-success fw-bold mb-3 small text-uppercase letter-spacing-1">
-                        <i class="bi bi-check-circle-fill fs-5"></i> The ProductCare Solution
+            <!-- Dilemma 2 -->
+            <div class="col-md-6 col-lg-3">
+                <div class="pc-dilemma-card">
+                    <div class="pc-dilemma-icon">
+                        <i class="bi bi-hourglass-bottom fs-5" style="color: var(--pc-amber);"></i>
                     </div>
-                    <h3 class="h4 fw-bold text-ink mb-3">Centralized, calm, and always accessible</h3>
-                    <ul class="list-unstyled d-flex flex-column gap-3 text-muted mb-0">
-                        <li class="d-flex align-items-start gap-2">
-                            <i class="bi bi-check2 text-success fs-5"></i>
-                            <span>Store digital copies of purchase invoices safely in your private digital vault.</span>
-                        </li>
-                        <li class="d-flex align-items-start gap-2">
-                            <i class="bi bi-check2 text-success fs-5"></i>
-                            <span>Dynamic calculations highlight upcoming expirations 30 days before they lapse.</span>
-                        </li>
-                        <li class="d-flex align-items-start gap-2">
-                            <i class="bi bi-check2 text-success fs-5"></i>
-                            <span>Raise service tickets in seconds and follow transparent milestone updates.</span>
-                        </li>
-                    </ul>
+                    <h5 class="fw-bold text-dark mb-2">The Lapsed Deadline</h5>
+                    <p class="text-muted small mb-0">
+                        Consumers discover a fault only to find the manufacturer warranty expired three weeks earlier because no tracking system gave warning.
+                    </p>
+                    <div class="mt-3 pt-3 border-top small text-forest fw-semibold" style="border-color: var(--pc-stone) !important;">
+                        <i class="bi bi-check-circle me-1"></i> 30-day proactive radar flags expiring commitments.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dilemma 3 -->
+            <div class="col-md-6 col-lg-3">
+                <div class="pc-dilemma-card">
+                    <div class="pc-dilemma-icon">
+                        <i class="bi bi-question-circle fs-5"></i>
+                    </div>
+                    <h5 class="fw-bold text-dark mb-2">The Opaque Repair</h5>
+                    <p class="text-muted small mb-0">
+                        Once a device enters a service workshop, customers face unanswered phone calls and complete silence regarding diagnostic progress.
+                    </p>
+                    <div class="mt-3 pt-3 border-top small text-forest fw-semibold" style="border-color: var(--pc-stone) !important;">
+                        <i class="bi bi-check-circle me-1"></i> Governed 8-state machine with immutable audit log.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dilemma 4 -->
+            <div class="col-md-6 col-lg-3">
+                <div class="pc-dilemma-card">
+                    <div class="pc-dilemma-icon">
+                        <i class="bi bi-diagram-3 fs-5"></i>
+                    </div>
+                    <h5 class="fw-bold text-dark mb-2">Fragmented Records</h5>
+                    <p class="text-muted small mb-0">
+                        Serial numbers, user manuals, and service histories remain scattered across manufacturer portals and disorganized personal email folders.
+                    </p>
+                    <div class="mt-3 pt-3 border-top small text-forest fw-semibold" style="border-color: var(--pc-stone) !important;">
+                        <i class="bi bi-check-circle me-1"></i> A single, unified digital ownership inventory.
+                    </div>
                 </div>
             </div>
         </div>
@@ -226,178 +239,54 @@
 </section>
 
 <!-- =========================================================================
-     3. SECTION B: THREE-STEP WORKFLOW
+     3. CONNECTED OWNERSHIP JOURNEY (HOW PRODUCTCARE WORKS)
      ========================================================================= -->
-<section id="how-it-works" class="py-5">
+<section class="py-5" id="how-it-works">
     <div class="container-xl px-3 px-md-4 py-4">
         <div class="text-center max-w-700 mx-auto mb-5">
-            <span class="pc-eyebrow">SIMPLE 3-STEP JOURNEY</span>
-            <h2 class="display-6 fw-bold text-ink mb-3">How ProductCare works for you</h2>
-            <p class="text-muted">A clear, reassuring workflow designed to keep your home and office technology covered.</p>
+            <span class="d-inline-block text-uppercase fw-bold small text-muted mb-2" style="letter-spacing: 0.08em;">THE SYSTEM IN ACTION</span>
+            <h2 class="pc-section-title">A continuous ownership lifecycle</h2>
+            <p class="pc-section-subtitle mx-auto">
+                From the moment you register an acquisition to the final resolution of a repair, ProductCare manages every transition with rigorous precision.
+            </p>
         </div>
 
         <div class="row g-4">
-            <!-- Step 1 -->
             <div class="col-md-4">
-                <div class="pc-card h-100 p-4">
-                    <div class="d-flex align-items-center justify-content-between mb-4">
-                        <div class="rounded-3 p-3 d-flex align-items-center justify-content-center" style="width: 52px; height: 52px; background: #EEF0FF; color: #4F5FEA;">
-                            <i class="bi bi-plus-square-fill fs-4"></i>
-                        </div>
-                        <span class="display-6 fw-bold text-muted opacity-25">01</span>
-                    </div>
-                    <h3 class="h5 fw-bold text-ink mb-2">1. Add what you own</h3>
-                    <p class="text-muted small mb-0">
-                        Record the brand, model, purchase date, and unique serial number. Optionally attach a PDF or image of your receipt for safe keeping.
+                <div class="pc-journey-step">
+                    <div class="pc-step-num">Step 01</div>
+                    <h5 class="fw-bold text-dark mb-2">Register &amp; Preserve Proof</h5>
+                    <p class="text-muted small mb-3">
+                        Enter your product's brand, model, and serial number. Attach the original purchase invoice or receipt (PDF, JPG, PNG). The physical file is safely stored in our secure repository outside web root.
                     </p>
+                    <div class="small font-monospace p-2 rounded bg-light border text-muted">
+                        &gt; PurchaseDate + DurationMonths
+                    </div>
                 </div>
             </div>
 
-            <!-- Step 2 -->
             <div class="col-md-4">
-                <div class="pc-card h-100 p-4">
-                    <div class="d-flex align-items-center justify-content-between mb-4">
-                        <div class="rounded-3 p-3 d-flex align-items-center justify-content-center" style="width: 52px; height: 52px; background: #E5F7F4; color: #12A89A;">
-                            <i class="bi bi-clock-history fs-4"></i>
-                        </div>
-                        <span class="display-6 fw-bold text-muted opacity-25">02</span>
-                    </div>
-                    <h3 class="h5 fw-bold text-ink mb-2">2. Know your coverage</h3>
-                    <p class="text-muted small mb-0">
-                        ProductCare automatically computes exact expiration dates and days remaining. Status badges alert you when warranties are approaching deadline.
+                <div class="pc-journey-step">
+                    <div class="pc-step-num">Step 02</div>
+                    <h5 class="fw-bold text-dark mb-2">Dynamic Warranty Intelligence</h5>
+                    <p class="text-muted small mb-3">
+                        Our centralized warranty engine calculates remaining coverage days against current UTC time, automatically updating statuses from Active to Expiring Soon (&le;30 days) and Expired.
                     </p>
+                    <div class="small font-monospace p-2 rounded bg-light border text-muted">
+                        &gt; 30-Day Alert Banner Activated
+                    </div>
                 </div>
             </div>
 
-            <!-- Step 3 -->
             <div class="col-md-4">
-                <div class="pc-card h-100 p-4">
-                    <div class="d-flex align-items-center justify-content-between mb-4">
-                        <div class="rounded-3 p-3 d-flex align-items-center justify-content-center" style="width: 52px; height: 52px; background: #FFF4DD; color: #B7791F;">
-                            <i class="bi bi-tools fs-4"></i>
-                        </div>
-                        <span class="display-6 fw-bold text-muted opacity-25">03</span>
-                    </div>
-                    <h3 class="h5 fw-bold text-ink mb-2">3. Follow service requests</h3>
-                    <p class="text-muted small mb-0">
-                        If a device breaks, submit a repair ticket directly against its record. Monitor diagnostic milestones from submission to full resolution.
+                <div class="pc-journey-step">
+                    <div class="pc-step-num">Step 03</div>
+                    <h5 class="fw-bold text-dark mb-2">Governed Service Resolution</h5>
+                    <p class="text-muted small mb-3">
+                        When issues occur, initiate a service request with a collision-safe ticket number (PC-YYYYMMDD-XXXX). Follow technician remarks and status transitions across an immutable audit history.
                     </p>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- =========================================================================
-     4. SECTION C: ASYMMETRICAL FEATURE BENTO GRID
-     ========================================================================= -->
-<section id="features" class="py-5 bg-white border-top border-bottom">
-    <div class="container-xl px-3 px-md-4 py-4">
-        <div class="text-center max-w-700 mx-auto mb-5">
-            <span class="pc-eyebrow">CAPABILITY SHOWCASE</span>
-            <h2 class="display-6 fw-bold text-ink mb-3">Designed for clarity and total control</h2>
-            <p class="text-muted">A purposeful suite of tools engineered to make product ownership painless.</p>
-        </div>
-
-        <div class="pc-bento-grid">
-            <!-- Bento Panel 1: Product Library (Span 8) -->
-            <div class="pc-bento-card col-span-8">
-                <div>
-                    <span class="pc-badge pc-badge-primary mb-3">DIGITAL PRODUCT SHELF</span>
-                    <h3 class="h4 fw-bold text-ink mb-2">Centralized Digital Product Shelf</h3>
-                    <p class="text-muted">
-                        Maintain a clean, searchable registry of every laptop, television, smartphone, and appliance you own. Instant lookup by serial number or category.
-                    </p>
-                </div>
-                <!-- Mini UI Illustration -->
-                <div class="pc-mini-ui">
-                    <div class="row g-2">
-                        <div class="col-sm-6">
-                            <div class="p-2 bg-white rounded-3 border d-flex align-items-center gap-2">
-                                <i class="bi bi-display text-primary-pc fs-4"></i>
-                                <div>
-                                    <div class="fw-bold small text-ink">LG OLED 65" C3</div>
-                                    <div class="text-muted" style="font-size: 11px;">S/N: 304INBGT1824</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="p-2 bg-white rounded-3 border d-flex align-items-center gap-2">
-                                <i class="bi bi-headphones text-teal-pc fs-4"></i>
-                                <div>
-                                    <div class="fw-bold small text-ink">Sony WH-1000XM5</div>
-                                    <div class="text-muted" style="font-size: 11px;">S/N: 7291048821</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Bento Panel 2: Warranty Intelligence (Span 4) -->
-            <div class="pc-bento-card col-span-4">
-                <div>
-                    <span class="pc-badge pc-badge-warning mb-3">INTELLIGENT TIMING</span>
-                    <h3 class="h4 fw-bold text-ink mb-2">Warranty Expiration Engine</h3>
-                    <p class="text-muted">
-                        No manual math required. View dynamic days-remaining counters and timely 30-day early warnings.
-                    </p>
-                </div>
-                <!-- Mini UI Gauge -->
-                <div class="pc-mini-ui text-center p-3">
-                    <div class="d-inline-flex align-items-center justify-content-center rounded-circle mb-2" style="width: 72px; height: 72px; background: #E5F7F4; border: 4px solid #12A89A;">
-                        <span class="fw-bold text-teal-pc fs-5">78%</span>
-                    </div>
-                    <div class="small fw-semibold text-ink">Overall Fleet Health</div>
-                    <div class="text-muted" style="font-size: 11px;">7 of 8 products under warranty</div>
-                </div>
-            </div>
-
-            <!-- Bento Panel 3: Governed Service (Span 4) -->
-            <div class="pc-bento-card col-span-4">
-                <div>
-                    <span class="pc-badge pc-badge-info mb-3">WORKFLOW ENGINE</span>
-                    <h3 class="h4 fw-bold text-ink mb-2">Governed Repair Workflow</h3>
-                    <p class="text-muted">
-                        Every ticket progresses through an 8-stage state machine with transparent diagnostic updates.
-                    </p>
-                </div>
-                <!-- Mini Stepper UI -->
-                <div class="pc-mini-ui">
-                    <div class="d-flex flex-column gap-2 small">
-                        <div class="d-flex align-items-center gap-2 text-success fw-semibold">
-                            <i class="bi bi-check-circle-fill"></i> 1. Submitted
-                        </div>
-                        <div class="d-flex align-items-center gap-2 text-success fw-semibold">
-                            <i class="bi bi-check-circle-fill"></i> 2. Under Review
-                        </div>
-                        <div class="d-flex align-items-center gap-2 text-primary fw-bold">
-                            <i class="bi bi-arrow-right-circle-fill"></i> 3. In Progress
-                        </div>
-                        <div class="d-flex align-items-center gap-2 text-muted">
-                            <i class="bi bi-circle"></i> 4. Resolved
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Bento Panel 4: Protected Records (Span 8, Deep Navy) -->
-            <div class="pc-bento-card col-span-8 bento-dark">
-                <div>
-                    <span class="pc-badge pc-badge-primary mb-3">DEFENSE IN DEPTH</span>
-                    <h3 class="h4 fw-bold text-white mb-2">Protected Records & Private Invoice Vault</h3>
-                    <p class="text-muted">
-                        Invoices are saved outside public directories with MIME and signature inspection. Customer records enforce strict server-side account ownership checks.
-                    </p>
-                </div>
-                <!-- Mini Security Audit UI -->
-                <div class="pc-mini-ui">
-                    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-2 text-white small">
-                        <div class="d-flex align-items-center gap-2">
-                            <i class="bi bi-shield-lock-fill text-teal-pc fs-5"></i>
-                            <span>Magic-byte verified PDF & Image storage</span>
-                        </div>
-                        <span class="badge bg-light text-dark">Strict Ownership Check</span>
+                    <div class="small font-monospace p-2 rounded bg-light border text-muted">
+                        &gt; StatusHistory + Actor Snapshot
                     </div>
                 </div>
             </div>
@@ -406,112 +295,101 @@
 </section>
 
 <!-- =========================================================================
-     5. SECTION D: SERVICE JOURNEY VISUAL
+     4. GENUINE APPLICATION CAPABILITIES (VERIFIED IMPLEMENTATION)
      ========================================================================= -->
-<section id="journey" class="py-5">
+<section class="py-5" id="capabilities" style="background-color: var(--pc-surface); border-top: 1px solid var(--pc-stone);">
     <div class="container-xl px-3 px-md-4 py-4">
-        <div class="text-center max-w-700 mx-auto mb-5">
-            <span class="pc-eyebrow">END-TO-END VISIBILITY</span>
-            <h2 class="display-6 fw-bold text-ink mb-3">Follow every service step in real time</h2>
-            <p class="text-muted">Every service ticket follows a transparent, immutable progression from report to repair.</p>
-        </div>
-
-        <div class="p-4 p-md-5 rounded-4 bg-white border shadow-sm">
-            <div class="row g-4 text-center">
-                <div class="col-6 col-md-3">
-                    <div class="p-3 rounded-3 bg-light mb-2">
-                        <i class="bi bi-send-fill text-primary-pc fs-3"></i>
-                    </div>
-                    <div class="fw-bold text-ink">1. Submitted</div>
-                    <div class="small text-muted">Ticket generated with format PC-YYYYMMDD-XXXX</div>
-                </div>
-                <div class="col-6 col-md-3">
-                    <div class="p-3 rounded-3 bg-light mb-2">
-                        <i class="bi bi-clipboard-check-fill text-teal-pc fs-3"></i>
-                    </div>
-                    <div class="fw-bold text-ink">2. Under Review</div>
-                    <div class="small text-muted">Administrator evaluates warranty claim</div>
-                </div>
-                <div class="col-6 col-md-3">
-                    <div class="p-3 rounded-3 bg-light mb-2">
-                        <i class="bi bi-gear-wide-connected text-warning fs-3"></i>
-                    </div>
-                    <div class="fw-bold text-ink">3. In Progress</div>
-                    <div class="small text-muted">Technician assigned with diagnostic remarks</div>
-                </div>
-                <div class="col-6 col-md-3">
-                    <div class="p-3 rounded-3 bg-light mb-2">
-                        <i class="bi bi-check-circle-fill text-success fs-3"></i>
-                    </div>
-                    <div class="fw-bold text-ink">4. Resolved</div>
-                    <div class="small text-muted">Final repair verified and customer notified</div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- =========================================================================
-     6. SECTION E: TRUST & CONTROL
-     ========================================================================= -->
-<section id="trust" class="py-5 bg-white border-top">
-    <div class="container-xl px-3 px-md-4 py-4">
-        <div class="row align-items-center g-5">
+        <div class="row align-items-center g-5 mb-5">
             <div class="col-lg-6">
-                <span class="pc-eyebrow">TRUSTED ARCHITECTURE</span>
-                <h2 class="display-6 fw-bold text-ink mb-3">Your records remain private, verified, and protected.</h2>
-                <p class="text-muted mb-4">
-                    ProductCare is engineered with defense-in-depth principles. Every customer query is bounded by authenticated user identity, ensuring no account can view or alter another customer's products or service records.
+                <span class="d-inline-block text-uppercase fw-bold small text-muted mb-2" style="letter-spacing: 0.08em;">SYSTEM CAPABILITIES</span>
+                <h2 class="pc-section-title">Built for operational integrity, not presentation theater</h2>
+                <p class="text-muted">
+                    ProductCare is engineered on modern software development tools and techniques, adhering to enterprise design patterns, strict role-based access control, and asynchronous database architecture.
                 </p>
-                <div class="d-flex flex-column gap-3">
-                    <div class="d-flex align-items-start gap-3">
-                        <div class="rounded-circle p-2 bg-primary-soft text-primary-pc mt-1">
-                            <i class="bi bi-shield-check fs-5"></i>
-                        </div>
-                        <div>
-                            <div class="fw-bold text-ink">Isolated Customer Boundary</div>
-                            <div class="small text-muted">Queries strictly enforce owner ID matching to eliminate unauthorized access.</div>
-                        </div>
+            </div>
+            <div class="col-lg-6 text-lg-end">
+                <a href="/swagger" target="_blank" class="btn btn-stone">
+                    <i class="bi bi-code-slash text-forest me-1"></i> Inspect OpenAPI Specification
+                </a>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <!-- Feature 1 -->
+            <div class="col-md-6 col-lg-4">
+                <div class="p-4 rounded-3 h-100" style="background-color: var(--pc-canvas); border: 1px solid var(--pc-stone);">
+                    <div class="d-flex align-items-center gap-2 mb-3">
+                        <i class="bi bi-database-check fs-4 text-forest"></i>
+                        <h6 class="fw-bold text-dark mb-0">Per-Customer Isolation</h6>
                     </div>
-                    <div class="d-flex align-items-start gap-3">
-                        <div class="rounded-circle p-2 bg-teal-soft text-teal-pc mt-1">
-                            <i class="bi bi-file-earmark-lock fs-5"></i>
-                        </div>
-                        <div>
-                            <div class="fw-bold text-ink">Secure Streaming Downloads</div>
-                            <div class="small text-muted">Receipts are served via authorized byte streams, keeping upload folders hidden from direct URL probing.</div>
-                        </div>
-                    </div>
+                    <p class="text-muted small mb-0">
+                        Strict server-side ownership enforcement prevents Insecure Direct Object References (IDOR). Customers access only records linked directly to their authenticated Identity.
+                    </p>
                 </div>
             </div>
 
-            <div class="col-lg-6">
-                <div class="p-4 p-lg-5 rounded-4 bg-light border">
-                    <h3 class="h5 fw-bold text-ink mb-3">Academic Project Credentials</h3>
-                    <p class="small text-muted mb-3">
-                        Developed as a complete capstone submission for course <strong>INT402: Modern Web Programming Tools and Techniques</strong>.
-                    </p>
-                    <div class="p-3 bg-white rounded-3 border mb-3 small">
-                        <div class="d-flex justify-content-between py-1 border-bottom">
-                            <span class="text-muted">Target Framework:</span>
-                            <span class="fw-semibold text-ink">.NET 10 (net10.0)</span>
-                        </div>
-                        <div class="d-flex justify-content-between py-1 border-bottom">
-                            <span class="text-muted">Database Engine:</span>
-                            <span class="fw-semibold text-ink">Microsoft SQL Server</span>
-                        </div>
-                        <div class="d-flex justify-content-between py-1 border-bottom">
-                            <span class="text-muted">ORM & Migrations:</span>
-                            <span class="fw-semibold text-ink">Entity Framework Core 10</span>
-                        </div>
-                        <div class="d-flex justify-content-between py-1">
-                            <span class="text-muted">Automated QA:</span>
-                            <span class="fw-semibold text-success"><i class="bi bi-check-circle me-1"></i>50 xUnit Tests Passing</span>
-                        </div>
+            <!-- Feature 2 -->
+            <div class="col-md-6 col-lg-4">
+                <div class="p-4 rounded-3 h-100" style="background-color: var(--pc-canvas); border: 1px solid var(--pc-stone);">
+                    <div class="d-flex align-items-center gap-2 mb-3">
+                        <i class="bi bi-shield-lock fs-4 text-forest"></i>
+                        <h6 class="fw-bold text-dark mb-0">Physical File Validation</h6>
                     </div>
-                    <a href="/swagger" target="_blank" class="btn btn-outline-dark btn-sm w-100">
-                        <i class="bi bi-code-slash me-1"></i> Explore Interactive OpenAPI / Swagger
-                    </a>
+                    <p class="text-muted small mb-0">
+                        Invoices are validated using magic byte headers to confirm genuine file formats (PDF, JPEG, PNG). Stored safely outside the web root with unique GUID filenames.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Feature 3 -->
+            <div class="col-md-6 col-lg-4">
+                <div class="p-4 rounded-3 h-100" style="background-color: var(--pc-canvas); border: 1px solid var(--pc-stone);">
+                    <div class="d-flex align-items-center gap-2 mb-3">
+                        <i class="bi bi-diagram-2 fs-4 text-forest"></i>
+                        <h6 class="fw-bold text-dark mb-0">Finite State Machine</h6>
+                    </div>
+                    <p class="text-muted small mb-0">
+                        Service tickets progress strictly across 8 validated states (Submitted &rarr; UnderReview &rarr; Assigned &rarr; InProgress &rarr; WaitingForCustomer &rarr; Resolved &rarr; Closed / Rejected).
+                    </p>
+                </div>
+            </div>
+
+            <!-- Feature 4 -->
+            <div class="col-md-6 col-lg-4">
+                <div class="p-4 rounded-3 h-100" style="background-color: var(--pc-canvas); border: 1px solid var(--pc-stone);">
+                    <div class="d-flex align-items-center gap-2 mb-3">
+                        <i class="bi bi-calendar3 fs-4 text-forest"></i>
+                        <h6 class="fw-bold text-dark mb-0">Precise Date Mathematics</h6>
+                    </div>
+                    <p class="text-muted small mb-0">
+                        The warranty engine accurately handles leap years, month-end boundary conditions, and negative day calculations, covered by 17 dedicated xUnit tests.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Feature 5 -->
+            <div class="col-md-6 col-lg-4">
+                <div class="p-4 rounded-3 h-100" style="background-color: var(--pc-canvas); border: 1px solid var(--pc-stone);">
+                    <div class="d-flex align-items-center gap-2 mb-3">
+                        <i class="bi bi-journal-text fs-4 text-forest"></i>
+                        <h6 class="fw-bold text-dark mb-0">Immutable Audit Trails</h6>
+                    </div>
+                    <p class="text-muted small mb-0">
+                        Every status transition logs a historical snapshot recording the prior status, new status, actor username, administrative remarks, and timestamp in UTC.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Feature 6 -->
+            <div class="col-md-6 col-lg-4">
+                <div class="p-4 rounded-3 h-100" style="background-color: var(--pc-canvas); border: 1px solid var(--pc-stone);">
+                    <div class="d-flex align-items-center gap-2 mb-3">
+                        <i class="bi bi-key fs-4 text-forest"></i>
+                        <h6 class="fw-bold text-dark mb-0">Dual Authentication</h6>
+                    </div>
+                    <p class="text-muted small mb-0">
+                        Supports secure Cookie Sessions for Razor MVC portals and signed JWT Bearer tokens for external API integration, documented seamlessly via OpenAPI 3.0.
+                    </p>
                 </div>
             </div>
         </div>
@@ -519,22 +397,24 @@
 </section>
 
 <!-- =========================================================================
-     7. SECTION F: CLOSING CTA
+     5. CLOSING INVITATION (AUTHENTICATION DESK ENTRY)
      ========================================================================= -->
-<section class="py-5 text-center text-white" style="background: linear-gradient(145deg, var(--pc-navy) 0%, var(--pc-navy-deep) 100%);">
-    <div class="container-xl px-3 px-md-4 py-5">
-        <h2 class="display-6 fw-bold mb-3 text-white">A little more clarity for everything you own.</h2>
-        <p class="lead mb-4 text-white-50 max-w-600 mx-auto">
-            Join ProductCare today. Keep purchase proofs organized, never miss a warranty deadline, and get repairs handled smoothly.
-        </p>
-        <div class="d-flex justify-content-center gap-3 flex-wrap">
-            <a asp-area="" asp-controller="Account" asp-action="Register" class="btn-pc-primary btn-lg px-4">
-                <span>Get started with ProductCare</span>
-                <i class="bi bi-arrow-right"></i>
-            </a>
-            <a asp-area="" asp-controller="Account" asp-action="Login" class="btn-pc-secondary btn-lg px-4">
-                <span>Sign in to account</span>
-            </a>
+<section class="py-5" id="security" style="border-top: 1px solid var(--pc-stone);">
+    <div class="container-xl px-3 px-md-4 py-5 text-center">
+        <div class="max-w-700 mx-auto">
+            <span class="d-inline-block text-uppercase fw-bold small text-muted mb-2" style="letter-spacing: 0.08em;">START KEEPING TRACK</span>
+            <h2 class="pc-hero-headline mb-3">Take control of everything you own</h2>
+            <p class="pc-hero-lead mx-auto mb-4">
+                Open your personal Ownership Desk today. Catalog your devices, store your purchase proofs, and protect your warranty rights.
+            </p>
+            <div class="d-flex justify-content-center gap-3">
+                <a class="btn btn-forest px-4 py-2" asp-area="" asp-controller="Account" asp-action="Register">
+                    Open Your Ownership Desk
+                </a>
+                <a class="btn btn-stone px-4 py-2" asp-area="" asp-controller="Account" asp-action="Login">
+                    Sign In to Existing Vault
+                </a>
+            </div>
         </div>
     </div>
 </section>

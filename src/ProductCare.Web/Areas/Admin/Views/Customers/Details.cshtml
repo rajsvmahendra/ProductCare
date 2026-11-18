@@ -7,11 +7,11 @@
 <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
     <div>
         <div class="d-flex align-items-center gap-2 mb-1">
-            <span class="pc-badge @(Model.IsActive ? "pc-badge-success" : "pc-badge-danger")">@(Model.IsActive ? "Active Customer" : "Deactivated")</span>
+            <span class="pc-badge @(Model.IsActive ? "pc-badge-active" : "pc-badge-expired")">@(Model.IsActive ? "Active Customer" : "Deactivated")</span>
         </div>
-        <h1 class="h3 fw-bold text-ink mb-0 font-heading">@Model.FullName</h1>
+        <h1 class="h3 fw-bold text-dark mb-0 font-serif">@Model.FullName</h1>
     </div>
-    <a asp-action="Index" class="btn-pc-secondary btn-pc-sm">
+    <a asp-action="Index" class="btn btn-stone btn-sm">
         <i class="bi bi-arrow-left me-1"></i> Back to Directory
     </a>
 </div>
@@ -20,23 +20,23 @@
     <!-- Profile Card -->
     <div class="col-lg-4">
         <div class="pc-card h-100 p-4">
-            <h2 class="h6 fw-bold text-ink mb-3 font-heading text-uppercase letter-spacing-1">Customer Profile</h2>
+            <h5 class="fw-bold text-dark mb-3 pb-2 border-bottom font-serif" style="border-color: var(--pc-stone) !important;">Customer Profile</h5>
 
             <div class="mb-3">
-                <div class="text-muted small fw-semibold text-uppercase letter-spacing-1">Email Address</div>
-                <div class="fw-bold text-ink">@Model.Email</div>
+                <div class="text-muted small fw-semibold text-uppercase" style="letter-spacing: 0.05em; font-size: 0.72rem;">Email Address</div>
+                <div class="fw-bold text-dark">@Model.Email</div>
             </div>
             <div class="mb-3">
-                <div class="text-muted small fw-semibold text-uppercase letter-spacing-1">Phone Number</div>
-                <div class="text-ink">@(string.IsNullOrEmpty(Model.PhoneNumber) ? "Not Provided" : Model.PhoneNumber)</div>
+                <div class="text-muted small fw-semibold text-uppercase" style="letter-spacing: 0.05em; font-size: 0.72rem;">Phone Number</div>
+                <div class="text-dark">@(string.IsNullOrEmpty(Model.PhoneNumber) ? "Not Provided" : Model.PhoneNumber)</div>
             </div>
             <div class="mb-3">
-                <div class="text-muted small fw-semibold text-uppercase letter-spacing-1">Location</div>
-                <div class="text-ink">@(string.IsNullOrEmpty(Model.Address) ? "" : Model.Address + ", ")@(string.IsNullOrEmpty(Model.City) ? "N/A" : Model.City) @Model.PostalCode</div>
+                <div class="text-muted small fw-semibold text-uppercase" style="letter-spacing: 0.05em; font-size: 0.72rem;">Location</div>
+                <div class="text-dark small">@(string.IsNullOrEmpty(Model.Address) ? "" : Model.Address + ", ")@(string.IsNullOrEmpty(Model.City) ? "N/A" : Model.City) @Model.PostalCode</div>
             </div>
             <div>
-                <div class="text-muted small fw-semibold text-uppercase letter-spacing-1">Member Since</div>
-                <div class="text-muted small num-tabular">@Model.CreatedAtUtc.ToString("MMMM dd, yyyy")</div>
+                <div class="text-muted small fw-semibold text-uppercase" style="letter-spacing: 0.05em; font-size: 0.72rem;">Member Since</div>
+                <div class="text-muted small tabular-nums">@Model.CreatedAtUtc.ToString("dd MMMM yyyy")</div>
             </div>
         </div>
     </div>
@@ -44,33 +44,41 @@
     <!-- Registered Products & Service Tickets -->
     <div class="col-lg-8">
         <!-- Products Table Card -->
-        <div class="pc-card overflow-hidden mb-4">
-            <div class="pc-card-header d-flex justify-content-between align-items-center">
-                <span><i class="bi bi-laptop me-2 text-primary-pc"></i>Registered Products (@Model.Products.Count)</span>
+        <div class="pc-card p-0 overflow-hidden mb-4">
+            <div class="pc-demo-topbar">
+                <span class="small fw-semibold text-dark"><i class="bi bi-laptop me-2 text-forest"></i>Registered Products (@Model.Products.Count)</span>
             </div>
-            <div class="p-0">
+            <div>
                 @if (Model.Products.Any())
                 {
-                    <div class="table-responsive">
+                    <div class="pc-table-wrapper border-0">
                         <table class="pc-table">
                             <thead>
                                 <tr>
                                     <th>Product</th>
-                                    <th>Model & S/N</th>
+                                    <th>Model &amp; S/N</th>
                                     <th>Category</th>
-                                    <th>Expiry Date</th>
+                                    <th>Expiry</th>
                                     <th>Status</th>
+                                    <th class="text-end">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach (var p in Model.Products)
                                 {
                                     <tr>
-                                        <td class="fw-bold text-ink">@p.Name <span class="text-muted small">(&middot; @p.Brand)</span></td>
-                                        <td>@p.ModelNumber &middot; <code class="text-ink num-tabular">@p.SerialNumber</code></td>
-                                        <td><span class="badge bg-light text-dark border">@p.CategoryName</span></td>
-                                        <td class="num-tabular">@p.WarrantyExpiryDate.ToString("yyyy-MM-dd")</td>
-                                        <td><span class="pc-badge @p.StatusBadgeCssClass">@p.StatusDisplayText</span></td>
+                                        <td class="fw-semibold text-dark small">@p.Name</td>
+                                        <td class="small text-muted font-monospace" style="font-size: 11px;">@p.ModelNumber / @p.SerialNumber</td>
+                                        <td><span class="badge bg-light text-dark border small">@p.CategoryName</span></td>
+                                        <td class="small tabular-nums">@p.WarrantyExpiryDate.ToString("dd MMM yyyy")</td>
+                                        <td>
+                                            <span class="pc-badge @p.StatusBadgeCssClass">@p.StatusDisplayText</span>
+                                        </td>
+                                        <td class="text-end">
+                                            <a asp-area="Admin" asp-controller="Products" asp-action="Details" asp-route-id="@p.Id" class="btn btn-stone btn-sm" style="font-size: 11px; padding: 2px 6px;">
+                                                View &rarr;
+                                            </a>
+                                        </td>
                                     </tr>
                                 }
                             </tbody>
@@ -79,51 +87,41 @@
                 }
                 else
                 {
-                    <div class="p-4 text-center text-muted small">
-                        No registered products recorded for this customer.
-                    </div>
+                    <div class="p-4 text-center text-muted small">No products registered by this customer.</div>
                 }
             </div>
         </div>
 
         <!-- Service Tickets Table Card -->
-        <div class="pc-card overflow-hidden">
-            <div class="pc-card-header d-flex justify-content-between align-items-center">
-                <span><i class="bi bi-tools me-2 text-primary-pc"></i>Service Request History (@Model.ServiceRequests.Count)</span>
+        <div class="pc-card p-0 overflow-hidden">
+            <div class="pc-demo-topbar">
+                <span class="small fw-semibold text-dark"><i class="bi bi-inbox me-2 text-forest"></i>Service History (@Model.ServiceRequests.Count)</span>
             </div>
-            <div class="p-0">
+            <div>
                 @if (Model.ServiceRequests.Any())
                 {
-                    <div class="table-responsive">
+                    <div class="pc-table-wrapper border-0">
                         <table class="pc-table">
                             <thead>
                                 <tr>
                                     <th>Ticket #</th>
-                                    <th>Product</th>
                                     <th>Subject</th>
                                     <th>Priority</th>
                                     <th>Status</th>
-                                    <th>Submitted</th>
-                                    <th class="text-end">Manage</th>
+                                    <th class="text-end">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach (var r in Model.ServiceRequests)
                                 {
                                     <tr>
-                                        <td class="fw-bold num-tabular">
-                                            <a asp-controller="ServiceRequests" asp-action="Details" asp-route-id="@r.Id" class="text-primary-pc text-decoration-none">
-                                                @r.TicketNumber
-                                            </a>
-                                        </td>
-                                        <td class="text-ink fw-medium">@r.ProductName</td>
-                                        <td class="text-truncate max-w-200" title="@r.Subject">@r.Subject</td>
-                                        <td><span class="badge badge-priority-@r.Priority.ToString().ToLower()">@r.Priority</span></td>
-                                        <td><span class="pc-badge @r.StatusBadgeCssClass">@r.StatusDisplayText</span></td>
-                                        <td class="num-tabular small text-muted">@r.CreatedAtUtc.ToString("yyyy-MM-dd")</td>
+                                        <td class="font-monospace fw-bold small text-dark">#@r.TicketNumber</td>
+                                        <td class="fw-semibold text-dark small text-truncate" style="max-width: 200px;">@r.Subject</td>
+                                        <td><span class="@r.PriorityBadgeCssClass" style="font-size: 11px;">@r.Priority</span></td>
+                                        <td><span class="@r.StatusBadgeCssClass" style="font-size: 11px;">@r.StatusDisplayText</span></td>
                                         <td class="text-end">
-                                            <a asp-controller="ServiceRequests" asp-action="Details" asp-route-id="@r.Id" class="btn-pc-secondary btn-pc-sm">
-                                                <i class="bi bi-gear me-1"></i> Manage
+                                            <a asp-area="Admin" asp-controller="ServiceRequests" asp-action="Details" asp-route-id="@r.Id" class="btn btn-stone btn-sm" style="font-size: 11px; padding: 2px 6px;">
+                                                Manage &rarr;
                                             </a>
                                         </td>
                                     </tr>
@@ -134,9 +132,7 @@
                 }
                 else
                 {
-                    <div class="p-4 text-center text-muted small">
-                        No service requests submitted by this customer.
-                    </div>
+                    <div class="p-4 text-center text-muted small">No service tickets raised by this customer.</div>
                 }
             </div>
         </div>

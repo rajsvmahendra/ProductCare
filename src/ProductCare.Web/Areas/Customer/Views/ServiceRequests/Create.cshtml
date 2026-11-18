@@ -7,10 +7,11 @@
     <div class="col-lg-9 col-xl-8">
         <div class="d-flex align-items-center justify-content-between mb-4">
             <div>
-                <h1 class="h3 fw-bold text-ink mb-1 font-heading">Submit Service / Repair Request</h1>
-                <p class="text-muted mb-0">Describe the issue observed so service technicians can triage and assist you.</p>
+                <span class="d-inline-block text-uppercase fw-bold small text-muted mb-1" style="letter-spacing: 0.08em; font-size: 0.72rem;">NEW SERVICE TICKET</span>
+                <h1 class="h3 fw-bold text-dark mb-1 font-serif">Submit Service / Repair Request</h1>
+                <p class="text-muted small mb-0">Describe the issue observed so service technicians can triage and assist you.</p>
             </div>
-            <a asp-action="Index" class="btn-pc-secondary btn-pc-sm">
+            <a asp-action="Index" class="btn btn-stone btn-sm">
                 <i class="bi bi-arrow-left me-1"></i> Back to Requests
             </a>
         </div>
@@ -23,8 +24,8 @@
 
                 <!-- Product Selection -->
                 <div class="mb-4">
-                    <label asp-for="ProductId" class="form-label">Target Product</label>
-                    <select asp-for="ProductId" class="form-select" asp-items="Model.AvailableProducts" required></select>
+                    <label asp-for="ProductId" class="form-label">Registered Target Device</label>
+                    <select asp-for="ProductId" class="form-select" asp-items="Model.AvailableProducts" required autofocus></select>
                     <span asp-validation-for="ProductId" class="text-danger small"></span>
                     <div class="form-text small text-muted">Select the registered device requiring diagnosis, repair, or warranty claim.</div>
                 </div>
@@ -45,24 +46,23 @@
 
                 <!-- Issue Subject -->
                 <div class="mb-4">
-                    <label asp-for="Subject" class="form-label">Brief Problem Summary</label>
+                    <label asp-for="Subject" class="form-label">Problem Summary</label>
                     <input asp-for="Subject" class="form-control" placeholder="e.g. Screen flickering when waking from sleep" required />
                     <span asp-validation-for="Subject" class="text-danger small"></span>
                 </div>
 
                 <!-- Symptoms / Description -->
                 <div class="mb-4">
-                    <label asp-for="Description" class="form-label">Detailed Symptoms & Observations</label>
+                    <label asp-for="Description" class="form-label">Detailed Symptoms &amp; Observations</label>
                     <textarea asp-for="Description" class="form-control" rows="5" placeholder="Please describe what happens: error codes, strange noises, when the issue began, and whether any troubleshooting was attempted..." required></textarea>
                     <span asp-validation-for="Description" class="text-danger small"></span>
                 </div>
 
                 <!-- Action Controls -->
-                <div class="d-flex align-items-center justify-content-end gap-2 pt-3 border-top">
-                    <a asp-action="Index" class="btn-pc-secondary">Cancel</a>
-                    <button type="submit" class="btn-pc-primary">
-                        <i class="bi bi-send me-1"></i>
-                        <span>Submit Service Ticket</span>
+                <div class="d-flex align-items-center justify-content-end gap-2 pt-3 border-top" style="border-color: var(--pc-stone) !important;">
+                    <a asp-action="Index" class="btn btn-stone">Cancel</a>
+                    <button type="submit" class="btn btn-forest px-4">
+                        <i class="bi bi-send me-1"></i> Submit Service Ticket
                     </button>
                 </div>
             </form>

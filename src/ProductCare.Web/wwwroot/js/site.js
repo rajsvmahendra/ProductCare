@@ -1,31 +1,30 @@
-﻿/**
- * ProductCare — Application Interaction & Motion Controller
+/**
+ * ProductCare — The Ownership Continuity Experience
+ * Application Interaction Controller
  * Specification: docs/DESIGN.md
  */
 
 document.addEventListener('DOMContentLoaded', function () {
     // 1. Password Visibility Toggles
-    const toggleButtons = document.querySelectorAll('.btn-password-toggle');
+    const toggleButtons = document.querySelectorAll('.pc-toggle-password, .btn-password-toggle');
     toggleButtons.forEach(btn => {
         btn.addEventListener('click', function () {
             const targetId = this.getAttribute('data-target');
             const input = document.getElementById(targetId);
             if (!input) return;
 
-            const icon = this.querySelector('i');
+            const eyeOpen = this.querySelector('.pc-eye-open');
+            const eyeSlash = this.querySelector('.pc-eye-slash');
+
             if (input.type === 'password') {
                 input.type = 'text';
-                if (icon) {
-                    icon.classList.remove('bi-eye');
-                    icon.classList.add('bi-eye-slash');
-                }
+                if (eyeOpen) eyeOpen.style.display = 'none';
+                if (eyeSlash) eyeSlash.style.display = 'inline-block';
                 this.setAttribute('aria-label', 'Hide password');
             } else {
                 input.type = 'password';
-                if (icon) {
-                    icon.classList.remove('bi-eye-slash');
-                    icon.classList.add('bi-eye');
-                }
+                if (eyeOpen) eyeOpen.style.display = 'inline-block';
+                if (eyeSlash) eyeSlash.style.display = 'none';
                 this.setAttribute('aria-label', 'Show password');
             }
         });
@@ -37,47 +36,22 @@ document.addEventListener('DOMContentLoaded', function () {
     if (sidebarToggle && sidebar) {
         sidebarToggle.addEventListener('click', function (e) {
             e.stopPropagation();
-            sidebar.classList.toggle('is-open');
+            sidebar.classList.toggle('show');
         });
 
         document.addEventListener('click', function (e) {
-            if (sidebar.classList.contains('is-open') && !sidebar.contains(e.target) && e.target !== sidebarToggle) {
-                sidebar.classList.remove('is-open');
+            if (sidebar.classList.contains('show') && !sidebar.contains(e.target) && e.target !== sidebarToggle) {
+                sidebar.classList.remove('show');
             }
         });
     }
 
-    // 3. Subtle Hero Parallax Tilt (when reduced-motion is not requested)
-    const isReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const mockupStage = document.querySelector('.pc-mockup-stage');
-    const mockupWindow = document.querySelector('.pc-mockup-window');
-
-    if (!isReducedMotion && mockupStage && mockupWindow) {
-        mockupStage.addEventListener('mousemove', function (e) {
-            const rect = mockupStage.getBoundingClientRect();
-            const x = e.clientX - rect.left - rect.width / 2;
-            const y = e.clientY - rect.top - rect.height / 2;
-            
-            const rotateX = -(y / rect.height) * 10;
-            const rotateY = (x / rect.width) * 14;
-
-            mockupWindow.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
-        });
-
-        mockupStage.addEventListener('mouseleave', function () {
-            mockupWindow.style.transform = '';
-        });
-    }
-
-    // 4. Auto-dismiss Flash Alerts
+    // 3. Auto-dismissing Flash Alerts (after 7 seconds)
     const alerts = document.querySelectorAll('.alert-dismissible');
     alerts.forEach(alert => {
         setTimeout(() => {
-            if (alert && alert.classList.contains('show')) {
-                alert.classList.remove('show');
-                alert.classList.add('fade');
-                setTimeout(() => alert.remove(), 300);
-            }
-        }, 6000);
+            alert.classList.remove('show');
+            setTimeout(() => alert.remove(), 250);
+        }, 7000);
     });
 });

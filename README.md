@@ -106,12 +106,12 @@ ProductCare_INT402/
 │   ├── BUILD_STATUS.md                  # Comprehensive build & verification log
 │   ├── Project_Report.md                # Full academic project report draft
 │   └── screenshots/                     # Genuine high-DPI application screenshots
-│       ├── 01_landing_desktop.png       # 3D CSS perspective hero preview
+│       ├── 01_landing_desktop.png       # Editorial hero & ownership continuity vision
 │       ├── 02_landing_mobile.png        # Mobile responsive landing view
-│       ├── 03_landing_bento.png         # Asymmetric capability bento grid
-│       ├── 04_register_split.png        # Split-screen registration layout
-│       ├── 05_login_split.png           # Split-screen customer sign in
-│       ├── 06_register_mobile.png       # Mobile registration layout
+│       ├── 03_landing_demonstration.png # Grounded product ownership demonstration card
+│       ├── 04_register_desk.png         # The Ownership Desk registration experience
+│       ├── 05_login_desk.png            # The Ownership Desk customer sign-in
+│       ├── 06_register_mobile.png       # Mobile registration layout desk
 │       ├── 07_privacy_desktop.png       # Branded compliance & privacy
 │       ├── 08_access_denied.png         # Role authorization denial card
 │       └── 09_swagger_api.png           # Interactive Swagger OpenAPI UI
@@ -243,24 +243,26 @@ The application will bind to:
 
 ---
 
-## 11. Visual & UX Transformation (Design System)
+## 11. Visual & UX Transformation (The Ownership Continuity Experience)
 
 ProductCare features a visual and interactive design system implemented in accordance with [`docs/DESIGN.md`](docs/DESIGN.md):
 
-- **Palette & Design Tokens:** Indigo Blue (`#4F5FEA`), Deep Navy (`#17233F`), Off-White Canvas (`#F7F8FC`), and Teal Accent (`#12A89A`).
-- **Interactive 3D Hero:** CSS 3D perspective transforms (`perspective: 1200px; transform: rotateX(6deg) rotateY(-8deg)`) paired with floating coverage alert badges.
-- **Asymmetrical Bento Grid:** Capability highlights with live UI miniatures for inventory, coverage radar, workflow engine, and verified invoice proofs.
-- **Split-Screen Authentication:** Modern 44%/56% split auth interface with interactive password reveal toggles.
-- **Dedicated Authenticated Portal:** 252px deep navy navigation sidebar with contextual breadcrumbs and role indicators (`_PortalLayout.cshtml`).
+- **Palette & Design Tokens:** Canvas Off-White (`#F2F0E9`), Warm Natural Surface (`#FAFAF7`), Deep Graphite (`#202A28`), Forest Green (`#315D50`), Warm Amber (`#D69A51`), and Tactile Stone (`#DCDAD1`).
+- **High-Contrast Editorial Typography:** *Newsreader* serif for display headings, *IBM Plex Sans* for UI and body text, and tabular lining figures for numbers, dates, and currency.
+- **Grounded Product Ownership Demonstration:** Authentic device ownership record featuring a verified 2.4 MB PDF invoice download, dynamic 36-month coverage radar, and live service ticket progression (`PC-20261118-4091`).
+- **The Ownership Desk Authentication:** Clean document vignette atmosphere with accessible SVG password reveal toggles and progressive disclosure for address details.
+- **Dedicated Authenticated Portal:** 250px deep graphite navigation sidebar with stone dividers, amber active indicators, and contextual role indicators (`_PortalLayout.cshtml`).
 
 ### Application Screenshot Gallery
 
 | View | Desktop (1440&times;900) | Mobile (390&times;844) |
 |---|---|---|
 | **Public Landing Page** | ![Landing Desktop](docs/screenshots/01_landing_desktop.png) | ![Landing Mobile](docs/screenshots/02_landing_mobile.png) |
-| **Capability Bento Grid** | ![Bento Grid](docs/screenshots/03_landing_bento.png) | — |
-| **Customer Registration** | ![Register Desktop](docs/screenshots/04_register_split.png) | ![Register Mobile](docs/screenshots/06_register_mobile.png) |
-| **Customer Sign In** | ![Login Desktop](docs/screenshots/05_login_split.png) | — |
+| **Ownership Demonstration** | ![Ownership Card](docs/screenshots/03_landing_demonstration.png) | — |
+| **The Ownership Desk: Register** | ![Register Desk](docs/screenshots/04_register_desk.png) | ![Register Mobile](docs/screenshots/06_register_mobile.png) |
+| **The Ownership Desk: Sign In** | ![Login Desk](docs/screenshots/05_login_desk.png) | — |
+| **Compliance & Privacy** | ![Privacy](docs/screenshots/07_privacy_desktop.png) | — |
+| **Authorization Denial** | ![Access Denied](docs/screenshots/08_access_denied.png) | — |
 | **Swagger OpenAPI 3.0** | ![Swagger UI](docs/screenshots/09_swagger_api.png) | — |
 
 ---

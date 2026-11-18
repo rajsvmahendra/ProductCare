@@ -1,17 +1,18 @@
 @model ProductCare.Web.ViewModels.Customer.ProductListViewModel
 @{
-    ViewData["Title"] = "My Products";
+    ViewData["Title"] = "Product Inventory";
 }
 
 <!-- Page Header -->
 <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
     <div>
-        <h1 class="h3 fw-bold text-ink mb-1 font-heading">My Registered Products</h1>
-        <p class="text-muted mb-0">Manage your product records, warranty statuses, and purchase invoices in one place.</p>
+        <span class="d-inline-block text-uppercase fw-bold small text-muted mb-1" style="letter-spacing: 0.08em; font-size: 0.72rem;">OWNERSHIP CATALOG</span>
+        <h1 class="h3 fw-bold text-dark mb-1 font-serif">Registered Device Inventory</h1>
+        <p class="text-muted small mb-0">Manage your product records, warranty commitments, and purchase proofs in one place.</p>
     </div>
-    <a asp-action="Create" class="btn-pc-primary btn-pc-sm">
+    <a asp-action="Create" class="btn btn-forest btn-sm">
         <i class="bi bi-plus-lg"></i>
-        <span>Add Product</span>
+        <span>Register New Product</span>
     </a>
 </div>
 
@@ -35,8 +36,8 @@
             </select>
         </div>
         <div class="col-md-2 d-flex gap-2">
-            <button type="submit" class="btn-pc-secondary w-100 btn-pc-sm">Filter</button>
-            <a asp-action="Index" class="btn btn-light border btn-pc-sm d-flex align-items-center justify-content-center" title="Reset Filters">
+            <button type="submit" class="btn btn-forest w-100 btn-sm">Filter</button>
+            <a asp-action="Index" class="btn btn-stone btn-sm d-flex align-items-center justify-content-center" title="Reset Filters">
                 <i class="bi bi-arrow-counterclockwise"></i>
             </a>
         </div>
@@ -44,26 +45,26 @@
 </div>
 
 <!-- Products Table Card -->
-<div class="pc-card overflow-hidden">
-    <div class="pc-card-header d-flex justify-content-between align-items-center">
-        <span><i class="bi bi-laptop me-2 text-primary-pc"></i>Registered Device Inventory</span>
-        <span class="badge bg-light text-muted border">Showing @Model.TotalCount items</span>
+<div class="pc-card p-0 overflow-hidden">
+    <div class="pc-demo-topbar">
+        <span class="small fw-semibold text-dark"><i class="bi bi-laptop me-2 text-forest"></i>Personal Equipment Vault</span>
+        <span class="badge bg-light text-muted border small">Showing @Model.TotalCount device(s)</span>
     </div>
-    <div class="p-0">
+    <div>
         @if (Model.Products.Any())
         {
-            <div class="table-responsive">
+            <div class="pc-table-wrapper border-0">
                 <table class="pc-table">
                     <thead>
                         <tr>
                             <th>Product</th>
-                            <th>Brand & Model</th>
+                            <th>Brand &amp; Model</th>
                             <th>Serial Number</th>
                             <th>Category</th>
                             <th>Purchase Date</th>
                             <th>Warranty Expiry</th>
                             <th>Status</th>
-                            <th>Invoice</th>
+                            <th>Proof</th>
                             <th class="text-end">Actions</th>
                         </tr>
                     </thead>
@@ -71,38 +72,61 @@
                         @foreach (var p in Model.Products)
                         {
                             <tr>
-                                <td class="fw-bold text-ink">
-                                    <a asp-action="Details" asp-route-id="@p.Id" class="text-ink text-decoration-none">
+                                <td>
+                                    <a asp-action="Details" asp-route-id="@p.Id" class="fw-semibold text-dark text-decoration-none">
                                         @p.Name
                                     </a>
                                 </td>
-                                <td class="text-muted">@p.Brand &middot; @p.ModelNumber</td>
-                                <td><code class="text-ink num-tabular">@p.SerialNumber</code></td>
-                                <td><span class="badge bg-light text-dark border">@p.CategoryName</span></td>
-                                <td class="num-tabular">@p.PurchaseDate.ToString("yyyy-MM-dd")</td>
-                                <td class="num-tabular">@p.WarrantyExpiryDate.ToString("yyyy-MM-dd")</td>
+                                <td class="small text-muted">
+                                    @p.Brand <span class="text-dark">@p.ModelNumber</span>
+                                </td>
                                 <td>
-                                    <span class="pc-badge @p.StatusBadgeCssClass">@p.StatusDisplayText</span>
+                                    <span class="badge bg-light text-dark border font-monospace" style="font-size: 11px;">@p.SerialNumber</span>
+                                </td>
+                                <td>
+                                    <span class="badge bg-light text-dark border" style="font-size: 11px;">@p.CategoryName</span>
+                                </td>
+                                <td class="small text-muted tabular-nums">@p.PurchaseDate.ToString("dd MMM yyyy")</td>
+                                <td class="small tabular-nums">
+                                    <div>@p.WarrantyExpiryDate.ToString("dd MMM yyyy")</div>
+                                    <div class="text-muted" style="font-size: 11px;">@p.RemainingDays days remaining</div>
+                                </td>
+                                <td>
+                                    @if (p.WarrantyStatus == ProductCare.Web.Models.Enums.WarrantyStatus.Active)
+                                    {
+                                        <span class="pc-badge pc-badge-active">Active</span>
+                                    }
+                                    else if (p.WarrantyStatus == ProductCare.Web.Models.Enums.WarrantyStatus.ExpiringSoon)
+                                    {
+                                        <span class="pc-badge pc-badge-expiring">Expiring Soon</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="pc-badge pc-badge-expired">Expired</span>
+                                    }
                                 </td>
                                 <td>
                                     @if (p.HasInvoice)
                                     {
-                                        <a asp-action="DownloadInvoice" asp-route-id="@p.Id" class="text-success" title="Download Verified Invoice">
-                                            <i class="bi bi-file-earmark-check-fill fs-5"></i>
+                                        <a asp-action="DownloadInvoice" asp-route-id="@p.Id" class="badge" style="background-color: var(--pc-forest-soft); color: var(--pc-forest); text-decoration: none;" title="Download Verified Proof">
+                                            <i class="bi bi-file-earmark-check"></i> PDF
                                         </a>
                                     }
                                     else
                                     {
-                                        <span class="text-muted small">&mdash;</span>
+                                        <span class="text-muted small">—</span>
                                     }
                                 </td>
                                 <td class="text-end">
                                     <div class="btn-group btn-group-sm">
-                                        <a asp-action="Details" asp-route-id="@p.Id" class="btn btn-light border" title="View Details">
+                                        <a asp-action="Details" asp-route-id="@p.Id" class="btn btn-stone btn-sm" title="View Details">
                                             <i class="bi bi-eye"></i>
                                         </a>
-                                        <a asp-action="Edit" asp-route-id="@p.Id" class="btn btn-light border" title="Edit Product">
+                                        <a asp-action="Edit" asp-route-id="@p.Id" class="btn btn-stone btn-sm" title="Edit">
                                             <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <a asp-controller="ServiceRequests" asp-action="Create" asp-route-productId="@p.Id" class="btn btn-stone btn-sm text-forest" title="Raise Service Request">
+                                            <i class="bi bi-wrench"></i>
                                         </a>
                                     </div>
                                 </td>
@@ -115,11 +139,11 @@
         else
         {
             <div class="p-5 text-center text-muted">
-                <i class="bi bi-boxes fs-1 text-muted opacity-50 mb-3 d-block"></i>
-                <p class="mb-2 fw-medium text-ink">Your product shelf is ready.</p>
-                <p class="small text-muted mb-3">Add your first purchase to keep its details, receipts, and warranty in one place.</p>
-                <a asp-action="Create" class="btn-pc-primary btn-pc-sm">
-                    <i class="bi bi-plus-lg me-1"></i> Add First Product
+                <i class="bi bi-laptop fs-1 text-muted mb-3 d-block"></i>
+                <h5 class="fw-bold text-dark font-serif">No products found</h5>
+                <p class="small text-muted mb-3">No products match your active search or category filters.</p>
+                <a asp-action="Create" class="btn btn-forest btn-sm">
+                    <i class="bi bi-plus-lg me-1"></i> Register a Device Now
                 </a>
             </div>
         }

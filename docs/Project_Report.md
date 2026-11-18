@@ -222,30 +222,30 @@ Key design patterns and implementation practices employed include:
 
 The following figures present genuine high-definition screenshots captured directly from the executing ProductCare application via headless Chromium rendering at standard desktop (1440&times;900 / 1440&times;920) and mobile viewport (390&times;844) resolutions.
 
-### Figure 1: Public Landing Experience & 3D Interactive Hero
-The redesigned landing page features an original ProductCare brand identity mark, contextual INT402 academic header, and a dimensional software dashboard preview rendered with pure CSS 3D perspective transforms (`perspective: 1200px; transform: rotateX(6deg) rotateY(-8deg)`) and floating coverage alert chips.
+### Figure 1: Public Landing Experience & Ownership Continuity Vision
+The redesigned landing page features an original ProductCare brand identity mark in forest green and warm amber, editorial Newsreader serif typography, and an immediate product value proposition ("Everything you own. Every warranty. Every service journey. One place.").
 
-![Figure 1: Public Landing Experience & 3D Interactive Hero](screenshots/01_landing_desktop.png)
+![Figure 1: Public Landing Experience & Ownership Continuity Vision](screenshots/01_landing_desktop.png)
 
 ### Figure 2: Responsive Mobile Landing Page (390x844 Viewport)
-The mobile layout dynamically collapses navigation into a lightweight off-canvas drawer, stacks metric counters, and preserves the dimensional preview card without horizontal clipping or layout shift.
+The mobile layout dynamically collapses navigation into a lightweight off-canvas drawer, stacks metric counters, and preserves the grounded ownership lifecycle demonstration card without horizontal clipping or layout shift.
 
 ![Figure 2: Responsive Mobile Landing Page](screenshots/02_landing_mobile.png)
 
-### Figure 3: Asymmetrical Capability Bento Grid
-Replacing conventional uniform feature boxes, this asymmetric 4-module bento grid illustrates core platform capabilities with live UI miniatures: Device Registry, Real-Time Coverage Radar, Governed Service Workflow, and Verified Purchase Proofs.
+### Figure 3: Grounded Product Ownership Demonstration Card
+An authentic, software-driven ownership record demonstrating a registered device (Apple MacBook Pro 16", Serial `C02G1234MD6R`), verified 2.4 MB PDF invoice proof download, 36-month dynamic coverage radar, and an active service ticket (`PC-20261118-4091`) in Progress.
 
-![Figure 3: Asymmetrical Capability Bento Grid](screenshots/03_landing_bento.png)
+![Figure 3: Grounded Product Ownership Demonstration Card](screenshots/03_landing_demonstration.png)
 
-### Figure 4: Customer Split-Screen Registration
-A modern 44%/56% split authentication layout. The left column provides deep navy brand atmosphere with security credentials; the right column hosts the registration form with client-side validation and interactive password visibility toggles.
+### Figure 4: The Ownership Desk — Customer Self-Registration
+The Ownership Desk authentication environment featuring an authentic document record vignette on the left and a clean, high-contrast registration form on the right with interactive password visibility toggle.
 
-![Figure 4: Customer Split-Screen Registration](screenshots/04_register_split.png)
+![Figure 4: The Ownership Desk — Customer Self-Registration](screenshots/04_register_desk.png)
 
-### Figure 5: Customer Split-Screen Sign In
-Sign-in interface matching the split brand visual pattern with remember-me persistent session check, password reveal toggles, and direct links to self-registration.
+### Figure 5: The Ownership Desk — Customer Sign In
+Customer sign-in interface matching the document record desk pattern with persistent session remember-me, accessible SVG password visibility reveal, and responsive validation feedback.
 
-![Figure 5: Customer Split-Screen Sign In](screenshots/05_login_split.png)
+![Figure 5: The Ownership Desk — Customer Sign In](screenshots/05_login_desk.png)
 
 ### Figure 6: Mobile Self-Registration Interface
 Responsive single-column adaptation of the registration flow optimized for touch keyboards with clear error states and input focus halos.

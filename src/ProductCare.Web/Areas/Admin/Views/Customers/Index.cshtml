@@ -6,10 +6,11 @@
 <!-- Page Header & Counts -->
 <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
     <div>
-        <h1 class="h3 fw-bold text-ink mb-1 font-heading">Customer Directory</h1>
-        <p class="text-muted mb-0">Overview of all registered customers, associated products, and open support tickets.</p>
+        <span class="d-inline-block text-uppercase fw-bold small text-muted mb-1" style="letter-spacing: 0.08em; font-size: 0.72rem;">USER DIRECTORY</span>
+        <h1 class="h3 fw-bold text-dark mb-1 font-serif">Customer Directory</h1>
+        <p class="text-muted small mb-0">Overview of all registered customers, associated products, and open support tickets.</p>
     </div>
-    <span class="pc-badge pc-badge-primary">Total Customers: @Model.TotalCustomers</span>
+    <span class="pc-badge pc-badge-stone">Total Customers: @Model.TotalCustomers</span>
 </div>
 
 <!-- Search Bar -->
@@ -22,8 +23,8 @@
             </div>
         </div>
         <div class="col-md-2 d-flex gap-2">
-            <button type="submit" class="btn-pc-secondary w-100 btn-pc-sm">Search</button>
-            <a asp-action="Index" class="btn btn-light border btn-pc-sm d-flex align-items-center justify-content-center" title="Reset">
+            <button type="submit" class="btn btn-forest w-100 btn-sm">Search</button>
+            <a asp-action="Index" class="btn btn-stone btn-sm d-flex align-items-center justify-content-center" title="Reset">
                 <i class="bi bi-arrow-counterclockwise"></i>
             </a>
         </div>
@@ -31,14 +32,14 @@
 </div>
 
 <!-- Customer Table Card -->
-<div class="pc-card overflow-hidden">
-    <div class="pc-card-header d-flex justify-content-between align-items-center">
-        <span><i class="bi bi-people me-2 text-primary-pc"></i>Registered Customer Accounts</span>
+<div class="pc-card p-0 overflow-hidden">
+    <div class="pc-demo-topbar">
+        <span class="small fw-semibold text-dark"><i class="bi bi-people me-2 text-forest"></i>Registered Customer Accounts</span>
     </div>
-    <div class="p-0">
+    <div>
         @if (Model.Customers.Any())
         {
-            <div class="table-responsive">
+            <div class="pc-table-wrapper border-0">
                 <table class="pc-table">
                     <thead>
                         <tr>
@@ -56,28 +57,25 @@
                         @foreach (var c in Model.Customers)
                         {
                             <tr>
-                                <td class="fw-bold text-ink">@c.FullName</td>
-                                <td class="text-muted">@c.Email</td>
-                                <td>@(string.IsNullOrEmpty(c.City) ? "—" : c.City)</td>
-                                <td>
-                                    <span class="badge bg-light text-dark border">@c.RegisteredProductsCount devices</span>
-                                </td>
-                                <td class="num-tabular">@c.TotalServiceRequestsCount</td>
+                                <td class="fw-bold text-dark">@c.FullName</td>
+                                <td class="text-muted small">@c.Email</td>
+                                <td class="small text-muted">@(string.IsNullOrEmpty(c.City) ? "—" : c.City)</td>
+                                <td class="tabular-nums fw-semibold text-dark">@c.RegisteredProductsCount</td>
+                                <td class="tabular-nums text-muted">@c.TotalServiceRequestsCount</td>
                                 <td>
                                     @if (c.OpenServiceRequestsCount > 0)
                                     {
-                                        <span class="pc-badge pc-badge-warning">@c.OpenServiceRequestsCount Open</span>
+                                        <span class="pc-badge pc-badge-expiring">@c.OpenServiceRequestsCount Open</span>
                                     }
                                     else
                                     {
                                         <span class="text-muted small">0</span>
                                     }
                                 </td>
-                                <td class="num-tabular small text-muted">@c.CreatedAtUtc.ToString("MMM yyyy")</td>
+                                <td class="small text-muted tabular-nums">@c.CreatedAtUtc.ToString("dd MMM yyyy")</td>
                                 <td class="text-end">
-                                    <a asp-action="Details" asp-route-id="@c.Id" class="btn-pc-secondary btn-pc-sm">
-                                        <span>View Profile</span>
-                                        <i class="bi bi-arrow-right ms-1"></i>
+                                    <a asp-action="Details" asp-route-id="@c.Id" class="btn btn-stone btn-sm" style="font-size: 11px; padding: 4px 8px;">
+                                        View Profile &rarr;
                                     </a>
                                 </td>
                             </tr>
@@ -89,8 +87,9 @@
         else
         {
             <div class="p-5 text-center text-muted">
-                <i class="bi bi-people fs-1 text-muted opacity-50 mb-3 d-block"></i>
-                <p class="mb-0 fw-medium text-ink">No customer accounts matched your search criteria.</p>
+                <i class="bi bi-people fs-1 text-muted mb-3 d-block"></i>
+                <h5 class="fw-bold text-dark font-serif">No customer accounts found</h5>
+                <p class="small text-muted mb-0">No customers match your search query.</p>
             </div>
         }
     </div>
