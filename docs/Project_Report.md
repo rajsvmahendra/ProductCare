@@ -220,25 +220,25 @@ Key design patterns and implementation practices employed include:
 
 ## 15. Screenshots Section (User Interface Gallery)
 
-The following figures present genuine high-definition screenshots captured directly from the executing ProductCare application via headless Chromium rendering at standard desktop (1440&times;900 / 1440&times;920) and mobile viewport (390&times;844) resolutions.
+The following figures present genuine high-definition screenshots captured directly from the executing ProductCare application via headless Chromium rendering at standard desktop (1440&times;900 / 1440&times;920 / 1920&times;1080), tablet (768&times;1024 / 1024&times;768), and mobile viewport (390&times;844 / 430&times;932) resolutions.
 
-### Figure 1: Public Landing Experience & Ownership Continuity Vision
-The redesigned landing page features an original ProductCare brand identity mark in forest green and warm amber, editorial Newsreader serif typography, and an immediate product value proposition ("Everything you own. Every warranty. Every service journey. One place.").
+### Figure 1: Public Landing Experience & Midnight Precision Cinematic Hero
+The redesigned landing page features an original ProductCare brand identity mark in electric teal and warm amber, contemporary Space Grotesk display typography, and an immediate product value proposition ("Your products. Their proof. Every service journey.").
 
-![Figure 1: Public Landing Experience & Ownership Continuity Vision](screenshots/01_landing_desktop.png)
+![Figure 1: Public Landing Experience & Midnight Precision Cinematic Hero](screenshots/01_landing_desktop.png)
 
 ### Figure 2: Responsive Mobile Landing Page (390x844 Viewport)
 The mobile layout dynamically collapses navigation into a lightweight off-canvas drawer, stacks metric counters, and preserves the grounded ownership lifecycle demonstration card without horizontal clipping or layout shift.
 
 ![Figure 2: Responsive Mobile Landing Page](screenshots/02_landing_mobile.png)
 
-### Figure 3: Grounded Product Ownership Demonstration Card
-An authentic, software-driven ownership record demonstrating a registered device (Apple MacBook Pro 16", Serial `C02G1234MD6R`), verified 2.4 MB PDF invoice proof download, 36-month dynamic coverage radar, and an active service ticket (`PC-20261118-4091`) in Progress.
+### Figure 3: Grounded Product Ownership Demonstration Centerpiece
+An authentic, software-driven ownership record demonstrating a registered device (Apple MacBook Pro 16", Serial `C02G1001MD6R`), verified 2.4 MB PDF invoice proof download, 36-month dynamic coverage radar, and an active service ticket (`PC-20261118-4091`) in Progress with technician assignment.
 
-![Figure 3: Grounded Product Ownership Demonstration Card](screenshots/03_landing_demonstration.png)
+![Figure 3: Grounded Product Ownership Demonstration Centerpiece](screenshots/03_landing_demonstration.png)
 
 ### Figure 4: The Ownership Desk — Customer Self-Registration
-The Ownership Desk authentication environment featuring an authentic document record vignette on the left and a clean, high-contrast registration form on the right with interactive password visibility toggle.
+The Ownership Desk authentication environment featuring an authentic illuminated document record vignette on the left and a clean, high-contrast registration form on the right with interactive password visibility toggle.
 
 ![Figure 4: The Ownership Desk — Customer Self-Registration](screenshots/04_register_desk.png)
 
@@ -266,6 +266,12 @@ A clean, branded security error page presented when an unauthorized user attempt
 The interactive Swagger interface served at `/swagger`, documenting all REST API endpoints for authentication, product records, and service requests with JWT Bearer authorization support.
 
 ![Figure 9: Interactive OpenAPI / Swagger UI](screenshots/09_swagger_api.png)
+
+### Figure 10: Multi-Viewport Responsive Validation Gallery
+Cross-device responsiveness verified at 430&times;932 (Large Mobile), 768&times;1024 (Tablet Portrait), 1024&times;768 (Tablet Landscape), and 1920&times;1080 (Wide Display) with zero horizontal overflow:
+- Tablet Portrait: [11_landing_tablet_768.png](screenshots/11_landing_tablet_768.png)
+- Tablet Landscape: [12_landing_tablet_1024.png](screenshots/12_landing_tablet_1024.png)
+- Wide Display: [13_landing_wide_1920.png](screenshots/13_landing_wide_1920.png)
 
 ---
 

@@ -12,8 +12,8 @@
 |---|---|---|
 | **C# Compilation** | **SUCCESS** | 0 Warnings, 0 Errors across all projects (`ProductCare.sln`) |
 | **Unit Testing (xUnit)** | **SUCCESS** | 50 Tests Executed & Passed (100% pass rate in 95 ms) |
-| **UI/UX Design Transformation** | **SUCCESS** | Complete visual overhaul implemented per `docs/DESIGN.md` specification |
-| **Visual Verification & Screenshots**| **SUCCESS** | 9 Genuine high-DPI screenshots captured via Headless Chromium in `docs/screenshots/` |
+| **UI/UX Design Transformation** | **SUCCESS** | Midnight Precision v3.0 dark visual environment, Space Grotesk + Plus Jakarta Sans, Electric Teal & Blue accents, hairline borders per `docs/DESIGN.md` |
+| **Visual Verification & Screenshots**| **SUCCESS** | 13 Genuine high-DPI screenshots captured across desktop, tablet, and mobile (390px, 430px, 768px, 1024px, 1440px, 1920px) with zero overflow |
 | **EF Core Migration** | **SUCCESS** | Migration `InitialCreate` compiled, listed, & snapshot verified |
 | **SQL Server Scripts** | **SUCCESS** | DDL, View (`vw_ProductWarrantySummary`), Stored Procedure (`sp_GetServiceTicketStatistics`), Seed Data (`04_Seed_Sample_Data.sql`) |
 | **Application Startup & Smoke Test** | **SUCCESS** | ASP.NET Core Kestrel listening on port 5213; Home, Login, Register, Swagger UI & OpenAPI JSON, Static Assets, Privacy, and AccessDenied return HTTP 200 OK |
@@ -101,43 +101,49 @@
 - [x] OpenAPI 3.0 / Swagger UI at `/swagger` with Bearer auth support.
 - [x] Postman collection: `postman/ProductCare.postman_collection.json`.
 
-### Module J & K — Middleware, UI/UX & Visual Design (Ownership Continuity Experience per `docs/DESIGN.md` v2.0)
+### Module J & K — Middleware, UI/UX & Visual Design (Midnight Precision Experience per `docs/DESIGN.md` v3.0)
 - [x] `CorrelationIdMiddleware` for end-to-end request tracing (`X-Correlation-ID`).
 - [x] `SecurityHeadersMiddleware` for HTTP security headers (`X-Content-Type-Options: nosniff`, `X-Frame-Options: SAMEORIGIN`, referrer policy).
-- [x] Comprehensive Warm Mineral Token System (`site.css`):
-  - Off-White Canvas (`#F2F0E9`, `--pc-canvas`) & Warm Natural Surface (`#FAFAF7`, `--pc-surface`).
-  - Deep Graphite Text & Navigation (`#202A28`, `--pc-graphite`).
-  - Forest Green Accent (`#315D50`, `--pc-forest`) & Forest Hover (`#234339`).
-  - Warm Amber Highlights (`#D69A51`, `--pc-amber`).
-  - Tactile Stone Dividers & Borders (`#DCDAD1`, `--pc-stone`).
-  - High-Contrast Editorial Typography: *Newsreader* serif for headings, *IBM Plex Sans* for UI/body, tabular lining figures for serial numbers, dates, and currency.
-  - Semantic Status Tokens: Active (`#2E6B56`), Expiring Soon (`#9B6B1F`), Expired (`#9E3A3A`), Resolved (`#2B6F55`).
-- [x] Original ProductCare Brand Identity: Inline SVG shield mark with circular continuity verification glyph in forest green and warm amber.
-- [x] Public Experience Overhaul:
-  - Editorial Hero: "Everything you own. Every warranty. Every service journey. One place."
-  - Grounded Product Demonstration Card: Authentic device ownership record (Apple MacBook Pro 16", Serial `C02G1234MD6R`, verified 2.4 MB PDF invoice download, 36-month dynamic coverage radar, and active service ticket `PC-20261118-4091` in Progress).
-  - Human Dilemma Cards: Real-world problems (faded thermal receipts, expired warranty surprises, chaotic repair journeys, fragmented device records).
-  - Connected 3-Step Ownership Progression: Register & Preserve &rarr; Monitor & Anticipate &rarr; Request & Track.
-  - Verified Core Capabilities & Academic INT402 Footer.
+- [x] Comprehensive Midnight Precision Token System (`site.css`):
+  - Canvas & Surfaces: Midnight Obsidian (`#080D16`, `--pc-bg-main`), Night Navy (`#101827`, `--pc-bg-secondary`), Elevated Surface (`#151F30`, `--pc-surface`), Popover/Dropdown (`#1E2C44`), Recessed Well (`#0D1422`).
+  - High-Contrast Text: Starlight White (`#F4F7FB`, `--pc-text-primary`), Slate Muted (`#A7B3C4`, `--pc-text-secondary`), Faint (`#627184`).
+  - Precision Lighting & Accents: Electric Teal (`#38D9C5`, `--pc-electric-teal`), Electric Blue (`#668CFF`, `--pc-electric-blue`), Warm Amber (`#F3B66D`, `--pc-warm-amber`), Coral Red (`#FF6B6B`).
+  - Hairline Boundaries: Precision 1px borders (`rgba(255, 255, 255, 0.08)` and `rgba(56, 217, 197, 0.35)` focus halos).
+  - Editorial & Interface Typography: *Space Grotesk* for display headlines, *Plus Jakarta Sans* / *Inter* for interface & body, tabular lining figures for numbers, dates, and currency.
+  - Semantic Status Tokens: Active (`#38D9C5`), Expiring Soon (`#F3B66D`), Expired (`#FF6B6B`), In Progress (`#668CFF`).
+- [x] Dedicated Navigation Row (`_Layout.cshtml`):
+  - Sticky header with glass backdrop blur (`rgba(8, 13, 22, 0.85)`).
+  - Brand Mark: Shield contour in electric teal with warm amber verification knot.
+  - Desktop Navigation: Overview, Ownership Journey, Why ProductCare, Capabilities, Security & Proof.
+  - Responsive Mobile Navigation: Touch hamburger button opening an animated full-screen drawer with zero clipping.
+- [x] Cinematic Asymmetric Hero:
+  - Left: "THE OWNERSHIP INTELLIGENCE PLATFORM" kicker, large display headline ("Your products.<br />Their proof.<br /><span class='text-electric-teal'>Every service journey.</span>"), lead copy, CTAs, and 4 trust indicators.
+  - Right: Layered ProductCare centerpiece with authentic device specs (MacBook Pro 16", Serial `C02G1001MD6R`), 2.4 MB verified PDF invoice, 36-month dynamic coverage radar with 695 days remaining, and active service ticket `PC-20261118-4091` in Progress.
+  - Subtle mouse parallax and dynamic lighting in desktop browsers.
+- [x] Sections 2 through 6:
+  - Section 2: Asymmetric dilemma cards (Disappearing Receipt, Lapsed Deadline, Opaque Repair, Fragmented Records).
+  - Section 3: 6-stage connected lifecycle progression (Register &rarr; Preserve &rarr; Dynamic Radar &rarr; Request Service &rarr; Governed Progress &rarr; Complete History).
+  - Section 4: Engineering capabilities grid.
+  - Section 5: Security, isolation, and proof guarantees.
+  - Section 6: Closing invitation to launch Ownership Desk.
 - [x] Redesigned Authentication Flow ("The ProductCare Ownership Desk"):
-  - Asymmetric desktop layout: left column contains a document record vignette previewing authentic ownership cards; right column hosts the clean form surface.
-  - Interactive password visibility reveal with accessible SVG eye icons (`site.js`).
-  - Grouped collapsible physical address fields for progressive disclosure.
+  - Desktop: Asymmetric 2-column desk with document record vignette on left and crisp form on right.
+  - Mobile: Clean single-column layout, zero horizontal overflow, accessible password reveal toggles with SVG eye icons.
 - [x] Dedicated Authenticated Portal Architecture (`_PortalLayout.cshtml`):
-  - Fixed 250px deep graphite (`#202A28`) sidebar navigation with stone dividers, amber active indicators, and section groupings.
+  - Fixed 250px Midnight Obsidian (`#0B111D` to `#101827`) sidebar navigation with electric teal active indicators.
   - Contextual topbar with dynamic page title, role badge, user profile button, and quick logout.
-  - Off-canvas responsive mobile drawer navigation.
+  - Responsive off-canvas mobile drawer navigation.
 - [x] Customer & Admin Portal Pages:
-  - High-contrast KPI metric cards with progress meters and mineral background surfaces.
+  - High-contrast KPI metric cards with progress meters and dark surfaces.
   - Actionable warranty radar table with expiration countdown markers.
-  - Service request timeline stepper with complete audit history and actor snapshots.
+  - Service request timeline stepper (`.pc-stepper`) with complete audit history and actor snapshots.
   - Status transition dropdowns constrained strictly to permissible next states.
   - Clean modal dialogs for product deletion and ticket cancellation confirmation.
 
 ### Module L — Testing and Quality Assurance
 - [x] xUnit test project: `tests/ProductCare.Tests/`.
 - [x] 50 automated unit tests covering warranty math, month-end calculations, boundaries, workflow state transitions, and ticket formatting.
-- [x] 100% test pass rate (50 passed in 77 ms).
+- [x] 100% test pass rate (50 passed in 91 ms).
 
 ---
 
@@ -146,23 +152,27 @@
 ```powershell
 # 1. Solution and Project Compilation
 dotnet build ProductCare.sln -m:1 --no-restore
-# Output: Build succeeded. 0 Warning(s), 0 Error(s). Time Elapsed 00:00:04.91
+# Output: Build succeeded. 0 Warning(s), 0 Error(s). Time Elapsed 00:00:11.13
 
 # 2. Automated Test Execution
 dotnet test tests/ProductCare.Tests/ProductCare.Tests.csproj --no-build
-# Output: Passed! - Failed: 0, Passed: 50, Skipped: 0, Total: 50, Duration: 77 ms - ProductCare.Tests.dll (net10.0)
+# Output: Passed! - Failed: 0, Passed: 50, Skipped: 0, Total: 50, Duration: 91 ms - ProductCare.Tests.dll (net10.0)
 
 # 3. Headless Chromium Screenshot Capture
-# Verified genuine rendering of desktop and mobile viewports via Microsoft Edge headless:
-# - docs/screenshots/01_landing_desktop.png (1440x920, 150 KB) - Editorial hero & ownership continuity vision
-# - docs/screenshots/02_landing_mobile.png (390x844, 55 KB) - Mobile responsive landing experience
-# - docs/screenshots/03_landing_demonstration.png (1440x900, 149 KB) - Grounded product ownership demonstration card
-# - docs/screenshots/04_register_desk.png (1440x900, 66 KB) - The Ownership Desk registration experience
-# - docs/screenshots/05_login_desk.png (1440x900, 56 KB) - The Ownership Desk customer sign-in
-# - docs/screenshots/06_register_mobile.png (390x844, 45 KB) - Mobile registration form desk
-# - docs/screenshots/07_privacy_desktop.png (1440x900, 110 KB) - Academic privacy & data compliance
-# - docs/screenshots/08_access_denied.png (1440x900, 75 KB) - Role authorization denial card
+# Verified genuine rendering of desktop, tablet, and mobile viewports via Microsoft Edge headless:
+# - docs/screenshots/01_landing_desktop.png (1440x920, 310 KB) - Cinematic hero & ownership vision
+# - docs/screenshots/02_landing_mobile.png (390x844, 93 KB) - Mobile responsive landing experience (390px)
+# - docs/screenshots/03_landing_demonstration.png (1440x900, 299 KB) - Grounded product ownership demonstration card
+# - docs/screenshots/04_register_desk.png (1440x900, 324 KB) - The Ownership Desk registration experience
+# - docs/screenshots/05_login_desk.png (1440x900, 289 KB) - The Ownership Desk customer sign-in
+# - docs/screenshots/06_register_mobile.png (390x844, 80 KB) - Mobile registration form desk (390px)
+# - docs/screenshots/07_privacy_desktop.png (1440x900, 227 KB) - Academic privacy & data compliance
+# - docs/screenshots/08_access_denied.png (1440x900, 172 KB) - Role authorization denial card
 # - docs/screenshots/09_swagger_api.png (1440x900, 17 KB) - OpenAPI / Swagger REST API UI
+# - docs/screenshots/10_landing_mobile_430.png (430x932, 107 KB) - Large mobile viewport (430px)
+# - docs/screenshots/11_landing_tablet_768.png (768x1024, 195 KB) - Tablet portrait viewport (768px)
+# - docs/screenshots/12_landing_tablet_1024.png (1024x768, 268 KB) - Tablet landscape viewport (1024px)
+# - docs/screenshots/13_landing_wide_1920.png (1920x1080, 343 KB) - Wide display viewport (1920px)
 
 # 4. EF Core Migration Verification
 dotnet ef migrations list --project src/ProductCare.Web --startup-project src/ProductCare.Web --no-connect

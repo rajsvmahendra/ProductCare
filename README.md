@@ -106,15 +106,19 @@ ProductCare_INT402/
 │   ├── BUILD_STATUS.md                  # Comprehensive build & verification log
 │   ├── Project_Report.md                # Full academic project report draft
 │   └── screenshots/                     # Genuine high-DPI application screenshots
-│       ├── 01_landing_desktop.png       # Editorial hero & ownership continuity vision
-│       ├── 02_landing_mobile.png        # Mobile responsive landing view
-│       ├── 03_landing_demonstration.png # Grounded product ownership demonstration card
+│       ├── 01_landing_desktop.png       # Cinematic hero & ownership vision
+│       ├── 02_landing_mobile.png        # Mobile responsive landing view (390px)
+│       ├── 03_landing_demonstration.png # Grounded product ownership demonstration centerpiece
 │       ├── 04_register_desk.png         # The Ownership Desk registration experience
 │       ├── 05_login_desk.png            # The Ownership Desk customer sign-in
-│       ├── 06_register_mobile.png       # Mobile registration layout desk
+│       ├── 06_register_mobile.png       # Mobile registration layout desk (390px)
 │       ├── 07_privacy_desktop.png       # Branded compliance & privacy
 │       ├── 08_access_denied.png         # Role authorization denial card
-│       └── 09_swagger_api.png           # Interactive Swagger OpenAPI UI
+│       ├── 09_swagger_api.png           # Interactive Swagger OpenAPI UI
+│       ├── 10_landing_mobile_430.png    # Mobile responsive view (430px)
+│       ├── 11_landing_tablet_768.png    # Tablet portrait view (768px)
+│       ├── 12_landing_tablet_1024.png   # Tablet landscape view (1024px)
+│       └── 13_landing_wide_1920.png     # Wide display view (1920px)
 │
 ├── scripts/                             # Database & Provisioning Scripts
 │   ├── 00_InitialDatabase.sql           # Complete idempotent SQL Server DDL
@@ -243,27 +247,33 @@ The application will bind to:
 
 ---
 
-## 11. Visual & UX Transformation (The Ownership Continuity Experience)
+## 11. Visual & UX Transformation (Midnight Precision Experience)
 
 ProductCare features a visual and interactive design system implemented in accordance with [`docs/DESIGN.md`](docs/DESIGN.md):
 
-- **Palette & Design Tokens:** Canvas Off-White (`#F2F0E9`), Warm Natural Surface (`#FAFAF7`), Deep Graphite (`#202A28`), Forest Green (`#315D50`), Warm Amber (`#D69A51`), and Tactile Stone (`#DCDAD1`).
-- **High-Contrast Editorial Typography:** *Newsreader* serif for display headings, *IBM Plex Sans* for UI and body text, and tabular lining figures for numbers, dates, and currency.
-- **Grounded Product Ownership Demonstration:** Authentic device ownership record featuring a verified 2.4 MB PDF invoice download, dynamic 36-month coverage radar, and live service ticket progression (`PC-20261118-4091`).
-- **The Ownership Desk Authentication:** Clean document vignette atmosphere with accessible SVG password reveal toggles and progressive disclosure for address details.
-- **Dedicated Authenticated Portal:** 250px deep graphite navigation sidebar with stone dividers, amber active indicators, and contextual role indicators (`_PortalLayout.cshtml`).
+- **Palette & Design Tokens:** Midnight Obsidian (`#080D16`), Night Navy (`#101827`), Luminous Surface (`#151F30`), Electric Teal (`#38D9C5`), Electric Blue (`#668CFF`), and Warm Amber (`#F3B66D`).
+- **High-Contrast Editorial Typography:** *Space Grotesk* for display headlines, *Plus Jakarta Sans* / *Inter* for interface and body text, and tabular lining figures for numbers, dates, and currency.
+- **Grounded Product Ownership Demonstration Centerpiece:** Authentic device ownership record featuring a verified 2.4 MB PDF invoice download, dynamic 36-month coverage radar with 695 days remaining, and active service ticket progression (`PC-20261118-4091`).
+- **The Ownership Desk Authentication:** Clean document vignette atmosphere with accessible SVG password reveal toggles, visible electric teal focus halos, and zero horizontal overflow.
+- **Dedicated Authenticated Portal:** 250px deep obsidian navigation sidebar (`#0B111D` to `#101827`) with electric teal active indicators, contextual breadcrumbs, and role indicators (`_PortalLayout.cshtml`).
 
 ### Application Screenshot Gallery
 
 | View | Desktop (1440&times;900) | Mobile (390&times;844) |
 |---|---|---|
 | **Public Landing Page** | ![Landing Desktop](docs/screenshots/01_landing_desktop.png) | ![Landing Mobile](docs/screenshots/02_landing_mobile.png) |
-| **Ownership Demonstration** | ![Ownership Card](docs/screenshots/03_landing_demonstration.png) | — |
+| **Ownership Demonstration** | ![Ownership Centerpiece](docs/screenshots/03_landing_demonstration.png) | — |
 | **The Ownership Desk: Register** | ![Register Desk](docs/screenshots/04_register_desk.png) | ![Register Mobile](docs/screenshots/06_register_mobile.png) |
 | **The Ownership Desk: Sign In** | ![Login Desk](docs/screenshots/05_login_desk.png) | — |
 | **Compliance & Privacy** | ![Privacy](docs/screenshots/07_privacy_desktop.png) | — |
 | **Authorization Denial** | ![Access Denied](docs/screenshots/08_access_denied.png) | — |
 | **Swagger OpenAPI 3.0** | ![Swagger UI](docs/screenshots/09_swagger_api.png) | — |
+
+*Additional verified viewports:*
+- Mobile (430&times;932): [10_landing_mobile_430.png](docs/screenshots/10_landing_mobile_430.png)
+- Tablet (768&times;1024): [11_landing_tablet_768.png](docs/screenshots/11_landing_tablet_768.png)
+- Tablet (1024&times;768): [12_landing_tablet_1024.png](docs/screenshots/12_landing_tablet_1024.png)
+- Wide Display (1920&times;1080): [13_landing_wide_1920.png](docs/screenshots/13_landing_wide_1920.png)
 
 ---
 

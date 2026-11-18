@@ -9,54 +9,54 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
 <body class="d-flex flex-column min-vh-100">
-    <!-- Public Header -->
+    <!-- Dedicated Public Navigation Row -->
     <header class="pc-public-header">
-        <div class="container-xl d-flex align-items-center justify-content-between px-3 px-md-4">
+        <div class="container-xl d-flex align-items-center justify-content-between h-100 px-3 px-md-4">
             <!-- Brand Mark & Logotype -->
             <a class="pc-brand-logo" asp-area="" asp-controller="Home" asp-action="Index">
                 <svg class="pc-brand-mark" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                    <rect width="32" height="32" rx="8" fill="#E7EFEA" />
-                    <!-- Protective Shield Contour -->
-                    <path d="M16 5.5L8 9.2V15.8C8 20.8 11.4 25.4 16 26.8C20.6 25.4 24 20.8 24 15.8V9.2L16 5.5Z" stroke="#315D50" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                    <!-- Continuity knot & verification mark -->
-                    <path d="M12 16.2L14.8 19L20.2 13.2" stroke="#D69A51" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+                    <rect width="32" height="32" rx="8" fill="#151F30" />
+                    <!-- Protective Shield Contour in Electric Teal -->
+                    <path d="M16 5.5L8 9.2V15.8C8 20.8 11.4 25.4 16 26.8C20.6 25.4 24 20.8 24 15.8V9.2L16 5.5Z" stroke="#38D9C5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    <!-- Verification Knot in Warm Amber -->
+                    <path d="M12 16.2L14.8 19L20.2 13.2" stroke="#F3B66D" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
                 </svg>
-                <span class="pc-brand-title font-sans">ProductCare</span>
+                <span class="pc-brand-title">ProductCare</span>
             </a>
 
-            <!-- Navigation Links -->
-            <nav class="d-none d-md-flex align-items-center gap-1" aria-label="Main Navigation">
+            <!-- Center Navigation Links (Desktop) -->
+            <nav class="d-none d-lg-flex align-items-center gap-1" aria-label="Main Navigation">
                 <a class="pc-nav-link" asp-area="" asp-controller="Home" asp-action="Index">Overview</a>
                 <a class="pc-nav-link" href="/#demonstration">Ownership Journey</a>
                 <a class="pc-nav-link" href="/#dilemmas">Why ProductCare</a>
                 <a class="pc-nav-link" href="/#capabilities">Capabilities</a>
-                <a class="pc-nav-link" href="/#security">Security & Proof</a>
+                <a class="pc-nav-link" href="/#security">Security &amp; Proof</a>
             </nav>
 
-            <!-- Authentication Actions -->
-            <div class="d-flex align-items-center gap-2">
+            <!-- Right Actions (Desktop & Auth) -->
+            <div class="d-none d-md-flex align-items-center gap-2">
                 @if (User.Identity?.IsAuthenticated == true)
                 {
                     @if (User.IsInRole("Admin"))
                     {
-                        <a class="btn btn-forest btn-sm" asp-area="Admin" asp-controller="Dashboard" asp-action="Index">
+                        <a class="btn btn-electric btn-sm" asp-area="Admin" asp-controller="Dashboard" asp-action="Index">
                             <i class="bi bi-shield-lock me-1"></i> Admin Portal
                         </a>
                     }
                     else
                     {
-                        <a class="btn btn-forest btn-sm" asp-area="Customer" asp-controller="Dashboard" asp-action="Index">
+                        <a class="btn btn-electric btn-sm" asp-area="Customer" asp-controller="Dashboard" asp-action="Index">
                             <i class="bi bi-folder-check me-1"></i> My Product Vault
                         </a>
                     }
 
                     <div class="dropdown">
-                        <button class="btn btn-stone btn-sm dropdown-toggle" type="button" id="userMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                        <button class="btn btn-midnight btn-sm dropdown-toggle" type="button" id="userMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="bi bi-person-circle"></i>
                         </button>
-                        <ul class="dropdown-menu dropdown-menu-end shadow-sm" aria-labelledby="userMenuButton">
-                            <li><h6 class="dropdown-header">@User.Identity?.Name</h6></li>
-                            <li><hr class="dropdown-divider"></li>
+                        <ul class="dropdown-menu dropdown-menu-end shadow-lg" style="background-color: var(--pc-surface-popover); border-color: var(--pc-border-subtle);" aria-labelledby="userMenuButton">
+                            <li><h6 class="dropdown-header text-electric-teal">@User.Identity?.Name</h6></li>
+                            <li><hr class="dropdown-divider" style="border-color: var(--pc-border-hairline);"></li>
                             <li>
                                 <form asp-area="" asp-controller="Account" asp-action="Logout" method="post">
                                     @Html.AntiForgeryToken()
@@ -70,40 +70,97 @@
                 }
                 else
                 {
-                    <a class="btn btn-stone btn-sm" asp-area="" asp-controller="Account" asp-action="Login">
+                    <a class="btn btn-midnight btn-sm" asp-area="" asp-controller="Account" asp-action="Login">
                         Sign In
                     </a>
-                    <a class="btn btn-forest btn-sm" asp-area="" asp-controller="Account" asp-action="Register">
+                    <a class="btn btn-electric btn-sm" asp-area="" asp-controller="Account" asp-action="Register">
                         Open Ownership Desk
                     </a>
                 }
             </div>
+
+            <!-- Mobile Hamburger Button -->
+            <button class="d-lg-none btn btn-midnight btn-sm px-2 py-1" id="pcMobileNavToggle" type="button" aria-label="Toggle navigation">
+                <i class="bi bi-list fs-5"></i>
+            </button>
         </div>
     </header>
 
-    <!-- Main Content Canvas -->
+    <!-- Mobile Off-Canvas Navigation Drawer -->
+    <div id="pcMobileNavDrawer" class="d-lg-none position-fixed top-0 start-0 w-100 h-100 z-3" style="background: rgba(8, 13, 22, 0.96); backdrop-filter: blur(20px); transform: translateY(-100%); transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);">
+        <div class="container h-100 d-flex flex-column justify-content-between p-4">
+            <div>
+                <div class="d-flex align-items-center justify-content-between mb-4 pb-3 border-bottom" style="border-color: var(--pc-border-hairline) !important;">
+                    <a class="pc-brand-logo" asp-area="" asp-controller="Home" asp-action="Index">
+                        <svg class="pc-brand-mark" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect width="32" height="32" rx="8" fill="#151F30" />
+                            <path d="M16 5.5L8 9.2V15.8C8 20.8 11.4 25.4 16 26.8C20.6 25.4 24 20.8 24 15.8V9.2L16 5.5Z" stroke="#38D9C5" stroke-width="2" />
+                            <path d="M12 16.2L14.8 19L20.2 13.2" stroke="#F3B66D" stroke-width="2.2" />
+                        </svg>
+                        <span class="pc-brand-title">ProductCare</span>
+                    </a>
+                    <button id="pcMobileNavClose" class="btn btn-midnight btn-sm" type="button" aria-label="Close menu">
+                        <i class="bi bi-x-lg"></i>
+                    </button>
+                </div>
+
+                <nav class="d-flex flex-column gap-3 mb-4">
+                    <a class="text-light fs-5 fw-semibold text-decoration-none py-1" asp-area="" asp-controller="Home" asp-action="Index">Overview</a>
+                    <a class="text-light fs-5 fw-semibold text-decoration-none py-1" href="/#demonstration">Ownership Journey</a>
+                    <a class="text-light fs-5 fw-semibold text-decoration-none py-1" href="/#dilemmas">Why ProductCare</a>
+                    <a class="text-light fs-5 fw-semibold text-decoration-none py-1" href="/#capabilities">Capabilities</a>
+                    <a class="text-light fs-5 fw-semibold text-decoration-none py-1" href="/#security">Security &amp; Proof</a>
+                </nav>
+            </div>
+
+            <div class="d-flex flex-column gap-2 pt-3 border-top" style="border-color: var(--pc-border-hairline) !important;">
+                @if (User.Identity?.IsAuthenticated == true)
+                {
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <a class="btn btn-electric" asp-area="Admin" asp-controller="Dashboard" asp-action="Index">
+                            <i class="bi bi-shield-lock me-1"></i> Admin Portal
+                        </a>
+                    }
+                    else
+                    {
+                        <a class="btn btn-electric" asp-area="Customer" asp-controller="Dashboard" asp-action="Index">
+                            <i class="bi bi-folder-check me-1"></i> My Product Vault
+                        </a>
+                    }
+                }
+                else
+                {
+                    <a class="btn btn-electric" asp-area="" asp-controller="Account" asp-action="Register">Open Ownership Desk</a>
+                    <a class="btn btn-midnight" asp-area="" asp-controller="Account" asp-action="Login">Sign In</a>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Area -->
     <main class="flex-grow-1">
         <!-- Toast & Feedback Notifications -->
         <div class="container-xl px-3 px-md-4 mt-3">
             @if (TempData["SuccessMessage"] != null)
             {
-                <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
-                    <i class="bi bi-check-circle-fill me-2 text-success"></i> @TempData["SuccessMessage"]
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                <div class="alert alert-success alert-dismissible fade show shadow-sm" style="background-color: rgba(56, 217, 197, 0.15); border-color: rgba(56, 217, 197, 0.35); color: var(--pc-text-primary);" role="alert">
+                    <i class="bi bi-check-circle-fill me-2 text-electric-teal"></i> @TempData["SuccessMessage"]
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             }
             @if (TempData["ErrorMessage"] != null)
             {
-                <div class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert">
+                <div class="alert alert-danger alert-dismissible fade show shadow-sm" style="background-color: rgba(255, 107, 107, 0.15); border-color: rgba(255, 107, 107, 0.35); color: var(--pc-text-primary);" role="alert">
                     <i class="bi bi-exclamation-triangle-fill me-2 text-danger"></i> @TempData["ErrorMessage"]
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             }
             @if (TempData["InfoMessage"] != null)
             {
-                <div class="alert alert-info alert-dismissible fade show shadow-sm" role="alert">
-                    <i class="bi bi-info-circle-fill me-2 text-info"></i> @TempData["InfoMessage"]
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                <div class="alert alert-info alert-dismissible fade show shadow-sm" style="background-color: rgba(102, 140, 255, 0.15); border-color: rgba(102, 140, 255, 0.35); color: var(--pc-text-primary);" role="alert">
+                    <i class="bi bi-info-circle-fill me-2 text-electric-blue"></i> @TempData["InfoMessage"]
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             }
         </div>
@@ -118,14 +175,14 @@
                 <div class="col-lg-5">
                     <div class="pc-brand-logo mb-3">
                         <svg class="pc-brand-mark" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                            <rect width="32" height="32" rx="8" fill="#E7EFEA" />
-                            <path d="M16 5.5L8 9.2V15.8C8 20.8 11.4 25.4 16 26.8C20.6 25.4 24 20.8 24 15.8V9.2L16 5.5Z" stroke="#315D50" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                            <path d="M12 16.2L14.8 19L20.2 13.2" stroke="#D69A51" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+                            <rect width="32" height="32" rx="8" fill="#151F30" />
+                            <path d="M16 5.5L8 9.2V15.8C8 20.8 11.4 25.4 16 26.8C20.6 25.4 24 20.8 24 15.8V9.2L16 5.5Z" stroke="#38D9C5" stroke-width="2" />
+                            <path d="M12 16.2L14.8 19L20.2 13.2" stroke="#F3B66D" stroke-width="2.2" />
                         </svg>
-                        <span class="pc-brand-title font-sans">ProductCare</span>
+                        <span class="pc-brand-title">ProductCare</span>
                     </div>
                     <p class="text-muted small pe-lg-5">
-                        ProductCare is the ownership management platform that keeps every product record, warranty commitment and service journey connected in one place.
+                        ProductCare is the intelligent ownership platform that keeps every product record, warranty commitment, and after-sales service journey connected in one place.
                     </p>
                 </div>
 
@@ -144,24 +201,24 @@
                     <ul class="pc-footer-list">
                         <li><a asp-area="" asp-controller="Account" asp-action="Register">Open Ownership Desk</a></li>
                         <li><a asp-area="" asp-controller="Account" asp-action="Login">Sign In to Vault</a></li>
-                        <li><a asp-area="" asp-controller="Home" asp-action="Privacy">Data & Security</a></li>
+                        <li><a asp-area="" asp-controller="Home" asp-action="Privacy">Data &amp; Security</a></li>
                     </ul>
                 </div>
 
                 <div class="col-md-6 col-lg-3">
-                    <div class="pc-footer-title">Integration & APIs</div>
+                    <div class="pc-footer-title">Integration &amp; APIs</div>
                     <p class="small text-muted mb-3">
                         Fully documented OpenAPI 3.0 REST endpoints secured via JWT Bearer tokens and ASP.NET Core Identity.
                     </p>
-                    <a href="/swagger" target="_blank" class="btn btn-stone btn-sm d-inline-flex align-items-center gap-2">
-                        <i class="bi bi-code-slash text-forest"></i> Swagger REST API
+                    <a href="/swagger" target="_blank" class="btn btn-midnight btn-sm d-inline-flex align-items-center gap-2">
+                        <i class="bi bi-code-slash text-electric-teal"></i> Swagger REST API
                     </a>
                 </div>
             </div>
 
-            <div class="border-top pt-4 d-flex flex-column flex-sm-row justify-content-between align-items-center gap-2 small text-muted" style="border-color: var(--pc-stone) !important;">
-                <div>&copy; 2026 ProductCare. The Ownership Continuity Experience.</div>
-                <div>Engineered with ASP.NET Core 10, Entity Framework Core 10 & SQL Server.</div>
+            <div class="border-top pt-4 d-flex flex-column flex-sm-row justify-content-between align-items-center gap-2 small text-muted" style="border-color: var(--pc-border-hairline) !important;">
+                <div>&copy; 2026 ProductCare. Midnight Precision Experience.</div>
+                <div>Engineered with ASP.NET Core 10, Entity Framework Core 10 &amp; SQL Server.</div>
             </div>
         </div>
     </footer>

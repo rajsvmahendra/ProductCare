@@ -4,123 +4,158 @@
 }
 
 <div class="pc-auth-desk">
-    <div class="pc-auth-card" style="max-width: 580px;">
-        <!-- Editorial Header -->
-        <div class="text-center mb-4">
-            <span class="d-inline-block text-uppercase fw-bold small text-muted mb-1" style="letter-spacing: 0.08em; font-size: 0.75rem;">THE OWNERSHIP DESK</span>
-            <h2 class="font-serif text-dark mb-1" style="font-size: 1.85rem; font-weight: 500;">Begin your registry.</h2>
-            <p class="text-muted small mb-0">Start keeping track of everything you own.</p>
-        </div>
+    <div class="container-xl px-3 px-md-4">
+        <div class="row justify-content-center">
+            <div class="col-12 col-lg-10 col-xl-9">
+                <div class="pc-auth-panel">
+                    <div class="row g-0">
+                        <!-- Left Vignette (Desktop Only) -->
+                        <div class="col-lg-5 pc-auth-vignette d-none d-lg-flex">
+                            <div>
+                                <div class="d-flex align-items-center gap-2 mb-4">
+                                    <svg class="pc-brand-mark" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                        <rect width="32" height="32" rx="8" fill="#151F30" />
+                                        <path d="M16 5.5L8 9.2V15.8C8 20.8 11.4 25.4 16 26.8C20.6 25.4 24 20.8 24 15.8V9.2L16 5.5Z" stroke="#38D9C5" stroke-width="2" />
+                                        <path d="M12 16.2L14.8 19L20.2 13.2" stroke="#F3B66D" stroke-width="2.2" />
+                                    </svg>
+                                    <span class="pc-brand-title text-light">ProductCare</span>
+                                </div>
 
-        <!-- Document Record Vignette -->
-        <div class="pc-ownership-vignette">
-            <div class="d-flex align-items-center justify-content-between mb-1">
-                <span class="pc-vignette-label">OWNERSHIP ONBOARDING &middot; NEW ACCOUNT</span>
-                <span class="pc-badge pc-badge-stone" style="font-size: 9px; padding: 2px 7px;">FREE SERVICE</span>
-            </div>
-            <p class="mb-0 text-muted small" style="font-size: 12px;">
-                Your account provides an isolated personal vault. Purchase proofs are stored safely outside the web root, and warranties are automatically tracked against current UTC time.
-            </p>
-        </div>
+                                <h3 class="font-display text-light fw-bold mb-2" style="font-size: 1.5rem;">Ownership Onboarding</h3>
+                                <p class="text-muted small mb-4">
+                                    Create your private digital vault. Store purchase invoices outside the web root, compute warranty deadlines automatically, and track repairs with complete transparency.
+                                </p>
 
-        <!-- Registration Form -->
-        <form asp-action="Register" method="post" id="registerForm">
-            @Html.AntiForgeryToken()
-
-            <div asp-validation-summary="ModelOnly" class="alert alert-danger py-2 small mb-3" role="alert"></div>
-
-            <!-- Full Name -->
-            <div class="mb-3">
-                <label asp-for="FullName" class="form-label">Full Name</label>
-                <input asp-for="FullName" class="form-control" placeholder="e.g. Johnathan Miller" autocomplete="name" required autofocus />
-                <span asp-validation-for="FullName" class="text-danger small"></span>
-            </div>
-
-            <!-- Email Address -->
-            <div class="mb-3">
-                <label asp-for="Email" class="form-label">Email Address</label>
-                <input asp-for="Email" type="email" class="form-control" placeholder="name@example.com" autocomplete="email" required />
-                <span asp-validation-for="Email" class="text-danger small"></span>
-            </div>
-
-            <!-- Password & Confirmation Grid -->
-            <div class="row g-3 mb-3">
-                <div class="col-sm-6">
-                    <label asp-for="Password" class="form-label">Password</label>
-                    <div class="input-group">
-                        <input asp-for="Password" type="password" id="regPassword" class="form-control" placeholder="At least 6 chars" autocomplete="new-password" required />
-                        <button type="button" class="btn btn-stone pc-toggle-password" data-target="regPassword" aria-label="Toggle password visibility">
-                            <svg class="pc-eye-open" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                                <circle cx="12" cy="12" r="3"></circle>
-                            </svg>
-                            <svg class="pc-eye-slash" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
-                                <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
-                                <line x1="1" y1="1" x2="23" y2="23"></line>
-                            </svg>
-                        </button>
-                    </div>
-                    <span asp-validation-for="Password" class="text-danger small"></span>
-                </div>
-                <div class="col-sm-6">
-                    <label asp-for="ConfirmPassword" class="form-label">Confirm Password</label>
-                    <div class="input-group">
-                        <input asp-for="ConfirmPassword" type="password" id="regConfirmPassword" class="form-control" placeholder="Re-enter password" autocomplete="new-password" required />
-                        <button type="button" class="btn btn-stone pc-toggle-password" data-target="regConfirmPassword" aria-label="Toggle password visibility">
-                            <svg class="pc-eye-open" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                                <circle cx="12" cy="12" r="3"></circle>
-                            </svg>
-                            <svg class="pc-eye-slash" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
-                                <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
-                                <line x1="1" y1="1" x2="23" y2="23"></line>
-                            </svg>
-                        </button>
-                    </div>
-                    <span asp-validation-for="ConfirmPassword" class="text-danger small"></span>
-                </div>
-            </div>
-
-            <!-- Optional Address Collapse -->
-            <div class="mb-4">
-                <button class="btn btn-link text-forest p-0 small fw-semibold text-decoration-none" type="button" data-bs-toggle="collapse" data-bs-target="#addressFields" aria-expanded="false" aria-controls="addressFields">
-                    <i class="bi bi-geo-alt me-1"></i> + Add physical address (optional)
-                </button>
-                <div class="collapse mt-3" id="addressFields">
-                    <div class="p-3 rounded-3" style="background-color: var(--pc-surface-inset); border: 1px solid var(--pc-stone);">
-                        <div class="mb-2">
-                            <label asp-for="Address" class="form-label">Street Address</label>
-                            <input asp-for="Address" class="form-control" placeholder="e.g. 742 Evergreen Terrace" />
-                            <span asp-validation-for="Address" class="text-danger small"></span>
-                        </div>
-                        <div class="row g-2">
-                            <div class="col-sm-7">
-                                <label asp-for="City" class="form-label">City</label>
-                                <input asp-for="City" class="form-control" placeholder="e.g. Springfield" />
-                                <span asp-validation-for="City" class="text-danger small"></span>
+                                <div class="pc-demo-card p-3 mb-3">
+                                    <div class="d-flex align-items-center justify-content-between mb-2">
+                                        <span class="small fw-bold font-display text-muted" style="font-size: 10px;">CUSTOMER PRIVACY PROMISE</span>
+                                        <span class="pc-badge pc-badge-active" style="font-size: 9px; padding: 2px 7px;">FREE SERVICE</span>
+                                    </div>
+                                    <p class="mb-0 text-muted small" style="font-size: 12px; line-height: 1.5;">
+                                        Your customer records are isolated using strict server-side tenant checks. We never share your warranty data or purchase records with third parties.
+                                    </p>
+                                </div>
                             </div>
-                            <div class="col-sm-5">
-                                <label asp-for="PostalCode" class="form-label">Postal Code</label>
-                                <input asp-for="PostalCode" class="form-control" placeholder="e.g. 97477" />
-                                <span asp-validation-for="PostalCode" class="text-danger small"></span>
+
+                            <div class="pt-4 border-top" style="border-color: var(--pc-border-hairline) !important;">
+                                <div class="d-flex align-items-center gap-3 text-muted small" style="font-size: 12px;">
+                                    <span class="d-inline-flex align-items-center gap-1"><i class="bi bi-shield-lock text-electric-teal"></i> Secure Storage</span>
+                                    <span class="d-inline-flex align-items-center gap-1"><i class="bi bi-cpu text-electric-teal"></i> Auto-Math</span>
+                                </div>
                             </div>
                         </div>
+
+                        <!-- Right Form Container -->
+                        <div class="col-12 col-lg-7 pc-auth-form-container">
+                            <div class="mb-4">
+                                <span class="pc-section-kicker">CREATE ACCOUNT</span>
+                                <h2 class="font-display text-light mb-1" style="font-size: 1.75rem;">Open Ownership Desk</h2>
+                                <p class="text-muted small mb-0">Start keeping track of everything you own.</p>
+                            </div>
+
+                            <!-- Registration Form -->
+                            <form asp-action="Register" method="post" id="registerForm">
+                                @Html.AntiForgeryToken()
+
+                                <div asp-validation-summary="ModelOnly" class="alert alert-danger py-2 small mb-3" style="background-color: rgba(255, 107, 107, 0.15); border-color: rgba(255, 107, 107, 0.35); color: var(--pc-text-primary);" role="alert"></div>
+
+                                <!-- Full Name -->
+                                <div class="mb-3">
+                                    <label asp-for="FullName" class="form-label">Full Name</label>
+                                    <input asp-for="FullName" class="form-control" placeholder="e.g. Johnathan Miller" autocomplete="name" required autofocus />
+                                    <span asp-validation-for="FullName" class="text-danger small"></span>
+                                </div>
+
+                                <!-- Email Address -->
+                                <div class="mb-3">
+                                    <label asp-for="Email" class="form-label">Email Address</label>
+                                    <input asp-for="Email" type="email" class="form-control" placeholder="name@example.com" autocomplete="email" required />
+                                    <span asp-validation-for="Email" class="text-danger small"></span>
+                                </div>
+
+                                <!-- Password & Confirmation Grid -->
+                                <div class="row g-3 mb-3">
+                                    <div class="col-sm-6">
+                                        <label asp-for="Password" class="form-label">Password</label>
+                                        <div class="input-group">
+                                            <input asp-for="Password" type="password" id="regPassword" class="form-control" placeholder="At least 6 chars" autocomplete="new-password" required />
+                                            <button type="button" class="btn btn-midnight pc-toggle-password" data-target="regPassword" aria-label="Toggle password visibility">
+                                                <svg class="pc-eye-open" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                                    <circle cx="12" cy="12" r="3"></circle>
+                                                </svg>
+                                                <svg class="pc-eye-slash" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
+                                                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                                                    <line x1="1" y1="1" x2="23" y2="23"></line>
+                                                </svg>
+                                            </button>
+                                        </div>
+                                        <span asp-validation-for="Password" class="text-danger small"></span>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <label asp-for="ConfirmPassword" class="form-label">Confirm Password</label>
+                                        <div class="input-group">
+                                            <input asp-for="ConfirmPassword" type="password" id="regConfirmPassword" class="form-control" placeholder="Re-enter password" autocomplete="new-password" required />
+                                            <button type="button" class="btn btn-midnight pc-toggle-password" data-target="regConfirmPassword" aria-label="Toggle password visibility">
+                                                <svg class="pc-eye-open" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                                    <circle cx="12" cy="12" r="3"></circle>
+                                                </svg>
+                                                <svg class="pc-eye-slash" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
+                                                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                                                    <line x1="1" y1="1" x2="23" y2="23"></line>
+                                                </svg>
+                                            </button>
+                                        </div>
+                                        <span asp-validation-for="ConfirmPassword" class="text-danger small"></span>
+                                    </div>
+                                </div>
+
+                                <!-- Optional Address Collapse -->
+                                <div class="mb-4">
+                                    <button class="btn btn-link text-electric-teal p-0 small fw-semibold text-decoration-none" type="button" data-bs-toggle="collapse" data-bs-target="#addressFields" aria-expanded="false" aria-controls="addressFields">
+                                        <i class="bi bi-geo-alt me-1"></i> + Add physical address (optional)
+                                    </button>
+                                    <div class="collapse mt-3" id="addressFields">
+                                        <div class="p-3 rounded-3" style="background-color: var(--pc-surface-inset); border: 1px solid var(--pc-border-hairline);">
+                                            <div class="mb-2">
+                                                <label asp-for="Address" class="form-label">Street Address</label>
+                                                <input asp-for="Address" class="form-control" placeholder="e.g. 742 Evergreen Terrace" />
+                                                <span asp-validation-for="Address" class="text-danger small"></span>
+                                            </div>
+                                            <div class="row g-2">
+                                                <div class="col-sm-7">
+                                                    <label asp-for="City" class="form-label">City</label>
+                                                    <input asp-for="City" class="form-control" placeholder="e.g. Springfield" />
+                                                    <span asp-validation-for="City" class="text-danger small"></span>
+                                                </div>
+                                                <div class="col-sm-5">
+                                                    <label asp-for="PostalCode" class="form-label">Postal Code</label>
+                                                    <input asp-for="PostalCode" class="form-control" placeholder="e.g. 97477" />
+                                                    <span asp-validation-for="PostalCode" class="text-danger small"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Submit Button -->
+                                <button type="submit" class="btn btn-electric w-100 py-2">
+                                    Create My Ownership Desk
+                                </button>
+                            </form>
+
+                            <!-- Footer Link -->
+                            <div class="text-center mt-4 pt-3 border-top" style="border-color: var(--pc-border-hairline) !important;">
+                                <p class="small text-muted mb-0">
+                                    Already have a vault?
+                                    <a asp-action="Login" class="fw-semibold text-electric-teal">Sign in to existing account &rarr;</a>
+                                </p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-
-            <!-- Submit Button -->
-            <button type="submit" class="btn btn-forest w-100 py-2">
-                Open Your Ownership Desk
-            </button>
-        </form>
-
-        <!-- Footer Link -->
-        <div class="text-center mt-4 pt-3 border-top" style="border-color: var(--pc-stone) !important;">
-            <p class="small text-muted mb-0">
-                Already registered?
-                <a asp-action="Login" class="fw-semibold text-forest">Sign in to existing vault &rarr;</a>
-            </p>
         </div>
     </div>
 </div>
