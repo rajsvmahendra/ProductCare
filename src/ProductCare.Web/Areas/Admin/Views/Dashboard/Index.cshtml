@@ -1,13 +1,13 @@
 @model ProductCare.Web.ViewModels.Admin.AdminDashboardViewModel
 @{
-    ViewData["Title"] = "Admin Overview";
+    ViewData["Title"] = "Campus Operations Overview";
 }
 
 <!-- Page Header & Action Controls -->
 <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
     <div>
-        <span class="d-inline-block text-uppercase fw-bold small text-muted mb-1" style="letter-spacing: 0.08em; font-size: 0.72rem;">ADMINISTRATIVE CONTROL</span>
-        <h1 class="h3 fw-bold text-dark mb-0 font-serif">Operations Dashboard</h1>
+        <span class="d-inline-block text-uppercase fw-bold small text-muted mb-1" style="letter-spacing: 0.06em; font-size: 0.72rem;">CAMPUS OPERATIONS DESK</span>
+        <h1 class="h3 fw-bold text-dark mb-0 font-display">Campus Facility, IT &amp; SLA Dashboard</h1>
     </div>
     <div class="d-flex align-items-center gap-2">
         <a asp-action="Index" asp-controller="ServiceRequests" class="btn btn-forest btn-sm">
@@ -16,63 +16,74 @@
         </a>
         <a asp-action="Index" asp-controller="Reports" class="btn btn-stone btn-sm">
             <i class="bi bi-bar-chart-line me-1"></i>
-            <span>Reports &amp; Intelligence</span>
+            <span>Analytics &amp; SQL Views</span>
         </a>
     </div>
 </div>
 
-<!-- 4 Primary Operational KPI Cards -->
+<!-- 5 Primary Operational KPI Cards -->
 <div class="row g-3 mb-4">
-    <!-- Total Customers -->
-    <div class="col-sm-6 col-xl-3">
+    <!-- Total Monitored Inventory -->
+    <div class="col-sm-6 col-xl">
         <div class="pc-kpi-card">
-            <div class="pc-kpi-label">Customer Accounts</div>
-            <div class="pc-kpi-val">@Model.TotalCustomers</div>
+            <div class="pc-kpi-label">Registered Assets</div>
+            <div class="pc-kpi-val text-success">@Model.TotalProducts</div>
             <div class="small text-muted mt-2 d-flex align-items-center gap-1">
-                <i class="bi bi-people"></i> Registered customer accounts
+                <i class="bi bi-laptop text-success"></i> Equipment &amp; devices
             </div>
         </div>
     </div>
 
-    <!-- Total Products -->
-    <div class="col-sm-6 col-xl-3">
-        <div class="pc-kpi-card">
-            <div class="pc-kpi-label">Monitored Inventory</div>
-            <div class="pc-kpi-val" style="color: var(--pc-status-active);">@Model.TotalProducts</div>
-            <div class="small text-muted mt-2 d-flex align-items-center gap-1">
-                <i class="bi bi-laptop" style="color: var(--pc-status-active);"></i> Total customer devices
-            </div>
-        </div>
-    </div>
-
-    <!-- Pending Action -->
-    <div class="col-sm-6 col-xl-3">
+    <!-- Pending Triage -->
+    <div class="col-sm-6 col-xl">
         <div class="pc-kpi-card">
             <div class="pc-kpi-label">Pending Triage</div>
-            <div class="pc-kpi-val" style="color: var(--pc-amber);">@Model.PendingRequests</div>
+            <div class="pc-kpi-val text-warning">@Model.PendingRequests</div>
             <div class="small text-muted mt-2 d-flex align-items-center gap-1">
-                <i class="bi bi-clock-history" style="color: var(--pc-amber);"></i> Submitted &amp; awaiting review
+                <i class="bi bi-clock-history text-warning"></i> Awaiting routing
             </div>
         </div>
     </div>
 
     <!-- In Progress Requests -->
-    <div class="col-sm-6 col-xl-3">
+    <div class="col-sm-6 col-xl">
         <div class="pc-kpi-card">
-            <div class="pc-kpi-label">In Progress</div>
-            <div class="pc-kpi-val" style="color: var(--pc-status-progress);">@Model.InProgressRequests</div>
+            <div class="pc-kpi-label">Active Work Orders</div>
+            <div class="pc-kpi-val text-primary">@Model.InProgressRequests</div>
             <div class="small text-muted mt-2 d-flex align-items-center gap-1">
-                <i class="bi bi-tools" style="color: var(--pc-status-progress);"></i> Active technician assignments
+                <i class="bi bi-tools text-primary"></i> Assigned technicians
+            </div>
+        </div>
+    </div>
+
+    <!-- Resolved Requests -->
+    <div class="col-sm-6 col-xl">
+        <div class="pc-kpi-card">
+            <div class="pc-kpi-label">Resolved Issues</div>
+            <div class="pc-kpi-val text-success">@Model.ResolvedRequests</div>
+            <div class="small text-muted mt-2 d-flex align-items-center gap-1">
+                <i class="bi bi-check-circle text-success"></i> Successfully closed
+            </div>
+        </div>
+    </div>
+
+    <!-- SLA Breached / Overdue -->
+    <div class="col-sm-6 col-xl">
+        <div class="pc-kpi-card" style="border-left: 3px solid #dc3545;">
+            <div class="pc-kpi-label text-danger">SLA Overdue</div>
+            <div class="pc-kpi-val text-danger">@Model.OverdueRequests</div>
+            <div class="small text-muted mt-2 d-flex align-items-center gap-1">
+                <i class="bi bi-exclamation-triangle-fill text-danger"></i> Breached resolution SLA
             </div>
         </div>
     </div>
 </div>
 
 <!-- Pending Triage Queue Table -->
-<div class="pc-card p-0 overflow-hidden">
-    <div class="pc-demo-topbar">
+<div class="pc-card p-0 overflow-hidden mb-4">
+    <div class="d-flex align-items-center justify-content-between p-3 border-bottom" style="background-color: var(--pc-surface-secondary);">
         <div class="d-flex align-items-center gap-2">
-            <span class="small fw-semibold text-dark"><i class="bi bi-inbox me-2 text-forest"></i>Recent Service Tickets</span>
+            <span class="small fw-semibold text-dark"><i class="bi bi-inbox me-2 text-forest"></i>Recent Campus Maintenance Requests</span>
             <span class="badge bg-warning text-dark border small" style="font-size: 10px;">Queue Activity</span>
         </div>
         <a asp-action="Index" asp-controller="ServiceRequests" class="small fw-semibold text-forest">
@@ -88,10 +99,10 @@
                     <thead>
                         <tr>
                             <th>Ticket #</th>
-                            <th>Customer</th>
-                            <th>Product</th>
+                            <th>Reporter</th>
+                            <th>Campus Facility</th>
                             <th>Category</th>
-                            <th>Priority</th>
+                            <th>SLA Countdown</th>
                             <th>Status</th>
                             <th>Received</th>
                             <th class="text-end">Triage</th>
@@ -111,12 +122,15 @@
                                     <div class="small text-muted" style="font-size: 11px;">@r.CustomerEmail</div>
                                 </td>
                                 <td>
-                                    <div class="fw-semibold text-dark small">@r.ProductName</div>
+                                    <div class="fw-semibold text-dark small"><i class="bi bi-geo-alt text-muted me-1"></i>@(r.CampusLocation ?? "Campus Facility")</div>
+                                    <div class="small text-muted" style="font-size: 10px;">@r.ProductName</div>
                                 </td>
                                 <td><span class="badge bg-light text-dark border small">@r.CategoryText</span></td>
-                                <td><span class="@r.PriorityBadgeCssClass" style="font-size: 11px;">@r.PriorityText</span></td>
+                                <td>
+                                    <span class="@r.SlaBadgeCssClass" style="font-size: 11px;">@r.SlaBadgeText</span>
+                                </td>
                                 <td><span class="@r.StatusBadgeCssClass" style="font-size: 11px;">@r.StatusText</span></td>
-                                <td class="small text-muted tabular-nums">@r.CreatedAtUtc.ToString("dd MMM HH:mm")</td>
+                                <td class="small text-muted">@r.CreatedAtUtc.ToString("dd MMM HH:mm")</td>
                                 <td class="text-end">
                                     <a asp-action="Details" asp-controller="ServiceRequests" asp-route-id="@r.Id" class="btn btn-forest btn-sm" style="font-size: 11px; padding: 4px 10px;">
                                         Triage &rarr;
@@ -132,9 +146,112 @@
         {
             <div class="p-5 text-center text-muted">
                 <i class="bi bi-check-all fs-1 text-forest mb-3 d-block"></i>
-                <h5 class="fw-bold text-dark font-serif">Triage Queue Clear</h5>
+                <h5 class="fw-bold text-dark font-display">Triage Queue Clear</h5>
                 <p class="small text-muted mb-0">No unassigned service requests pending triage at this time.</p>
             </div>
         }
+    </div>
+</div>
+
+<!-- Dashboards: Location Breakdown, Workload, and Network Health -->
+<div class="row g-4">
+    <!-- Technician Workload -->
+    <div class="col-lg-4">
+        <div class="pc-card h-100">
+            <h6 class="fw-bold text-dark mb-3 pb-2 border-bottom font-display">
+                <i class="bi bi-person-badge text-forest me-2"></i>Field Technician Workload
+            </h6>
+            @if (Model.TechnicianWorkloads.Any())
+            {
+                <ul class="list-unstyled mb-0">
+                    @foreach (var w in Model.TechnicianWorkloads)
+                    {
+                        <li class="d-flex align-items-center justify-content-between py-2 border-bottom">
+                            <span class="small fw-semibold text-dark text-truncate pe-2">@w.TechnicianName</span>
+                            <span class="badge bg-light text-dark border">@w.ActiveTicketCount active ticket(s)</span>
+                        </li>
+                    }
+                </ul>
+            }
+            else
+            {
+                <p class="small text-muted mb-0">No active work orders currently assigned to technicians.</p>
+            }
+        </div>
+    </div>
+
+    <!-- Campus Location Issues -->
+    <div class="col-lg-4">
+        <div class="pc-card h-100">
+            <h6 class="fw-bold text-dark mb-3 pb-2 border-bottom font-display">
+                <i class="bi bi-building text-forest me-2"></i>Issues by Campus Building
+            </h6>
+            @if (Model.LocationSummaries.Any())
+            {
+                <ul class="list-unstyled mb-0">
+                    @foreach (var l in Model.LocationSummaries)
+                    {
+                        <li class="py-2 border-bottom">
+                            <div class="d-flex align-items-center justify-content-between mb-1">
+                                <span class="small fw-semibold text-dark text-truncate pe-2">@l.Location</span>
+                                <span class="badge bg-light text-dark border small">@l.TotalCount total</span>
+                            </div>
+                            <div class="d-flex align-items-center gap-2 small text-muted" style="font-size: 11px;">
+                                <span>Open: <strong>@l.OpenCount</strong></span>
+                                @if (l.OverdueCount > 0)
+                                {
+                                    <span class="text-danger fw-bold">&bull; Overdue: @l.OverdueCount</span>
+                                }
+                            </div>
+                        </li>
+                    }
+                </ul>
+            }
+            else
+            {
+                <p class="small text-muted mb-0">No facility-specific issue volume recorded yet.</p>
+            }
+        </div>
+    </div>
+
+    <!-- Authorized & Campus Service Centres -->
+    <div class="col-lg-4">
+        <div class="pc-card h-100">
+            <div class="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom">
+                <h6 class="fw-bold text-dark mb-0 font-display">
+                    <i class="bi bi-building text-forest me-2"></i>Service Centres Directory
+                </h6>
+                <a asp-action="Index" asp-controller="ServiceCenters" class="small fw-semibold text-forest text-decoration-none">Manage &rarr;</a>
+            </div>
+            @if (Model.ServiceCenterSummaries.Any())
+            {
+                <ul class="list-unstyled mb-0">
+                    @foreach (var sc in Model.ServiceCenterSummaries)
+                    {
+                        <li class="py-2 border-bottom">
+                            <div class="d-flex align-items-center justify-content-between mb-1">
+                                <span class="small fw-semibold text-dark text-truncate pe-2">@sc.Name</span>
+                                @if (sc.IsVerified)
+                                {
+                                    <span class="badge bg-success" style="font-size: 9px;"><i class="bi bi-check-circle-fill"></i> Verified</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-warning text-dark" style="font-size: 9px;">Sample Hub</span>
+                                }
+                            </div>
+                            <div class="d-flex align-items-center justify-content-between small text-muted" style="font-size: 11px;">
+                                <span><i class="bi bi-geo-alt me-1"></i>@sc.City</span>
+                                <span>@sc.ActiveTicketCount active ticket(s)</span>
+                            </div>
+                        </li>
+                    }
+                </ul>
+            }
+            else
+            {
+                <p class="small text-muted mb-0">No service centres registered yet.</p>
+            }
+        </div>
     </div>
 </div>

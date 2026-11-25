@@ -1,0 +1,44 @@
+@import "tailwindcss";
+
+@layer base {
+  body {
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Outfit', 'Plus Jakarta Sans', sans-serif;
+  }
+}
+
+/* Glassmorphism and Custom Hero Card Shapes */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.glass-nav {
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Clip paths for the three sections shown in image 2 */
+@media (min-width: 1024px) {
+  /* Left panel: angled right edge (slants right to left downwards or left to right) */
+  .polygon-left-card {
+    clip-path: polygon(0 0, 100% 0, 88% 100%, 0 100%);
+  }
+
+  /* Center panel: inverted trapezoid (wider at top, narrower at bottom) */
+  .polygon-center-card {
+    clip-path: polygon(7% 0, 93% 0, 100% 100%, 0% 100%);
+  }
+
+  /* Right panel: angled left edge */
+  .polygon-right-card {
+    clip-path: polygon(12% 0, 100% 0, 100% 100%, 0% 100%);
+  }
+}
+

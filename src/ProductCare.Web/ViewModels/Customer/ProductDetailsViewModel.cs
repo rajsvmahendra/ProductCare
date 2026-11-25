@@ -12,6 +12,7 @@ public class ProductDetailsViewModel
     public string SerialNumber { get; set; } = string.Empty;
     public ProductCategory Category { get; set; }
     public string CategoryName { get; set; } = string.Empty;
+    public string? SubCategory { get; set; }
     public DateOnly PurchaseDate { get; set; }
     public int WarrantyDurationMonths { get; set; }
     public DateOnly WarrantyExpiryDate { get; set; }

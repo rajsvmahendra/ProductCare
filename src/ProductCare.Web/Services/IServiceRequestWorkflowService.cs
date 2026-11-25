@@ -45,6 +45,18 @@ public interface IServiceRequestWorkflowService
     );
 
     /// <summary>
+    /// Flags a ticket as escalated under SLA policy with recorded audit trail and supervisor remarks.
+    /// EduRev P10 — M3 SLA & Escalation.
+    /// </summary>
+    Task<WorkflowResult> EscalateTicketAsync(
+        int requestId,
+        string changedByUserId,
+        string changedByUserName,
+        string reason,
+        CancellationToken cancellationToken = default
+    );
+
+    /// <summary>
     /// Generates a collision-safe, human-readable ticket number in format PC-YYYYMMDD-XXXX.
     /// </summary>
     Task<string> GenerateTicketNumberAsync(CancellationToken cancellationToken = default);

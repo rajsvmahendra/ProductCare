@@ -4,129 +4,250 @@
 }
 
 <div class="row justify-content-center">
-    <div class="col-lg-9 col-xl-8">
-        <div class="d-flex align-items-center justify-content-between mb-4">
+    <div class="col-lg-10 col-xl-9">
+        <!-- Header -->
+        <div class="d-flex flex-column flex-sm-row align-items-start align-items-sm-center justify-content-between mb-4 gap-3">
             <div>
-                <span class="d-inline-block text-uppercase fw-bold small text-muted mb-1" style="letter-spacing: 0.08em; font-size: 0.72rem;">NEW ASSET ENTRY</span>
-                <h1 class="h3 fw-bold text-dark mb-1 font-serif">Register Purchased Product</h1>
-                <p class="text-muted small mb-0">Record your device specifications, purchase dates, and receipt for safe keeping.</p>
+                <span class="d-inline-block fw-semibold small text-muted mb-1 font-display" style="letter-spacing: 0.04em;">Personal Workspace</span>
+                <h1 class="h3 fw-bold text-dark mb-1 font-display">Register a Product</h1>
+                <p class="text-muted small mb-0">Record your device identity, purchase records, and warranty coverage in three simple steps.</p>
             </div>
-            <a asp-action="Index" class="btn btn-stone btn-sm">
-                <i class="bi bi-arrow-left me-1"></i> Back to Inventory
+            <a asp-action="Index" class="btn btn-stone btn-sm pc-btn-tactile">
+                <i class="bi bi-arrow-left me-1"></i> Back to Products
             </a>
         </div>
 
-        <div class="pc-card p-4 p-md-5">
-            <form asp-action="Create" method="post" enctype="multipart/form-data">
+        <!-- Consumer-Friendly Voice-Assisted Entry Bar (Bento Pastel Style) -->
+        <div class="pc-bento-card pc-bento-sage mb-4 p-4 shadow-sm">
+            <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3">
+                <div class="d-flex align-items-center gap-3">
+                    <button type="button" id="voiceMicBtn" class="pc-mic-button shadow-sm" title="Speak product details" aria-label="Speak product details">
+                        <i class="bi bi-mic" id="voiceMicIcon"></i>
+                    </button>
+                    <div>
+                        <div class="fw-bold small text-dark d-flex align-items-center gap-2">
+                            <span>Speak your product details</span>
+                            <span class="badge bg-white text-forest border" style="font-size: 11px;">Voice Assistant</span>
+                        </div>
+                        <div class="text-muted small" id="voiceStatusText" style="font-size: 13px;">
+                            Click the microphone and say something like: <em>"Apple MacBook Pro 16 inch laptop, serial C02G73276936, 24 months warranty"</em>.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex align-items-center gap-2">
+                    <button type="button" id="voiceClearBtn" class="btn btn-stone btn-sm d-none">
+                        <i class="bi bi-x-circle me-1"></i> Clear Voice Details
+                    </button>
+                </div>
+            </div>
+
+            <!-- Live Speech Transcript & Editable Suggestions Card -->
+            <div id="voiceParsedContainer" class="mt-3 pt-3 border-top d-none">
+                <div class="small fw-semibold text-dark mb-2 d-flex flex-column flex-sm-row align-items-start align-items-sm-center justify-content-between gap-2">
+                    <span><i class="bi bi-check2-circle me-1 text-forest"></i>Detected Details (Review before applying to form):</span>
+                    <button type="button" id="voiceApplyBtn" class="btn btn-forest btn-sm pc-btn-tactile" style="font-size: 12px; padding: 4px 14px;">
+                        <i class="bi bi-check-lg me-1"></i> Apply Details to Form
+                    </button>
+                </div>
+                <div class="row g-2 small">
+                    <div class="col-sm-4">
+                        <span class="text-muted">Brand:</span>
+                        <input type="text" id="voiceBrand" class="form-control form-control-sm mt-1" />
+                    </div>
+                    <div class="col-sm-4">
+                        <span class="text-muted">Model Name:</span>
+                        <input type="text" id="voiceModel" class="form-control form-control-sm mt-1" />
+                    </div>
+                    <div class="col-sm-4">
+                        <span class="text-muted">Serial Number:</span>
+                        <input type="text" id="voiceSerial" class="form-control form-control-sm mt-1 font-monospace" />
+                    </div>
+                    <div class="col-sm-4">
+                        <span class="text-muted">Category:</span>
+                        <input type="text" id="voiceCategory" class="form-control form-control-sm mt-1" />
+                    </div>
+                    <div class="col-sm-4">
+                        <span class="text-muted">Warranty Months:</span>
+                        <input type="number" id="voiceDuration" class="form-control form-control-sm mt-1" />
+                    </div>
+                    <div class="col-sm-4">
+                        <span class="text-muted">Speech Transcript:</span>
+                        <div id="voiceTranscriptPreview" class="p-1 px-2 border rounded bg-white text-truncate text-muted mt-1" style="font-size: 11px; height: 31px;">—</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Friendly Fallback for Unsupported Browsers or Denied Permissions -->
+            <div id="voiceUnsupportedNotice" class="alert alert-secondary py-2 small mb-0 mt-3 d-none">
+                <i class="bi bi-info-circle me-1"></i> <span id="voiceUnsupportedMsg">Microphone voice input is supported in Google Chrome, Microsoft Edge, and Safari. You can use standard manual entry anytime.</span>
+            </div>
+        </div>
+
+        <!-- Main Product Registration 3-Step Guided Form (Bento Style) -->
+        <div class="pc-bento-card pc-bento-white shadow-sm p-4 p-md-5">
+            <form asp-action="Create" method="post" enctype="multipart/form-data" id="productForm">
                 @Html.AntiForgeryToken()
 
                 <div asp-validation-summary="ModelOnly" class="alert alert-danger py-2 small mb-4" role="alert"></div>
 
-                <!-- Section 1: Device Info -->
-                <div class="mb-4">
-                    <div class="d-flex align-items-center gap-2 mb-3 pb-2 border-bottom" style="border-color: var(--pc-stone) !important;">
-                        <span class="pc-badge pc-badge-stone" style="font-size: 10px;">SECTION 1</span>
-                        <h6 class="fw-bold text-dark mb-0 font-serif">Device Specifications</h6>
+                <!-- =============================================================
+                     STEP 1 — PRODUCT DETAILS
+                     ============================================================= -->
+                <div class="mb-5">
+                    <div class="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom">
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="badge bg-forest text-white" style="font-size: 11px;">Step 1</span>
+                            <h2 class="h6 fw-bold text-dark mb-0 font-display">Product Details</h2>
+                        </div>
+                        <span class="text-muted small" style="font-size: 12px;"><span class="text-danger">*</span> Required</span>
                     </div>
 
-                    <div class="row g-3 mb-3">
+                    <div class="row g-3">
+                        <!-- Category -->
                         <div class="col-md-6">
-                            <label asp-for="Name" class="form-label">Product Name</label>
-                            <input asp-for="Name" class="form-control" placeholder="e.g. MacBook Pro 16-inch" required autofocus />
-                            <span asp-validation-for="Name" class="text-danger small"></span>
+                            <label asp-for="Category" class="form-label fw-semibold">Product Category <span class="text-danger">*</span></label>
+                            <select asp-for="Category" id="categorySelect" class="form-select" asp-items="Html.GetEnumSelectList<ProductCare.Web.Models.Enums.ProductCategory>()" required></select>
+                            <span asp-validation-for="Category" class="text-danger small"></span>
                         </div>
+
+                        <!-- Brand -->
                         <div class="col-md-6">
-                            <label asp-for="Brand" class="form-label">Brand / Manufacturer</label>
-                            <input asp-for="Brand" class="form-control" placeholder="e.g. Apple, Samsung, Sony" required />
+                            <label asp-for="Brand" class="form-label fw-semibold">Brand / Manufacturer <span class="text-danger">*</span></label>
+                            <input asp-for="Brand" id="brandInput" class="form-control" placeholder="e.g. Apple, Dell, Sony, Samsung" required />
                             <span asp-validation-for="Brand" class="text-danger small"></span>
                         </div>
-                    </div>
 
-                    <div class="row g-3 mb-3">
-                        <div class="col-md-6">
-                            <label asp-for="ModelNumber" class="form-label">Model Number</label>
-                            <input asp-for="ModelNumber" class="form-control" placeholder="e.g. A2485" required />
+                        <!-- Product Name with Smart Autocomplete -->
+                        <div class="col-md-8 pc-autocomplete-container position-relative">
+                            <label asp-for="Name" class="form-label fw-semibold">Product Name &amp; Model <span class="text-danger">*</span></label>
+                            <input asp-for="Name" id="productNameInput" class="form-control" placeholder="e.g. MacBook Pro 16-inch M3 Max" autocomplete="off" required />
+                            <span asp-validation-for="Name" class="text-danger small"></span>
+                            <div class="form-text text-muted small">Type to see suggested models or enter your own custom device.</div>
+                            
+                            <!-- Autocomplete Suggestions Menu -->
+                            <div id="autocompleteMenu" class="pc-autocomplete-dropdown shadow-lg d-none"></div>
+                        </div>
+
+                        <!-- Model Number -->
+                        <div class="col-md-4">
+                            <label asp-for="ModelNumber" class="form-label fw-semibold">Model Number / SKU <span class="text-danger">*</span></label>
+                            <input asp-for="ModelNumber" id="modelNumberInput" class="form-control" placeholder="e.g. A2485, SM-S928B" required />
                             <span asp-validation-for="ModelNumber" class="text-danger small"></span>
                         </div>
-                        <div class="col-md-6">
-                            <label asp-for="SerialNumber" class="form-label">Unique Serial Number</label>
-                            <input asp-for="SerialNumber" class="form-control" placeholder="e.g. C02G1234MD6R" required />
-                            <span asp-validation-for="SerialNumber" class="text-danger small"></span>
-                        </div>
-                    </div>
 
-                    <div class="mb-3">
-                        <label asp-for="Category" class="form-label">Product Category</label>
-                        <select asp-for="Category" class="form-select" asp-items="Html.GetEnumSelectList<ProductCare.Web.Models.Enums.ProductCategory>()"></select>
-                        <span asp-validation-for="Category" class="text-danger small"></span>
+                        <!-- Serial Number -->
+                        <div class="col-md-8">
+                            <label asp-for="SerialNumber" class="form-label fw-semibold">Hardware Serial Number (S/N) <span class="text-danger">*</span></label>
+                            <input asp-for="SerialNumber" id="serialNumberInput" class="form-control font-monospace" placeholder="e.g. C02G73276936" required />
+                            <span asp-validation-for="SerialNumber" class="text-danger small"></span>
+                            <div class="form-text text-muted small">Found on your device chassis, box label, or in device settings.</div>
+                        </div>
+
+                        <!-- Subcategory (Optional) -->
+                        <div class="col-md-4">
+                            <label asp-for="SubCategory" class="form-label fw-semibold">Form Factor <span class="text-muted fw-normal small">(Optional)</span></label>
+                            <input asp-for="SubCategory" id="subCategoryInput" class="form-control" placeholder="e.g. Ultrabook, ANC Headphones" />
+                            <span asp-validation-for="SubCategory" class="text-danger small"></span>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Section 2: Purchase & Warranty Details -->
-                <div class="mb-4">
-                    <div class="d-flex align-items-center gap-2 mb-3 pb-2 border-bottom" style="border-color: var(--pc-stone) !important;">
-                        <span class="pc-badge pc-badge-stone" style="font-size: 10px;">SECTION 2</span>
-                        <h6 class="fw-bold text-dark mb-0 font-serif">Purchase &amp; Warranty Commitment</h6>
+                <!-- =============================================================
+                     STEP 2 — PURCHASE DETAILS
+                     ============================================================= -->
+                <div class="mb-5">
+                    <div class="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom">
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="badge bg-forest text-white" style="font-size: 11px;">Step 2</span>
+                            <h2 class="h6 fw-bold text-dark mb-0 font-display">Purchase Details</h2>
+                        </div>
+                        <span class="text-muted small" style="font-size: 12px;">Proof of Ownership</span>
                     </div>
 
-                    <div class="row g-3 mb-3">
+                    <div class="row g-3">
+                        <!-- Purchase Date -->
                         <div class="col-md-6">
-                            <label asp-for="PurchaseDate" class="form-label">Purchase Date</label>
-                            <input asp-for="PurchaseDate" type="date" class="form-control" max="@DateTime.UtcNow.ToString("yyyy-MM-dd")" required />
+                            <label asp-for="PurchaseDate" class="form-label fw-semibold">Purchase Date <span class="text-danger">*</span></label>
+                            <input asp-for="PurchaseDate" type="date" id="purchaseDateInput" class="form-control" required />
                             <span asp-validation-for="PurchaseDate" class="text-danger small"></span>
                         </div>
-                        <div class="col-md-6">
-                            <label asp-for="WarrantyDurationMonths" class="form-label">Warranty Duration (Months)</label>
-                            <input asp-for="WarrantyDurationMonths" type="number" min="1" max="120" class="form-control" placeholder="e.g. 12, 24, 36" required />
-                            <span asp-validation-for="WarrantyDurationMonths" class="text-danger small"></span>
-                        </div>
-                    </div>
 
-                    <div class="row g-3 mb-3">
+                        <!-- Purchase Price -->
                         <div class="col-md-6">
-                            <label asp-for="PurchaseStore" class="form-label">Retailer / Store (Optional)</label>
-                            <input asp-for="PurchaseStore" class="form-control" placeholder="e.g. Best Buy, Amazon, Apple Store" />
-                            <span asp-validation-for="PurchaseStore" class="text-danger small"></span>
-                        </div>
-                        <div class="col-md-6">
-                            <label asp-for="PurchasePrice" class="form-label">Purchase Price (Optional)</label>
+                            <label asp-for="PurchasePrice" class="form-label fw-semibold">Purchase Price <span class="text-muted fw-normal small">(Optional)</span></label>
                             <div class="input-group">
-                                <span class="input-group-text">$</span>
-                                <input asp-for="PurchasePrice" type="number" step="0.01" min="0" class="form-control" placeholder="0.00" />
+                                <span class="input-group-text bg-white border-end-0 text-muted">&dollar;</span>
+                                <input asp-for="PurchasePrice" type="number" step="0.01" min="0" class="form-control border-start-0" placeholder="0.00" />
                             </div>
                             <span asp-validation-for="PurchasePrice" class="text-danger small"></span>
                         </div>
-                    </div>
 
-                    <div class="mb-3">
-                        <label asp-for="Notes" class="form-label">Personal Notes (Optional)</label>
-                        <textarea asp-for="Notes" class="form-control" rows="3" placeholder="Additional specifications, order ID, or coverage details..."></textarea>
-                        <span asp-validation-for="Notes" class="text-danger small"></span>
-                    </div>
-                </div>
+                        <!-- Purchase Store -->
+                        <div class="col-md-6">
+                            <label asp-for="PurchaseStore" class="form-label fw-semibold">Store / Retailer <span class="text-muted fw-normal small">(Optional)</span></label>
+                            <input asp-for="PurchaseStore" class="form-control" placeholder="e.g. Apple Store, Amazon, Best Buy" />
+                            <span asp-validation-for="PurchaseStore" class="text-danger small"></span>
+                        </div>
 
-                <!-- Section 3: Physical Invoice Upload -->
-                <div class="mb-4">
-                    <div class="d-flex align-items-center gap-2 mb-3 pb-2 border-bottom" style="border-color: var(--pc-stone) !important;">
-                        <span class="pc-badge pc-badge-stone" style="font-size: 10px;">SECTION 3</span>
-                        <h6 class="fw-bold text-dark mb-0 font-serif">Attach Invoice Proof (Optional)</h6>
-                    </div>
-
-                    <div class="p-3 rounded-3" style="background-color: var(--pc-surface-inset); border: 1px dashed var(--pc-stone);">
-                        <label asp-for="InvoiceFile" class="form-label">Upload Receipt / Invoice</label>
-                        <input asp-for="InvoiceFile" type="file" class="form-control" accept=".pdf,.jpg,.jpeg,.png" />
-                        <span asp-validation-for="InvoiceFile" class="text-danger small"></span>
-                        <div class="form-text small mt-2">
-                            <i class="bi bi-shield-check text-forest"></i> Accepted formats: PDF, JPG, PNG &middot; Max size: 5 MB &middot; Stored securely outside web root.
+                        <!-- Invoice File Upload -->
+                        <div class="col-md-6">
+                            <label asp-for="InvoiceFile" class="form-label fw-semibold">Invoice / Receipt <span class="text-muted fw-normal small">(Optional, Max 5MB)</span></label>
+                            <input asp-for="InvoiceFile" type="file" class="form-control" accept=".pdf,.png,.jpg,.jpeg" />
+                            <span asp-validation-for="InvoiceFile" class="text-danger small"></span>
+                            <div class="form-text text-muted small">Accepted formats: PDF, JPG, PNG. Stored securely for claims.</div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Submit Button -->
-                <div class="d-flex align-items-center justify-content-end gap-2 pt-3 border-top" style="border-color: var(--pc-stone) !important;">
+                <!-- =============================================================
+                     STEP 3 — WARRANTY DETAILS
+                     ============================================================= -->
+                <div class="mb-4">
+                    <div class="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom">
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="badge bg-forest text-white" style="font-size: 11px;">Step 3</span>
+                            <h2 class="h6 fw-bold text-dark mb-0 font-display">Warranty Details</h2>
+                        </div>
+                        <span class="text-muted small" style="font-size: 12px;">Coverage Math</span>
+                    </div>
+
+                    <div class="row g-3">
+                        <!-- Warranty Duration -->
+                        <div class="col-md-6">
+                            <label asp-for="WarrantyDurationMonths" class="form-label fw-semibold">Warranty Duration (Months) <span class="text-danger">*</span></label>
+                            <input asp-for="WarrantyDurationMonths" type="number" id="warrantyMonthsInput" class="form-control" min="1" max="120" required />
+                            <span asp-validation-for="WarrantyDurationMonths" class="text-danger small"></span>
+                            <div class="form-text text-muted small">Typical terms: 12 months (phones/accessories), 24–36 months (laptops).</div>
+                        </div>
+
+                        <!-- Live Calculated Expiry Explanation -->
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Warranty Expiry Date</label>
+                            <div class="p-2 px-3 rounded-2 border bg-light d-flex align-items-center justify-content-between" style="min-height: 38px;">
+                                <div class="d-flex align-items-center gap-2">
+                                    <i class="bi bi-shield-check text-forest"></i>
+                                    <span class="small text-dark fw-bold" id="calculatedExpiryDisplay">—</span>
+                                </div>
+                                <span class="badge bg-success-subtle text-success border border-success-subtle" style="font-size: 10px;">Calculated Automatically</span>
+                            </div>
+                            <div class="form-text text-muted small">The application automatically calculates and tracks your expiry date from your purchase date.</div>
+                        </div>
+
+                        <!-- Optional Notes -->
+                        <div class="col-12">
+                            <label asp-for="Notes" class="form-label fw-semibold">Hardware Notes &amp; Specifications <span class="text-muted fw-normal small">(Optional)</span></label>
+                            <textarea asp-for="Notes" id="notesInput" class="form-control" rows="2" placeholder="e.g. Apple M3 Max, 36GB RAM, 1TB SSD. Includes AppleCare+ warranty extension."></textarea>
+                            <span asp-validation-for="Notes" class="text-danger small"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Form Submit Buttons -->
+                <div class="d-flex align-items-center justify-content-end gap-3 pt-3 border-top">
                     <a asp-action="Index" class="btn btn-stone">Cancel</a>
-                    <button type="submit" class="btn btn-forest px-4">
-                        <i class="bi bi-check2 me-1"></i> Register Product
+                    <button type="submit" class="btn btn-forest px-4 pc-btn-tactile">
+                        <i class="bi bi-check-circle me-1"></i> Save &amp; Register Product
                     </button>
                 </div>
             </form>
@@ -136,4 +257,409 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // 1. Live Warranty Expiry Calculation
+            const purchaseDateInput = document.getElementById('purchaseDateInput');
+            const warrantyMonthsInput = document.getElementById('warrantyMonthsInput');
+            const calculatedExpiryDisplay = document.getElementById('calculatedExpiryDisplay');
+
+            function updateCalculatedExpiry() {
+                if (!purchaseDateInput || !warrantyMonthsInput || !calculatedExpiryDisplay) return;
+                const dateVal = purchaseDateInput.value;
+                const monthsVal = parseInt(warrantyMonthsInput.value, 10);
+
+                if (dateVal && !isNaN(monthsVal) && monthsVal >= 0) {
+                    const parts = dateVal.split('-');
+                    if (parts.length === 3) {
+                        const year = parseInt(parts[0], 10);
+                        const month = parseInt(parts[1], 10) - 1;
+                        const day = parseInt(parts[2], 10);
+
+                        const targetDate = new Date(year, month + monthsVal, day);
+                        const options = { day: '2-digit', month: 'short', year: 'numeric' };
+                        calculatedExpiryDisplay.textContent = targetDate.toLocaleDateString('en-GB', options);
+                        return;
+                    }
+                }
+                calculatedExpiryDisplay.textContent = 'Enter purchase date & duration';
+            }
+
+            if (purchaseDateInput) purchaseDateInput.addEventListener('change', updateCalculatedExpiry);
+            if (warrantyMonthsInput) warrantyMonthsInput.addEventListener('input', updateCalculatedExpiry);
+            updateCalculatedExpiry();
+
+            // 2. Smart Autocomplete for Product Name
+            const nameInput = document.getElementById('productNameInput');
+            const menu = document.getElementById('autocompleteMenu');
+            const brandInput = document.getElementById('brandInput');
+            const catSelect = document.getElementById('categorySelect');
+            const subCatInput = document.getElementById('subCategoryInput');
+            const modelInput = document.getElementById('modelNumberInput');
+
+            let debounceTimer = null;
+            let currentItems = [];
+            let focusedIdx = -1;
+
+            if (nameInput && menu) {
+                nameInput.addEventListener('input', function () {
+                    clearTimeout(debounceTimer);
+                    const q = nameInput.value.trim();
+                    if (q.length < 2) {
+                        menu.classList.add('d-none');
+                        menu.innerHTML = '';
+                        return;
+                    }
+
+                    debounceTimer = setTimeout(async function () {
+                        try {
+                            const res = await fetch(`/Customer/Products/Suggest?query=${encodeURIComponent(q)}`);
+                            if (!res.ok) return;
+                            const items = await res.json();
+                            currentItems = items;
+                            focusedIdx = -1;
+
+                            if (!items || items.length === 0) {
+                                menu.innerHTML = '<div class="p-3 text-muted small fst-italic">No catalog matches. You can enter any custom device.</div>';
+                                menu.classList.remove('d-none');
+                                return;
+                            }
+
+                            menu.innerHTML = items.map((it, idx) => `
+                                <div class="pc-autocomplete-item p-2 px-3 border-bottom d-flex align-items-center justify-content-between" data-index="${idx}" style="cursor: pointer;">
+                                    <div>
+                                        <div class="fw-semibold text-dark small">${it.name}</div>
+                                        <div class="text-muted" style="font-size: 11px;">${it.brand} &bull; Model: ${it.modelNumber}</div>
+                                    </div>
+                                    <span class="badge bg-light text-forest border" style="font-size: 10px;">${it.subCategory || it.category}</span>
+                                </div>
+                            `).join('');
+                            menu.classList.remove('d-none');
+
+                            menu.querySelectorAll('.pc-autocomplete-item').forEach(el => {
+                                el.addEventListener('click', function () {
+                                    const idx = parseInt(el.getAttribute('data-index'), 10);
+                                    selectSuggestion(currentItems[idx]);
+                                });
+                            });
+                        } catch (e) {
+                            console.error('Autocomplete fetch error', e);
+                        }
+                    }, 250);
+                });
+
+                nameInput.addEventListener('keydown', function (e) {
+                    if (menu.classList.contains('d-none')) return;
+                    const items = menu.querySelectorAll('.pc-autocomplete-item');
+                    if (e.key === 'ArrowDown') {
+                        e.preventDefault();
+                        focusedIdx = (focusedIdx + 1) % items.length;
+                        highlightItem(items);
+                    } else if (e.key === 'ArrowUp') {
+                        e.preventDefault();
+                        focusedIdx = (focusedIdx - 1 + items.length) % items.length;
+                        highlightItem(items);
+                    } else if (e.key === 'Enter' && focusedIdx >= 0 && focusedIdx < currentItems.length) {
+                        e.preventDefault();
+                        selectSuggestion(currentItems[focusedIdx]);
+                    } else if (e.key === 'Escape') {
+                        menu.classList.add('d-none');
+                    }
+                });
+
+                document.addEventListener('click', function (e) {
+                    if (!nameInput.contains(e.target) && !menu.contains(e.target)) {
+                        menu.classList.add('d-none');
+                    }
+                });
+            }
+
+            function highlightItem(items) {
+                items.forEach((it, idx) => {
+                    if (idx === focusedIdx) {
+                        it.classList.add('bg-light');
+                        it.scrollIntoView({ block: 'nearest' });
+                    } else {
+                        it.classList.remove('bg-light');
+                    }
+                });
+            }
+
+            function selectSuggestion(item) {
+                if (!item) return;
+                nameInput.value = item.name;
+                brandInput.value = item.brand;
+                if (item.subCategory && subCatInput) subCatInput.value = item.subCategory;
+                if (item.modelNumber && modelInput) modelInput.value = item.modelNumber;
+
+                for (let opt of catSelect.options) {
+                    if (opt.text.toLowerCase() === item.category.toString().toLowerCase() || opt.value == item.category) {
+                        catSelect.value = opt.value;
+                        break;
+                    }
+                }
+                menu.classList.add('d-none');
+            }
+
+            // 3. Web Speech Recognition Voice Assistant Implementation
+            const voiceMicBtn = document.getElementById('voiceMicBtn');
+            const voiceMicIcon = document.getElementById('voiceMicIcon');
+            const voiceStatusText = document.getElementById('voiceStatusText');
+            const voiceParsedContainer = document.getElementById('voiceParsedContainer');
+            const voiceTranscriptPreview = document.getElementById('voiceTranscriptPreview');
+            const voiceBrand = document.getElementById('voiceBrand');
+            const voiceModel = document.getElementById('voiceModel');
+            const voiceSerial = document.getElementById('voiceSerial');
+            const voiceCategory = document.getElementById('voiceCategory');
+            const voiceDuration = document.getElementById('voiceDuration');
+            const voiceApplyBtn = document.getElementById('voiceApplyBtn');
+            const voiceClearBtn = document.getElementById('voiceClearBtn');
+            const voiceUnsupportedNotice = document.getElementById('voiceUnsupportedNotice');
+            const voiceUnsupportedMsg = document.getElementById('voiceUnsupportedMsg');
+
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+            if (!SpeechRecognition) {
+                if (voiceUnsupportedNotice) voiceUnsupportedNotice.classList.remove('d-none');
+                if (voiceMicBtn) {
+                    voiceMicBtn.disabled = true;
+                    voiceMicBtn.title = 'Voice recognition is not supported in this browser';
+                    voiceMicBtn.style.opacity = '0.6';
+                    voiceMicBtn.style.cursor = 'not-allowed';
+                }
+                if (voiceStatusText) {
+                    voiceStatusText.innerHTML = '<span class="text-muted">Speech recognition is not supported in this browser. Please use standard manual entry below.</span>';
+                }
+            } else {
+                let recognition = null;
+                let isRecognizing = false;
+
+                try {
+                    recognition = new SpeechRecognition();
+                    recognition.continuous = false;
+                    recognition.interimResults = true;
+                    recognition.lang = 'en-US';
+
+                    recognition.onstart = function () {
+                        isRecognizing = true;
+                        if (voiceMicBtn) voiceMicBtn.classList.add('listening');
+                        if (voiceMicIcon) {
+                            voiceMicIcon.classList.remove('bi-mic');
+                            voiceMicIcon.classList.add('bi-mic-fill');
+                        }
+                        if (voiceStatusText) {
+                            voiceStatusText.innerHTML = '<span class="text-danger fw-bold"><i class="bi bi-record-circle-fill me-1"></i>Listening... Please speak your device brand, model, serial, and warranty months.</span>';
+                        }
+                    };
+
+                    recognition.onresult = function (event) {
+                        let finalTranscript = '';
+                        let interimTranscript = '';
+
+                        for (let i = event.resultIndex; i < event.results.length; ++i) {
+                            if (event.results[i].isFinal) {
+                                finalTranscript += event.results[i][0].transcript;
+                            } else {
+                                interimTranscript += event.results[i][0].transcript;
+                            }
+                        }
+
+                        const currentText = finalTranscript || interimTranscript;
+                        if (voiceTranscriptPreview) {
+                            voiceTranscriptPreview.textContent = currentText || '—';
+                        }
+
+                        if (finalTranscript) {
+                            parseSpokenProductDetails(finalTranscript);
+                        }
+                    };
+
+                    recognition.onerror = function (event) {
+                        isRecognizing = false;
+                        resetMicUi();
+                        if (event.error === 'not-allowed') {
+                            if (voiceUnsupportedNotice) {
+                                voiceUnsupportedMsg.textContent = 'Microphone permission was denied. Please allow microphone access in your browser to use voice input.';
+                                voiceUnsupportedNotice.classList.remove('d-none');
+                            }
+                            if (voiceStatusText) {
+                                voiceStatusText.innerHTML = '<span class="text-danger"><i class="bi bi-exclamation-triangle-fill me-1"></i>Microphone permission denied. Enter details manually below.</span>';
+                            }
+                        } else if (event.error === 'no-speech') {
+                            if (voiceStatusText) {
+                                voiceStatusText.innerHTML = '<span class="text-warning"><i class="bi bi-mic-mute me-1"></i>No speech detected. Click the microphone to try again.</span>';
+                            }
+                        } else {
+                            if (voiceStatusText) {
+                                voiceStatusText.innerHTML = `<span class="text-muted">Voice recognition stopped (${event.error}). You can retry or enter details manually.</span>`;
+                            }
+                        }
+                    };
+
+                    recognition.onend = function () {
+                        isRecognizing = false;
+                        resetMicUi();
+                    };
+
+                    if (voiceMicBtn) {
+                        voiceMicBtn.addEventListener('click', function () {
+                            if (isRecognizing) {
+                                recognition.stop();
+                            } else {
+                                if (voiceUnsupportedNotice) voiceUnsupportedNotice.classList.add('d-none');
+                                try {
+                                    recognition.start();
+                                } catch (err) {
+                                    console.warn('Recognition start error:', err);
+                                }
+                            }
+                        });
+                    }
+                } catch (ex) {
+                    console.warn('SpeechRecognition initialization failed:', ex);
+                }
+
+                function resetMicUi() {
+                    if (voiceMicBtn) voiceMicBtn.classList.remove('listening');
+                    if (voiceMicIcon) {
+                        voiceMicIcon.classList.remove('bi-mic-fill');
+                        voiceMicIcon.classList.add('bi-mic');
+                    }
+                }
+
+                function parseSpokenProductDetails(spoken) {
+                    const text = spoken.trim();
+                    const lower = text.toLowerCase();
+
+                    let brand = '';
+                    let model = '';
+                    let serial = '';
+                    let category = '';
+                    let duration = '';
+
+                    // 1. Detect Brand
+                    const brandList = ['Apple', 'Dell', 'HP', 'Lenovo', 'Sony', 'Samsung', 'Asus', 'Acer', 'Microsoft', 'Google', 'Bose', 'Logitech', 'OnePlus', 'Xiaomi', 'Motorola', 'Nothing', 'LG'];
+                    for (let b of brandList) {
+                        if (new RegExp('\\b' + b + '\\b', 'i').test(text)) {
+                            brand = b;
+                            break;
+                        }
+                    }
+
+                    // 2. Detect Category
+                    if (/laptop|macbook|notebook|thinkpad|chromebook/i.test(lower)) {
+                        category = 'Laptop';
+                    } else if (/phone|iphone|smartphone|galaxy|pixel/i.test(lower)) {
+                        category = 'Smartphone';
+                    } else if (/headphone|earphone|audio|earbuds|airpods|speaker/i.test(lower)) {
+                        category = 'Audio';
+                    } else if (/watch|smartwatch|band/i.test(lower)) {
+                        category = 'Wearable';
+                    } else if (/tablet|ipad|tab/i.test(lower)) {
+                        category = 'Tablet';
+                    } else if (/tv|television|monitor|display/i.test(lower)) {
+                        category = 'Television';
+                    } else if (/camera|dslr/i.test(lower)) {
+                        category = 'Camera';
+                    } else if (/console|playstation|xbox|nintendo/i.test(lower)) {
+                        category = 'GamingConsole';
+                    }
+
+                    // 3. Detect Serial Number
+                    const snMatch = text.match(/(?:serial(?:\s*number)?|s\/n|code)\s*(?:is|:)?\s*([a-zA-Z0-9_-]{4,24})/i)
+                                 || text.match(/\b([A-Z0-9]{8,18})\b/);
+                    if (snMatch) {
+                        serial = snMatch[1].toUpperCase();
+                    }
+
+                    // 4. Detect Warranty Duration
+                    const durMatch = text.match(/(\d+)\s*(?:months?|years?)\s*(?:of\s*)?warranty/i)
+                                  || text.match(/warranty\s*(?:is|of)?\s*(\d+)\s*(?:months?|years?)/i);
+                    if (durMatch) {
+                        const num = parseInt(durMatch[1], 10);
+                        if (/year/i.test(durMatch[0])) {
+                            duration = (num * 12).toString();
+                        } else {
+                            duration = num.toString();
+                        }
+                    }
+
+                    // 5. Clean Model Name
+                    let clean = text
+                        .replace(/(?:serial(?:\s*number)?|s\/n|code)\s*(?:is|:)?\s*[a-zA-Z0-9_-]+/gi, '')
+                        .replace(/\b\d+\s*(?:months?|years?)\s*warranty\b/gi, '')
+                        .replace(/\bpurchased\s*(?:in|on)?\s*[a-zA-Z0-9\s,]+\b/gi, '')
+                        .replace(/\b(with|and|a|an|the|my|laptop|phone|device|months|warranty)\b/gi, '')
+                        .trim();
+
+                    if (brand && !clean.toLowerCase().includes(brand.toLowerCase())) {
+                        clean = brand + ' ' + clean;
+                    }
+                    model = clean.replace(/\s+/g, ' ').trim();
+
+                    // Fill voice suggestion box
+                    if (voiceBrand) voiceBrand.value = brand;
+                    if (voiceModel) voiceModel.value = model || text;
+                    if (voiceSerial) voiceSerial.value = serial;
+                    if (voiceCategory) voiceCategory.value = category;
+                    if (voiceDuration) voiceDuration.value = duration || '12';
+
+                    if (voiceParsedContainer) voiceParsedContainer.classList.remove('d-none');
+                    if (voiceClearBtn) voiceClearBtn.classList.remove('d-none');
+                    if (voiceStatusText) {
+                        voiceStatusText.innerHTML = '<span class="text-success"><i class="bi bi-check2-circle me-1"></i>Speech recognized! Review details in the card and click "Apply Details to Form".</span>';
+                    }
+                }
+
+                if (voiceApplyBtn) {
+                    voiceApplyBtn.addEventListener('click', function () {
+                        if (voiceBrand && voiceBrand.value && brandInput) brandInput.value = voiceBrand.value;
+                        if (voiceModel && voiceModel.value && nameInput) nameInput.value = voiceModel.value;
+                        if (voiceSerial && voiceSerial.value && serialNumberInput) serialNumberInput.value = voiceSerial.value;
+                        if (voiceDuration && voiceDuration.value && warrantyMonthsInput) {
+                            warrantyMonthsInput.value = voiceDuration.value;
+                            updateCalculatedExpiry();
+                        }
+
+                        if (voiceCategory && voiceCategory.value && catSelect) {
+                            for (let opt of catSelect.options) {
+                                if (opt.text.toLowerCase().includes(voiceCategory.value.toLowerCase())) {
+                                    catSelect.value = opt.value;
+                                    break;
+                                }
+                            }
+                        }
+
+                        if (nameInput && !modelInput.value) {
+                            // Extract last token or sub-sku if available
+                            const tokens = nameInput.value.split(' ');
+                            if (tokens.length > 2) {
+                                modelInput.value = tokens.slice(-2).join(' ');
+                            }
+                        }
+
+                        if (voiceStatusText) {
+                            voiceStatusText.innerHTML = '<span class="text-success fw-bold"><i class="bi bi-check-circle-fill me-1"></i>Details applied to form! Please review and click "Save & Register Product" below.</span>';
+                        }
+                    });
+                }
+
+                if (voiceClearBtn) {
+                    voiceClearBtn.addEventListener('click', function () {
+                        if (voiceParsedContainer) voiceParsedContainer.classList.add('d-none');
+                        if (voiceTranscriptPreview) voiceTranscriptPreview.textContent = '—';
+                        if (voiceBrand) voiceBrand.value = '';
+                        if (voiceModel) voiceModel.value = '';
+                        if (voiceSerial) voiceSerial.value = '';
+                        if (voiceCategory) voiceCategory.value = '';
+                        if (voiceDuration) voiceDuration.value = '';
+                        voiceClearBtn.classList.add('d-none');
+                        if (voiceStatusText) {
+                            voiceStatusText.innerHTML = 'Tell us the brand and model. Click the microphone to try again.';
+                        }
+                    });
+                }
+            }
+        });
+    </script>
 }

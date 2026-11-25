@@ -16,8 +16,10 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     }
 
     public DbSet<Product> Products => Set<Product>();
+    public DbSet<ServiceCenter> ServiceCenters => Set<ServiceCenter>();
     public DbSet<ServiceRequest> ServiceRequests => Set<ServiceRequest>();
     public DbSet<ServiceRequestHistory> ServiceRequestHistories => Set<ServiceRequestHistory>();
+    public DbSet<NetworkQualityReport> NetworkQualityReports => Set<NetworkQualityReport>();
 
     // Keyless entities for SQL Server View and Stored Procedure projections
     public DbSet<ProductWarrantySummaryView> ProductWarrantySummaries => Set<ProductWarrantySummaryView>();

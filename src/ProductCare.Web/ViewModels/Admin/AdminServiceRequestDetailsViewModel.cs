@@ -22,6 +22,17 @@ public class AdminServiceRequestDetailsViewModel
     public string? CurrentAssignedTechnician { get; set; }
     public string? CurrentAdminRemarks { get; set; }
 
+    public string? CampusLocation { get; set; }
+    public DateTime? SlaDeadlineUtc { get; set; }
+    public bool IsOverdue { get; set; }
+    public bool IsApproachingBreach { get; set; }
+    public bool IsEscalated { get; set; }
+    public string SlaBadgeText { get; set; } = string.Empty;
+    public string SlaBadgeCssClass { get; set; } = "badge bg-secondary";
+    public string? AttachmentFileName { get; set; }
+    public string? ResolutionProofFileName { get; set; }
+    public string? RecommendedTechnician { get; set; }
+
     public DateTime CreatedAtUtc { get; set; }
     public DateTime? UpdatedAtUtc { get; set; }
     public DateTime? ResolvedAtUtc { get; set; }
@@ -42,6 +53,13 @@ public class AdminServiceRequestDetailsViewModel
     public DateOnly ProductWarrantyExpiryDate { get; set; }
     public string ProductWarrantyStatusBadge { get; set; } = string.Empty;
     public string ProductWarrantyStatusText { get; set; } = string.Empty;
+
+    // Associated Service Center
+    public int? ServiceCenterId { get; set; }
+    public string? ServiceCenterName { get; set; }
+    public string? ServiceCenterAddress { get; set; }
+    public string? ServiceCenterCity { get; set; }
+    public bool? ServiceCenterIsVerified { get; set; }
 
     // Status transition action form
     [Display(Name = "Update Status To")]

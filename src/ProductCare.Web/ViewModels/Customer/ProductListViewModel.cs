@@ -10,6 +10,7 @@ public class ProductListViewModel
     public ProductCategory? FilterCategory { get; set; }
     public WarrantyStatus? FilterStatus { get; set; }
     public string? SearchTerm { get; set; }
+    public string? Sort { get; set; }
 
     public int TotalCount => Products.Count;
 }
@@ -23,6 +24,7 @@ public class ProductListItemViewModel
     public string SerialNumber { get; set; } = string.Empty;
     public ProductCategory Category { get; set; }
     public string CategoryName { get; set; } = string.Empty;
+    public string? SubCategory { get; set; }
     public DateOnly PurchaseDate { get; set; }
     public int WarrantyDurationMonths { get; set; }
     public DateOnly WarrantyExpiryDate { get; set; }

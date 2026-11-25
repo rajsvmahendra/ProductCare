@@ -1,0 +1,1779 @@
+/* ============================================================================
+   PRODUCTCARE — LIGHT EDITORIAL PRODUCT DESIGN SYSTEM
+   Specification: Clean, Natural, Editorial Product UI
+   Palette: Soft Gray-White Canvas (#F5F7FA), Crisp White Surfaces (#FFFFFF)
+   Primary Accent: Deep Forest (#285B50), Hover (#1E473E), Soft Tint (rgba(40, 91, 80, 0.08))
+   Secondary: Soft Stone (#EEF2F6), Slate Text (#17212B / #526071)
+   Typography: Plus Jakarta Sans / Inter
+   ============================================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+/* --- 1. DESIGN TOKENS --- */
+:root {
+    /* Background Canvas & Surfaces */
+    --pc-bg-main: #F5F7FA;
+    --pc-bg-secondary: #EEF2F6;
+    --pc-surface: #FFFFFF;
+    --pc-surface-elevated: #FFFFFF;
+    --pc-surface-secondary: #F8FAFC;
+    --pc-surface-popover: #FFFFFF;
+    --pc-surface-inset: #F1F5F9;
+    --pc-canvas: #F5F7FA;
+
+    /* Primary Accent: Deep Forest */
+    --pc-forest: #285B50;
+    --pc-forest-hover: #1E473E;
+    --pc-forest-active: #16352E;
+    --pc-forest-soft: rgba(40, 91, 80, 0.08);
+    --pc-forest-border: rgba(40, 91, 80, 0.22);
+
+    /* Secondary Accent: Stone & Neutral Slate */
+    --pc-stone: #EEF2F6;
+    --pc-stone-dark: #E2E8F0;
+    --pc-stone-hover: #E2E8F0;
+
+    /* Legacy compatibility aliases for electric tokens */
+    --pc-electric-teal: #285B50;
+    --pc-electric-teal-hover: #1E473E;
+    --pc-electric-teal-glow: rgba(40, 91, 80, 0.15);
+    --pc-electric-blue: #2563EB;
+    --pc-electric-blue-hover: #1D4ED8;
+    --pc-electric-blue-glow: rgba(37, 99, 235, 0.15);
+    --pc-graphite: #17212B;
+    --pc-graphite-soft: #526071;
+
+    /* Semantic Status Tokens (Natural & Restrained) */
+    --pc-amber: #D97706;
+    --pc-amber-soft: rgba(217, 119, 6, 0.09);
+    --pc-amber-border: rgba(217, 119, 6, 0.25);
+    --pc-warm-amber: #D97706;
+
+    --pc-red: #DC2626;
+    --pc-red-soft: rgba(220, 38, 38, 0.09);
+    --pc-red-border: rgba(220, 38, 38, 0.25);
+    --pc-coral-red: #DC2626;
+
+    --pc-blue: #2563EB;
+    --pc-blue-soft: rgba(37, 99, 235, 0.09);
+    --pc-blue-border: rgba(37, 99, 235, 0.25);
+
+    --pc-status-active: #16A34A;
+    --pc-status-active-bg: rgba(22, 163, 74, 0.09);
+    --pc-status-active-border: rgba(22, 163, 74, 0.25);
+
+    --pc-status-expiring: #D97706;
+    --pc-status-expiring-bg: rgba(217, 119, 6, 0.09);
+    --pc-status-expiring-border: rgba(217, 119, 6, 0.25);
+
+    --pc-status-expired: #DC2626;
+    --pc-status-expired-bg: rgba(220, 38, 38, 0.09);
+    --pc-status-expired-border: rgba(220, 38, 38, 0.25);
+
+    --pc-status-progress: #2563EB;
+    --pc-status-progress-bg: rgba(37, 99, 235, 0.09);
+    --pc-status-progress-border: rgba(37, 99, 235, 0.25);
+
+    /* Text & Contrast Hierarchy */
+    --pc-text-primary: #17212B;
+    --pc-text-secondary: #526071;
+    --pc-text-faint: #8A96A6;
+    --pc-text: #17212B;
+    --pc-text-muted: #64748B;
+
+    /* Refined High-Clarity Visible Border System */
+    --pc-border-hairline: #CBD5E1;
+    --pc-border-subtle: #94A3B8;
+    --pc-border-strong: #64748B;
+    --pc-border-card: rgba(203, 213, 225, 0.95);
+    --pc-border-glass: rgba(148, 163, 184, 0.50);
+    --pc-border-highlight: #285B50;
+    --pc-border-focus: rgba(40, 91, 80, 0.35);
+
+    /* Typography */
+    --pc-font-display: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --pc-font-sans: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --pc-font-serif: var(--pc-font-display);
+    --pc-font-mono: 'JetBrains Mono', 'SF Mono', Menlo, Consolas, monospace;
+
+    /* Layered Tactile Shadows with Inner Highlights */
+    --pc-shadow-subtle: 0 1px 3px rgba(15, 23, 42, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    --pc-shadow-card: 0 2px 8px -2px rgba(15, 23, 42, 0.06), 0 1px 3px rgba(15, 23, 42, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.95);
+    --pc-shadow-floating: 0 12px 32px -6px rgba(15, 23, 42, 0.10), 0 4px 10px -2px rgba(15, 23, 42, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    --pc-shadow-hover: 0 14px 34px -8px rgba(15, 23, 42, 0.12), 0 6px 14px -3px rgba(40, 91, 80, 0.10), inset 0 1px 0 rgba(255, 255, 255, 1);
+
+    /* Restrained Radii */
+    --pc-radius-sm: 6px;
+    --pc-radius-md: 8px;
+    --pc-radius-lg: 12px;
+    --pc-radius-xl: 16px;
+    --pc-radius-2xl: 20px;
+    --pc-radius-pill: 999px;
+
+    /* Dimensions */
+    --pc-header-h: 70px;
+    --pc-topbar-h: 64px;
+    --pc-sidebar-w: 248px;
+}
+
+/* --- 2. GLOBAL RESET & BASE RULES --- */
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--pc-canvas);
+    color: var(--pc-text-primary);
+    font-family: var(--pc-font-sans);
+    font-size: 15px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: var(--pc-text-primary);
+    font-family: var(--pc-font-display);
+    margin-top: 0;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    line-height: 1.25;
+}
+
+p {
+    color: var(--pc-text-secondary);
+}
+
+.text-muted {
+    color: var(--pc-text-muted) !important;
+}
+
+.text-faint {
+    color: var(--pc-text-faint) !important;
+}
+
+.text-forest {
+    color: var(--pc-forest) !important;
+}
+
+.text-electric-teal {
+    color: var(--pc-forest) !important;
+}
+
+.text-electric-blue {
+    color: var(--pc-blue) !important;
+}
+
+.text-warm-amber {
+    color: var(--pc-amber) !important;
+}
+
+.text-dark {
+    color: var(--pc-text-primary) !important;
+}
+
+.bg-light {
+    background-color: var(--pc-surface-secondary) !important;
+}
+
+.bg-white {
+    background-color: #FFFFFF !important;
+}
+
+.border, .border-top, .border-bottom, .border-start, .border-end {
+    border-color: var(--pc-border-hairline) !important;
+}
+
+.card, .pc-card {
+    background-color: #FFFFFF !important;
+    border: 1px solid var(--pc-border-card) !important;
+    border-radius: var(--pc-radius-lg) !important;
+    color: var(--pc-text-primary) !important;
+    box-shadow: var(--pc-shadow-card) !important;
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.modal-content {
+    background-color: #FFFFFF !important;
+    border: 1px solid var(--pc-border-hairline) !important;
+    color: var(--pc-text-primary) !important;
+    border-radius: var(--pc-radius-lg) !important;
+    box-shadow: var(--pc-shadow-floating) !important;
+}
+
+.modal-header, .modal-footer {
+    border-color: var(--pc-border-hairline) !important;
+    background-color: #FFFFFF;
+}
+
+.dropdown-menu {
+    background-color: #FFFFFF !important;
+    border: 1px solid var(--pc-border-hairline) !important;
+    color: var(--pc-text-primary) !important;
+    border-radius: var(--pc-radius-md) !important;
+    box-shadow: var(--pc-shadow-floating) !important;
+    padding: 0.5rem;
+}
+
+.dropdown-item {
+    color: var(--pc-text-secondary) !important;
+    border-radius: var(--pc-radius-sm);
+    font-size: 0.88rem;
+    font-weight: 500;
+    padding: 0.5rem 0.85rem;
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.dropdown-item:hover, .dropdown-item:focus {
+    background-color: var(--pc-surface-secondary) !important;
+    color: var(--pc-text-primary) !important;
+}
+
+.table {
+    --bs-table-bg: transparent;
+    --bs-table-color: var(--pc-text-primary);
+    --bs-table-border-color: var(--pc-border-hairline);
+    --bs-table-hover-bg: #F8FAFC;
+    color: var(--pc-text-primary) !important;
+}
+
+.table > :not(caption) > * > * {
+    background-color: transparent !important;
+    color: var(--pc-text-primary);
+    border-bottom-color: var(--pc-border-hairline) !important;
+}
+
+.table-hover > tbody > tr:hover > * {
+    background-color: #F8FAFC !important;
+}
+
+a {
+    color: var(--pc-forest);
+    text-decoration: none;
+    transition: color 0.15s ease;
+}
+
+a:hover {
+    color: var(--pc-forest-hover);
+}
+
+.font-display {
+    font-family: var(--pc-font-display) !important;
+}
+
+.font-sans {
+    font-family: var(--pc-font-sans) !important;
+}
+
+.font-mono {
+    font-family: var(--pc-font-mono) !important;
+}
+
+.font-serif {
+    font-family: var(--pc-font-display) !important;
+}
+
+/* --- 3. REFINED BUTTON STYLES --- */
+.btn {
+    font-family: var(--pc-font-sans);
+    font-size: 0.88rem;
+    font-weight: 600;
+    padding: 0.55rem 1.15rem;
+    border-radius: var(--pc-radius-md);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    transition: all 0.18s ease-in-out;
+    border: 1px solid transparent;
+    cursor: pointer;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+/* Primary Forest Button */
+.btn-forest,
+.btn-electric {
+    background-color: var(--pc-forest);
+    color: #FFFFFF !important;
+    border-color: var(--pc-forest);
+    box-shadow: 0 1px 2px rgba(40, 91, 80, 0.2);
+}
+
+.btn-forest:hover,
+.btn-electric:hover {
+    background-color: var(--pc-forest-hover);
+    border-color: var(--pc-forest-hover);
+    color: #FFFFFF !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(40, 91, 80, 0.25);
+}
+
+.btn-forest:active,
+.btn-electric:active {
+    background-color: var(--pc-forest-active);
+    transform: translateY(0);
+}
+
+/* Secondary Stone Button */
+.btn-stone,
+.btn-midnight {
+    background-color: var(--pc-surface-secondary);
+    color: var(--pc-text-primary) !important;
+    border-color: var(--pc-border-hairline);
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+
+.btn-stone:hover,
+.btn-midnight:hover {
+    background-color: #E2E8F0;
+    border-color: var(--pc-border-subtle);
+    color: var(--pc-text-primary) !important;
+    transform: translateY(-1px);
+}
+
+.btn-outline-forest,
+.btn-outline-electric {
+    background-color: transparent;
+    color: var(--pc-forest) !important;
+    border-color: var(--pc-forest);
+}
+
+.btn-outline-forest:hover,
+.btn-outline-electric:hover {
+    background-color: var(--pc-forest-soft);
+    color: var(--pc-forest-hover) !important;
+    transform: translateY(-1px);
+}
+
+.btn-sm {
+    padding: 0.38rem 0.85rem;
+    font-size: 0.82rem;
+    border-radius: var(--pc-radius-sm);
+}
+
+.btn-lg {
+    padding: 0.75rem 1.6rem;
+    font-size: 0.98rem;
+    border-radius: var(--pc-radius-md);
+}
+
+/* --- 4. PUBLIC NAVIGATION (LIGHT & REFINED) --- */
+.pc-public-header {
+    height: var(--pc-header-h);
+    background-color: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--pc-border-hairline);
+    position: sticky;
+    top: 0;
+    z-index: 1040;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.pc-brand-logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.65rem;
+    text-decoration: none;
+    color: var(--pc-text-primary) !important;
+}
+
+.pc-brand-mark {
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+}
+
+.pc-brand-logo:hover .pc-brand-mark {
+    transform: scale(1.05);
+}
+
+.pc-brand-title {
+    font-family: var(--pc-font-display);
+    font-size: 1.15rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--pc-text-primary);
+}
+
+.pc-nav-link {
+    color: var(--pc-text-secondary);
+    font-size: 0.88rem;
+    font-weight: 500;
+    padding: 0.45rem 0.85rem;
+    border-radius: var(--pc-radius-sm);
+    text-decoration: none;
+    transition: color 0.15s ease, background-color 0.15s ease;
+}
+
+.pc-nav-link:hover,
+.pc-nav-link.active {
+    color: var(--pc-text-primary);
+    background-color: var(--pc-surface-secondary);
+}
+
+/* --- 5. CINEMATIC HERO SECTION (AURORA & VISOR REFINED) --- */
+.pc-hero-section {
+    padding: 4.5rem 0 3.5rem 0;
+    position: relative;
+    background-color: var(--pc-canvas);
+}
+
+.pc-hero-kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.3rem 0.85rem;
+    background-color: var(--pc-forest-soft);
+    border: 1px solid var(--pc-forest-border);
+    border-radius: var(--pc-radius-pill);
+    color: var(--pc-forest);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 1.25rem;
+}
+
+.pc-hero-kicker .pulse-dot {
+    width: 7px;
+    height: 7px;
+    background-color: var(--pc-forest);
+    border-radius: 50%;
+}
+
+.pc-hero-headline {
+    font-family: var(--pc-font-display);
+    font-size: clamp(2.4rem, 4.8vw, 3.8rem);
+    font-weight: 800;
+    letter-spacing: -0.035em;
+    line-height: 1.12;
+    color: var(--pc-text-primary);
+    margin-bottom: 1.25rem;
+}
+
+.pc-hero-lead {
+    font-size: 1.12rem;
+    color: var(--pc-text-secondary);
+    line-height: 1.6;
+    max-width: 580px;
+    margin-bottom: 2rem;
+}
+
+.pc-trust-badge-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--pc-border-hairline);
+    font-size: 0.84rem;
+    color: var(--pc-text-secondary);
+}
+
+.pc-trust-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+}
+
+.pc-trust-item i {
+    color: var(--pc-forest);
+    font-size: 1rem;
+}
+
+/* --- 6. VISOR-INSPIRED 16:9 SHOWCASE FRAME & 3-CARD BANNER --- */
+.pc-showcase-container {
+    width: 100%;
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+.pc-hero-showcase-frame {
+    position: relative;
+    width: 100%;
+    border-radius: var(--pc-radius-2xl);
+    overflow: hidden;
+    background-color: #FFFFFF;
+    border: 1px solid var(--pc-border-hairline);
+    box-shadow: var(--pc-shadow-floating);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.pc-showcase-topbar {
+    padding: 0.85rem 1.4rem;
+    background-color: #F8FAFC;
+    border-bottom: 1px solid var(--pc-border-hairline);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.pc-showcase-body {
+    padding: 1.75rem;
+    background-color: #FFFFFF;
+}
+
+/* Asymmetrical 3-Card Banner below the showcase */
+.pc-hero-banner-row {
+    margin-top: 1.75rem;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+}
+
+@media (max-width: 991px) {
+    .pc-hero-banner-row {
+        grid-template-columns: 1fr;
+    }
+}
+
+.pc-feature-card {
+    background-color: #FFFFFF;
+    border: 1px solid var(--pc-border-hairline);
+    border-radius: var(--pc-radius-xl);
+    padding: 1.5rem;
+    box-shadow: var(--pc-shadow-card);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.pc-feature-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--pc-shadow-hover);
+    border-color: var(--pc-border-subtle);
+}
+
+.pc-feature-icon-box {
+    width: 42px;
+    height: 42px;
+    border-radius: var(--pc-radius-md);
+    background-color: var(--pc-forest-soft);
+    color: var(--pc-forest);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    margin-bottom: 1.25rem;
+}
+
+.pc-feature-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--pc-text-primary);
+    margin-bottom: 0.6rem;
+}
+
+.pc-feature-desc {
+    font-size: 0.9rem;
+    color: var(--pc-text-secondary);
+    line-height: 1.55;
+    margin-bottom: 1.25rem;
+}
+
+.pc-feature-link {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--pc-forest);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    text-decoration: none;
+    transition: gap 0.15s ease;
+}
+
+.pc-feature-link:hover {
+    color: var(--pc-forest-hover);
+    gap: 0.55rem;
+}
+
+/* --- 7. REFINED COMPONENT STYLES & KPI CARDS --- */
+.pc-kpi-card {
+    background-color: #FFFFFF;
+    border: 1px solid var(--pc-border-hairline);
+    border-radius: var(--pc-radius-lg);
+    padding: 1.25rem 1.4rem;
+    box-shadow: var(--pc-shadow-card);
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.pc-kpi-card:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--pc-shadow-hover);
+}
+
+.pc-kpi-label {
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--pc-text-secondary);
+    margin-bottom: 0.4rem;
+}
+
+.pc-kpi-val,
+.pc-kpi-value {
+    font-family: var(--pc-font-display);
+    font-size: 1.9rem;
+    font-weight: 800;
+    color: var(--pc-text-primary);
+    line-height: 1.1;
+    margin-bottom: 0.35rem;
+}
+
+/* Status Badges */
+.pc-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.24rem 0.65rem;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    border-radius: var(--pc-radius-pill);
+    white-space: nowrap;
+}
+
+.pc-badge-active {
+    background-color: var(--pc-status-active-bg);
+    color: var(--pc-status-active);
+    border: 1px solid var(--pc-status-active-border);
+}
+
+.pc-badge-expiring {
+    background-color: var(--pc-status-expiring-bg);
+    color: var(--pc-status-expiring);
+    border: 1px solid var(--pc-status-expiring-border);
+}
+
+.pc-badge-expired {
+    background-color: var(--pc-status-expired-bg);
+    color: var(--pc-status-expired);
+    border: 1px solid var(--pc-status-expired-border);
+}
+
+.pc-badge-progress {
+    background-color: var(--pc-status-progress-bg);
+    color: var(--pc-status-progress);
+    border: 1px solid var(--pc-status-progress-border);
+}
+
+/* Modern Tables */
+.pc-table-wrapper {
+    background-color: #FFFFFF;
+    border: 1px solid var(--pc-border-hairline);
+    border-radius: var(--pc-radius-lg);
+    overflow: hidden;
+    box-shadow: var(--pc-shadow-card);
+}
+
+.pc-table {
+    width: 100%;
+    margin-bottom: 0;
+    color: var(--pc-text-primary);
+    vertical-align: middle;
+}
+
+.pc-table th {
+    background-color: #F8FAFC;
+    border-bottom: 1px solid var(--pc-border-hairline);
+    color: var(--pc-text-secondary);
+    font-size: 0.76rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 0.85rem 1.25rem;
+}
+
+.pc-table td {
+    padding: 0.95rem 1.25rem;
+    border-bottom: 1px solid var(--pc-border-hairline);
+    font-size: 0.88rem;
+    background-color: #FFFFFF;
+}
+
+.pc-table tr:hover td {
+    background-color: #F8FAFC;
+}
+
+.pc-table tr:last-child td {
+    border-bottom: none;
+}
+
+/* Stepper & Timelines */
+.pc-stepper {
+    position: relative;
+    padding-left: 1.5rem;
+}
+
+.pc-stepper::before {
+    content: '';
+    position: absolute;
+    top: 10px;
+    bottom: 10px;
+    left: 6px;
+    width: 2px;
+    background-color: var(--pc-border-hairline);
+}
+
+.pc-step-item {
+    position: relative;
+    padding-bottom: 1.5rem;
+}
+
+.pc-step-item:last-child {
+    padding-bottom: 0;
+}
+
+.pc-step-dot {
+    position: absolute;
+    left: -1.5rem;
+    top: 3px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background-color: #FFFFFF;
+    border: 2px solid var(--pc-border-subtle);
+    z-index: 1;
+}
+
+.pc-step-item.completed .pc-step-dot {
+    background-color: var(--pc-forest);
+    border-color: var(--pc-forest);
+}
+
+.pc-step-item.active .pc-step-dot {
+    background-color: var(--pc-blue);
+    border-color: var(--pc-blue);
+}
+
+/* --- 8. AUTHENTICATION PAGES --- */
+.pc-auth-desk {
+    min-height: calc(100vh - var(--pc-header-h));
+    display: flex;
+    align-items: center;
+    padding: 3rem 0;
+    background-color: var(--pc-canvas);
+}
+
+.pc-auth-card {
+    background-color: #FFFFFF;
+    border: 1px solid var(--pc-border-hairline);
+    border-radius: var(--pc-radius-xl);
+    box-shadow: var(--pc-shadow-floating);
+    padding: 2.5rem;
+}
+
+@media (max-width: 575px) {
+    .pc-auth-card {
+        padding: 1.75rem 1.25rem;
+    }
+}
+
+/* Form Controls */
+.form-label {
+    font-size: 0.84rem;
+    font-weight: 600;
+    color: var(--pc-text-primary);
+    margin-bottom: 0.35rem;
+}
+
+.form-control, .form-select {
+    background-color: #FFFFFF;
+    border: 1px solid var(--pc-border-hairline);
+    color: var(--pc-text-primary);
+    border-radius: var(--pc-radius-md);
+    padding: 0.6rem 0.95rem;
+    font-size: 0.9rem;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.form-control:focus, .form-select:focus {
+    background-color: #FFFFFF;
+    color: var(--pc-text-primary);
+    border-color: var(--pc-forest);
+    box-shadow: 0 0 0 3px var(--pc-forest-soft);
+    outline: none;
+}
+
+.form-control::placeholder {
+    color: var(--pc-text-faint);
+}
+
+.input-group-text {
+    background-color: var(--pc-surface-secondary);
+    border: 1px solid var(--pc-border-hairline);
+    color: var(--pc-text-secondary);
+}
+
+.pc-password-toggle {
+    background: transparent;
+    border: none;
+    color: var(--pc-text-secondary);
+    padding: 0.5rem 0.75rem;
+    cursor: pointer;
+    transition: color 0.15s ease;
+}
+
+.pc-password-toggle:hover {
+    color: var(--pc-text-primary);
+}
+
+/* --- 9. AUTHENTICATED PORTAL WORKSPACE --- */
+.pc-portal-layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+.pc-portal-sidebar {
+    width: var(--pc-sidebar-w);
+    background-color: #FFFFFF;
+    border-right: 1px solid var(--pc-border-hairline);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1030;
+    padding: 1.25rem 1rem;
+    overflow-y: auto;
+    transition: transform 0.25s ease;
+}
+
+.pc-portal-content {
+    margin-left: var(--pc-sidebar-w);
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: var(--pc-canvas);
+}
+
+.pc-portal-topbar {
+    height: var(--pc-topbar-h);
+    background-color: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--pc-border-hairline);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1.75rem;
+    position: sticky;
+    top: 0;
+    z-index: 1020;
+}
+
+.pc-sidebar-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0.4rem 0.6rem 1.1rem 0.6rem;
+    border-bottom: 1px solid var(--pc-border-hairline);
+    margin-bottom: 1rem;
+    text-decoration: none;
+}
+
+.pc-sidebar-nav {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.pc-sidebar-group-title {
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--pc-text-muted);
+    padding: 0.85rem 0.6rem 0.35rem 0.6rem;
+}
+
+.pc-sidebar-item {
+    margin-bottom: 2px;
+}
+
+.pc-sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.55rem 0.75rem;
+    border-radius: var(--pc-radius-md);
+    color: var(--pc-text-secondary);
+    font-size: 0.88rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.15s ease;
+}
+
+.pc-sidebar-link i {
+    font-size: 1.05rem;
+    width: 20px;
+    text-align: center;
+}
+
+.pc-sidebar-link:hover {
+    color: var(--pc-text-primary);
+    background-color: var(--pc-surface-secondary);
+}
+
+.pc-sidebar-link.active {
+    color: var(--pc-forest);
+    background-color: var(--pc-forest-soft);
+    font-weight: 600;
+}
+
+.pc-sidebar-link.active i {
+    color: var(--pc-forest);
+}
+
+/* --- 10. PUBLIC FOOTER --- */
+.pc-public-footer {
+    background-color: #FFFFFF;
+    border-top: 1px solid var(--pc-border-hairline);
+    padding: 3.5rem 0 2rem 0;
+    margin-top: auto;
+}
+
+.pc-footer-title {
+    font-family: var(--pc-font-display);
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--pc-text-primary);
+    margin-bottom: 1rem;
+}
+
+.pc-footer-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.pc-footer-list li {
+    margin-bottom: 0.5rem;
+}
+
+.pc-footer-list a {
+    color: var(--pc-text-secondary);
+    font-size: 0.86rem;
+    text-decoration: none;
+    transition: color 0.15s ease;
+}
+
+.pc-footer-list a:hover {
+    color: var(--pc-forest);
+}
+
+/* --- 11. RESPONSIVE UTILITIES --- */
+@media (max-width: 991.98px) {
+    .pc-portal-sidebar {
+        transform: translateX(-100%);
+    }
+
+    .pc-portal-sidebar.show {
+        transform: translateX(0);
+    }
+
+    .pc-portal-content {
+        margin-left: 0;
+    }
+
+    .pc-portal-topbar {
+        padding: 0 1rem;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .pc-hero-headline {
+        font-size: 1.8rem;
+        line-height: 1.18;
+    }
+
+    .pc-hero-cta-group .btn {
+        width: 100%;
+    }
+
+    .pc-trust-badge-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.75rem;
+    }
+}
+
+#pcMobileNavDrawer.show {
+    transform: translateY(0) !important;
+}
+
+/* --- 12. LIQUID GLASS & REFINED PRODUCT SYSTEM --- */
+.pc-glass-card {
+    background: rgba(255, 255, 255, 0.94);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--pc-border-card);
+    border-radius: var(--pc-radius-lg);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95), 0 4px 18px -2px rgba(15, 23, 42, 0.05);
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.pc-glass-card-interactive:hover,
+.pc-glass-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--pc-border-interactive);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 1), 0 12px 28px -4px rgba(15, 23, 42, 0.10);
+}
+
+.pc-glass-nav {
+    background: rgba(255, 255, 255, 0.86);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid rgba(226, 232, 240, 0.75);
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.02);
+}
+
+.pc-glass-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.22rem 0.65rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border-radius: var(--pc-radius-pill);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+
+.pc-glass-badge-verified {
+    background: rgba(40, 91, 80, 0.10);
+    color: var(--pc-forest);
+    border: 1px solid rgba(40, 91, 80, 0.25);
+}
+
+.pc-glass-badge-sample {
+    background: rgba(217, 119, 6, 0.10);
+    color: #B45309;
+    border: 1px solid rgba(217, 119, 6, 0.25);
+}
+
+/* Voice Assistant Registration Bar */
+.pc-voice-bar {
+    background: linear-gradient(135deg, rgba(240, 253, 250, 0.95), rgba(248, 250, 252, 0.95));
+    border: 1px solid rgba(40, 91, 80, 0.22);
+    border-radius: var(--pc-radius-lg);
+    padding: 1.25rem;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 1), 0 4px 12px -2px rgba(40, 91, 80, 0.04);
+}
+
+.pc-mic-button {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 2px solid var(--pc-forest);
+    background: #FFFFFF;
+    color: var(--pc-forest);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 6px rgba(40, 91, 80, 0.15);
+}
+
+.pc-mic-button:hover {
+    background: var(--pc-forest);
+    color: #FFFFFF;
+    transform: scale(1.05);
+}
+
+.pc-mic-button.listening {
+    background: #DC2626;
+    border-color: #DC2626;
+    color: #FFFFFF;
+    animation: pc-pulse-glow 1.5s infinite;
+}
+
+@keyframes pc-pulse-glow {
+    0% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.4); }
+    70% { box-shadow: 0 0 0 10px rgba(220, 38, 38, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0); }
+}
+
+/* Product Ownership Cards */
+.pc-product-card {
+    background: #FFFFFF;
+    border: 1px solid var(--pc-border-hairline);
+    border-radius: var(--pc-radius-lg);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    box-shadow: var(--pc-shadow-card);
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.pc-product-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--pc-shadow-hover);
+    border-color: rgba(40, 91, 80, 0.3);
+}
+
+.pc-product-card-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.pc-product-card-body {
+    flex-grow: 1;
+    margin-bottom: 1.25rem;
+}
+
+.pc-product-card-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--pc-stone);
+}
+
+/* 5-Step Repair Journey Progress Indicator */
+.pc-repair-journey {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    padding: 1.5rem 0.5rem;
+    margin: 1.5rem 0;
+}
+
+.pc-repair-journey::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 2rem;
+    right: 2rem;
+    height: 3px;
+    background: var(--pc-stone);
+    z-index: 1;
+    transform: translateY(-50%);
+}
+
+.pc-journey-step {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    width: 18%;
+}
+
+.pc-journey-dot {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #FFFFFF;
+    border: 2px solid var(--pc-stone-dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--pc-text-muted);
+    margin-bottom: 0.5rem;
+    transition: all 0.2s ease;
+}
+
+.pc-journey-step.active .pc-journey-dot {
+    border-color: var(--pc-forest);
+    background: var(--pc-forest);
+    color: #FFFFFF;
+    box-shadow: 0 0 0 4px rgba(40, 91, 80, 0.15);
+}
+
+.pc-journey-step.completed .pc-journey-dot {
+    border-color: #16A34A;
+    background: #16A34A;
+    color: #FFFFFF;
+}
+
+.pc-journey-title {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--pc-text-secondary);
+}
+
+.pc-journey-step.active .pc-journey-title {
+    color: var(--pc-text-primary);
+    font-weight: 700;
+}
+
+
+
+/* ============================================================================
+   PHASE 3: PREMIUM VISUAL EXPERIENCE & CREATIVE UI RECONSTRUCTION
+   ============================================================================ */
+
+/* 1. Integrated Floating Pill Navigation */
+.pc-floating-nav-container {
+    position: fixed;
+    top: 1rem;
+    left: 0;
+    right: 0;
+    z-index: 1040;
+    display: flex;
+    justify-content: center;
+    padding: 0 1rem;
+    pointer-events: none;
+}
+
+.pc-floating-navbar {
+    max-width: 1240px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 0.5rem 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(255, 255, 255, 0.90) !important;
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid var(--pc-border-card);
+    border-radius: var(--pc-radius-pill);
+    box-shadow: 0 8px 30px -4px rgba(15, 23, 42, 0.08), inset 0 1px 0 rgba(255, 255, 255, 1);
+    pointer-events: auto;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.pc-floating-navbar.scrolled {
+    background: rgba(255, 255, 255, 0.96) !important;
+    box-shadow: 0 12px 36px -6px rgba(15, 23, 42, 0.12), inset 0 1px 0 rgba(255, 255, 255, 1);
+    border-color: rgba(203, 213, 225, 1);
+}
+
+.pc-nav-col-left {
+    display: flex;
+    align-items: center;
+    min-width: 170px;
+}
+
+.pc-nav-capsule {
+    background: rgba(241, 245, 249, 0.85);
+    padding: 3px 4px;
+    border-radius: var(--pc-radius-pill);
+    border: 1px solid rgba(203, 213, 225, 0.7);
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+
+.pc-nav-pill {
+    padding: 0.38rem 0.95rem;
+    font-size: 0.84rem;
+    font-weight: 600;
+    color: var(--pc-text-secondary);
+    border-radius: var(--pc-radius-pill);
+    transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.pc-nav-pill:hover {
+    color: var(--pc-text-primary);
+    background: rgba(255, 255, 255, 0.9);
+}
+
+.pc-nav-pill.active {
+    color: var(--pc-forest);
+    background: #FFFFFF;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08), 0 0 0 1px rgba(203, 213, 225, 0.6);
+}
+
+.pc-nav-col-right {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    min-width: 170px;
+}
+
+.pc-btn-tactile {
+    font-weight: 600;
+    font-size: 0.84rem;
+    padding: 0.45rem 1.15rem;
+    border-radius: var(--pc-radius-pill);
+    transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    text-decoration: none;
+    border: 1px solid var(--pc-border-card);
+}
+
+.pc-btn-tactile:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(15, 23, 42, 0.08);
+}
+
+.pc-btn-tactile:active {
+    transform: translateY(0);
+}
+
+.pc-btn-tactile-primary {
+    background: var(--pc-forest) !important;
+    color: #FFFFFF !important;
+    border-color: var(--pc-forest) !important;
+    box-shadow: 0 2px 6px rgba(40, 91, 80, 0.25);
+}
+
+.pc-btn-tactile-primary:hover {
+    background: var(--pc-forest-hover) !important;
+    border-color: var(--pc-forest-hover) !important;
+    box-shadow: 0 6px 16px rgba(40, 91, 80, 0.30);
+}
+
+/* 2. Technology Poster Hero Styling */
+.pc-hero-section {
+    padding-top: calc(var(--pc-header-h) + 2.5rem);
+    padding-bottom: 3.5rem;
+    position: relative;
+    overflow: hidden;
+    background: radial-gradient(circle at 85% 20%, rgba(16, 185, 129, 0.06) 0%, transparent 50%),
+                radial-gradient(circle at 15% 80%, rgba(40, 91, 80, 0.04) 0%, transparent 40%),
+                var(--pc-canvas);
+}
+
+.pc-hero-gradient-text {
+    background: linear-gradient(135deg, #10B981 0%, #285B50 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: inline-block;
+}
+
+.pc-hero-poster-scene {
+    position: relative;
+    width: 100%;
+    min-height: 440px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    perspective: 1200px;
+}
+
+.pc-poster-glow {
+    position: absolute;
+    width: 320px;
+    height: 320px;
+    background: radial-gradient(circle, rgba(16, 185, 129, 0.18) 0%, rgba(40, 91, 80, 0.05) 50%, transparent 70%);
+    filter: blur(40px);
+    z-index: 1;
+    pointer-events: none;
+    animation: pcShieldGlow 6s ease-in-out infinite alternate;
+}
+
+.pc-poster-main-card {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: 440px;
+    background: #FFFFFF;
+    border: 1px solid var(--pc-border-card);
+    border-radius: var(--pc-radius-2xl);
+    padding: 1.5rem;
+    box-shadow: 0 20px 45px -10px rgba(15, 23, 42, 0.10), 0 0 0 1px rgba(255, 255, 255, 0.95) inset;
+    transform: rotateX(2deg) rotateY(-3deg);
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
+}
+
+.pc-poster-main-card:hover {
+    transform: rotateX(0) rotateY(0) translateY(-4px);
+    box-shadow: 0 24px 50px -8px rgba(15, 23, 42, 0.14), 0 0 0 1px rgba(255, 255, 255, 1) inset;
+}
+
+.pc-poster-icon-box {
+    width: 44px;
+    height: 44px;
+    border-radius: var(--pc-radius-lg);
+    background: var(--pc-forest-soft);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(40, 91, 80, 0.15);
+}
+
+.pc-poster-metric-box {
+    background: var(--pc-surface-secondary);
+    border: 1px solid var(--pc-border-card);
+    border-radius: var(--pc-radius-lg);
+    padding: 1rem;
+}
+
+.pc-poster-ticket-box {
+    background: #FFFFFF;
+    border: 1px solid var(--pc-border-card);
+    border-radius: var(--pc-radius-lg);
+    padding: 0.9rem;
+    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.03);
+}
+
+/* Floating Badges */
+.pc-floating-glass-badge {
+    position: absolute;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid var(--pc-border-card);
+    border-radius: var(--pc-radius-pill);
+    padding: 0.55rem 0.95rem;
+    box-shadow: 0 12px 28px -4px rgba(15, 23, 42, 0.12), inset 0 1px 0 rgba(255, 255, 255, 1);
+    animation: pcFloat 5s ease-in-out infinite alternate;
+}
+
+.pc-float-shield {
+    top: 15px;
+    right: -15px;
+    animation-delay: 0s;
+}
+
+.pc-float-invoice {
+    bottom: -15px;
+    left: -15px;
+    animation-delay: 2.5s;
+}
+
+.pc-badge-icon-emerald {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: rgba(16, 185, 129, 0.12);
+    color: #10B981;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+}
+
+.pc-badge-icon-stone {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: rgba(40, 91, 80, 0.10);
+    color: var(--pc-forest);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+}
+
+@keyframes pcFloat {
+    0% { transform: translateY(0px); }
+    100% { transform: translateY(-8px); }
+}
+
+@keyframes pcShieldGlow {
+    0% { opacity: 0.6; transform: scale(0.95); }
+    100% { opacity: 1; transform: scale(1.05); }
+}
+
+/* 3. Interactive Capability Showcase Section */
+.pc-showcase-section {
+    background-color: #FFFFFF;
+    position: relative;
+    scroll-margin-top: 84px;
+}
+
+.pc-showcase-nav {
+    background: rgba(241, 245, 249, 0.85);
+    border: 1px solid var(--pc-border-card);
+    box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.04);
+    gap: 4px;
+}
+
+.pc-showcase-tab {
+    padding: 0.5rem 1.25rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--pc-text-secondary);
+    background: transparent;
+    border: none;
+    border-radius: var(--pc-radius-pill);
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    white-space: nowrap;
+}
+
+.pc-showcase-tab:hover {
+    color: var(--pc-text-primary);
+    background: rgba(255, 255, 255, 0.7);
+}
+
+.pc-showcase-tab.active {
+    color: var(--pc-forest);
+    background: #FFFFFF;
+    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.08), 0 0 0 1px var(--pc-border-card);
+}
+
+.pc-showcase-stage {
+    border-radius: var(--pc-radius-2xl) !important;
+    border: 1px solid var(--pc-border-card) !important;
+    box-shadow: 0 20px 45px -10px rgba(15, 23, 42, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.95) !important;
+}
+
+.pc-showcase-panel {
+    display: none;
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity 0.25s ease, transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.pc-showcase-panel.active {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* 4. Connected 5-Stage Product Journey */
+#journey {
+    scroll-margin-top: 84px;
+}
+
+.pc-journey-grid {
+    position: relative;
+}
+
+.pc-journey-card {
+    border: 1px solid var(--pc-border-card) !important;
+    border-radius: var(--pc-radius-xl) !important;
+    transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.22s ease, border-color 0.22s ease !important;
+}
+
+.pc-journey-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--pc-border-interactive) !important;
+    box-shadow: 0 12px 28px -6px rgba(15, 23, 42, 0.08), inset 0 1px 0 rgba(255, 255, 255, 1) !important;
+}
+
+/* 5. Service Network & CTA */
+#network {
+    scroll-margin-top: 84px;
+}
+
+#experience {
+    scroll-margin-top: 84px;
+}
+
+.pc-cta-banner {
+    background: linear-gradient(135deg, #0F2E22 0%, #16352E 50%, #1E473E 100%);
+    border-radius: var(--pc-radius-2xl);
+    color: #FFFFFF;
+    padding: 3.5rem 2rem;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 16px 36px -8px rgba(15, 46, 34, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+/* 6. Form Inputs & Select Controls Visible High-Contrast Borders */
+.form-control,
+.form-select {
+    border: 1px solid var(--pc-border-hairline) !important;
+    color: var(--pc-text-primary);
+    background-color: #FFFFFF;
+    border-radius: var(--pc-radius-md);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--pc-forest) !important;
+    box-shadow: 0 0 0 3px rgba(40, 91, 80, 0.15) !important;
+    outline: none;
+}
+
+.input-group-text {
+    border: 1px solid var(--pc-border-hairline) !important;
+    background-color: var(--pc-surface-secondary);
+}
+
+/* 7. Autocomplete Container & Suggestion Box */
+.pc-autocomplete-container {
+    position: relative;
+}
+
+.pc-autocomplete-dropdown {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    right: 0;
+    background: #FFFFFF;
+    border: 1px solid var(--pc-border-card);
+    border-radius: var(--pc-radius-lg);
+    box-shadow: 0 12px 30px -4px rgba(15, 23, 42, 0.12), 0 4px 6px -2px rgba(15, 23, 42, 0.05);
+    z-index: 1050;
+    max-height: 280px;
+    overflow-y: auto;
+    padding: 4px;
+}
+
+.pc-autocomplete-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+    border-radius: var(--pc-radius-md);
+    cursor: pointer;
+    font-size: 0.88rem;
+    transition: background-color 0.15s ease;
+}
+
+.pc-autocomplete-item:hover,
+.pc-autocomplete-item.active {
+    background-color: var(--pc-surface-secondary);
+}
+
+.pc-autocomplete-item-name {
+    font-weight: 600;
+    color: var(--pc-text-primary);
+}
+
+.pc-autocomplete-item-meta {
+    font-size: 0.78rem;
+    color: var(--pc-text-muted);
+}
+
+/* 8. KPI Cards Refinement */
+.pc-kpi-card {
+    background: #FFFFFF;
+    border: 1px solid var(--pc-border-card) !important;
+    border-radius: var(--pc-radius-lg);
+    padding: 1.25rem;
+    box-shadow: var(--pc-shadow-card) !important;
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.pc-kpi-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--pc-shadow-hover) !important;
+    border-color: var(--pc-border-subtle) !important;
+}
+
+.pc-kpi-val {
+    font-family: var(--pc-font-display);
+    font-size: 2rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    color: var(--pc-text-primary);
+}
+
+.pc-kpi-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--pc-text-muted);
+    margin-bottom: 0.35rem;
+}
+
+/* 9. Product Card Elevation */
+.pc-product-card {
+    background: #FFFFFF;
+    border: 1px solid var(--pc-border-card) !important;
+    border-radius: var(--pc-radius-xl);
+    box-shadow: var(--pc-shadow-card) !important;
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.pc-product-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--pc-shadow-hover) !important;
+    border-color: var(--pc-border-subtle) !important;
+}
+
+.pc-step-number {
+    font-family: var(--pc-font-display);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: var(--pc-forest);
+    background: var(--pc-forest-soft);
+    padding: 0.25rem 0.65rem;
+    border-radius: var(--pc-radius-pill);
+    display: inline-block;
+    border: 1px solid rgba(40, 91, 80, 0.15);
+}
+
+.pc-device-icon-box {
+    width: 44px;
+    height: 44px;
+    border-radius: var(--pc-radius-lg);
+    background: var(--pc-forest-soft);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--pc-forest);
+    font-size: 1.35rem;
+    flex-shrink: 0;
+    border: 1px solid rgba(40, 91, 80, 0.15);
+}
+
+/* Status dots & radar tracks */
+.pc-status-dot-active {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #10B981;
+    display: inline-block;
+}
+
+.pc-status-dot-expiring {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #F59E0B;
+    display: inline-block;
+}
+
+.pc-status-dot-expired {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #EF4444;
+    display: inline-block;
+}
+
+.pc-progress-track {
+    background-color: var(--pc-stone);
+    border-radius: var(--pc-radius-pill);
+    height: 8px;
+    overflow: hidden;
+}

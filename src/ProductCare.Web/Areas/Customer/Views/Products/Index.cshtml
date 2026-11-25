@@ -1,151 +1,431 @@
 @model ProductCare.Web.ViewModels.Customer.ProductListViewModel
 @{
-    ViewData["Title"] = "Product Inventory";
+    ViewData["Title"] = "My Registered Products";
 }
 
 <!-- Page Header -->
 <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
     <div>
-        <span class="d-inline-block text-uppercase fw-bold small text-muted mb-1" style="letter-spacing: 0.08em; font-size: 0.72rem;">OWNERSHIP CATALOG</span>
-        <h1 class="h3 fw-bold text-dark mb-1 font-serif">Registered Device Inventory</h1>
-        <p class="text-muted small mb-0">Manage your product records, warranty commitments, and purchase proofs in one place.</p>
+        <div class="d-flex align-items-center gap-2 mb-1">
+            <span class="d-inline-block fw-bold small text-muted font-display" style="font-size: 0.8rem;">Hardware catalog</span>
+            <span class="text-muted">&bull;</span>
+            <span class="badge bg-light text-dark border small" style="font-size: 11px;">@Model.TotalCount device(s) registered</span>
+        </div>
+        <h1 class="h2 fw-bold text-dark mb-1 font-display">My Products</h1>
+        <p class="text-muted small mb-0">Registered hardware records, purchase invoices, and real-time warranty tracking.</p>
     </div>
-    <a asp-action="Create" class="btn btn-forest btn-sm">
-        <i class="bi bi-plus-lg"></i>
-        <span>Register New Product</span>
-    </a>
+    <div class="d-flex align-items-center gap-2">
+        <a asp-action="Create" class="btn btn-forest btn-sm pc-btn-tactile px-3">
+            <i class="bi bi-plus-lg me-1"></i> Register a Product
+        </a>
+    </div>
 </div>
 
-<!-- Filters & Search Toolbar -->
-<div class="pc-card mb-4 p-3">
-    <form method="get" class="row g-2 align-items-center">
-        <div class="col-md-5">
-            <div class="input-group">
-                <span class="input-group-text"><i class="bi bi-search"></i></span>
-                <input type="text" name="search" value="@Model.SearchTerm" class="form-control" placeholder="Search by name, brand, model, S/N..." />
+<!-- Structured 2-Row Filter & Search Toolbar (Bento Style) -->
+<div class="pc-bento-card pc-bento-white mb-4 p-4 shadow-sm">
+    <form method="get" class="d-flex flex-column gap-3">
+        <!-- Row 1: Prominent Search Input -->
+        <div class="input-group">
+            <span class="input-group-text bg-white border-end-0 text-muted" style="min-height: 42px; height: 42px;"><i class="bi bi-search"></i></span>
+            <input type="text" name="search" value="@Model.SearchTerm" class="form-control border-start-0" placeholder="Search devices by name, brand, model number, serial number..." style="min-height: 42px; height: 42px;" />
+            @if (!string.IsNullOrEmpty(Model.SearchTerm))
+            {
+                <a asp-action="Index" class="btn btn-stone border border-start-0 d-inline-flex align-items-center justify-content-center" title="Clear Search" style="min-height: 42px; height: 42px; width: 42px;">
+                    <i class="bi bi-x fs-5"></i>
+                </a>
+            }
+        </div>
+
+        <!-- Row 2: Category Filter, Warranty Filter, Sort Filter, Apply Filters, Reset, and View Toggle -->
+        <div class="row g-2 align-items-center">
+            <div class="col-12 col-md-3">
+                <select name="category" class="form-select" asp-for="FilterCategory" asp-items="Html.GetEnumSelectList<ProductCare.Web.Models.Enums.ProductCategory>()" style="min-height: 42px; height: 42px;">
+                    <option value="">All Categories</option>
+                </select>
             </div>
-        </div>
-        <div class="col-md-3">
-            <select name="category" class="form-select" asp-for="FilterCategory" asp-items="Html.GetEnumSelectList<ProductCare.Web.Models.Enums.ProductCategory>()">
-                <option value="">-- All Categories --</option>
-            </select>
-        </div>
-        <div class="col-md-2">
-            <select name="status" class="form-select" asp-for="FilterStatus" asp-items="Html.GetEnumSelectList<ProductCare.Web.Models.Enums.WarrantyStatus>()">
-                <option value="">-- All Statuses --</option>
-            </select>
-        </div>
-        <div class="col-md-2 d-flex gap-2">
-            <button type="submit" class="btn btn-forest w-100 btn-sm">Filter</button>
-            <a asp-action="Index" class="btn btn-stone btn-sm d-flex align-items-center justify-content-center" title="Reset Filters">
-                <i class="bi bi-arrow-counterclockwise"></i>
-            </a>
+            <div class="col-12 col-md-3">
+                <select name="status" class="form-select" asp-for="FilterStatus" asp-items="Html.GetEnumSelectList<ProductCare.Web.Models.Enums.WarrantyStatus>()" style="min-height: 42px; height: 42px;">
+                    <option value="">All Warranty Statuses</option>
+                </select>
+            </div>
+            <div class="col-12 col-md-2">
+                <select name="sort" class="form-select" style="min-height: 42px; height: 42px;">
+                    <!option value="" @(string.IsNullOrEmpty(Model.Sort) ? "selected" : "")>Expiry: Soonest</!option>
+                    <!option value="expiry_desc" @(Model.Sort == "expiry_desc" ? "selected" : "")>Expiry: Furthest</!option>
+                    <!option value="name_asc" @(Model.Sort == "name_asc" ? "selected" : "")>Name: A to Z</!option>
+                    <!option value="purchase_desc" @(Model.Sort == "purchase_desc" ? "selected" : "")>Purchased: Newest</!option>
+                </select>
+            </div>
+            <div class="col-6 col-md-2">
+                <button type="submit" class="btn btn-forest w-100 pc-btn-tactile d-inline-flex align-items-center justify-content-center" style="min-height: 42px; height: 42px;">
+                    <i class="bi bi-funnel me-1"></i> Apply Filters
+                </button>
+            </div>
+            <div class="col-6 col-md-2 d-flex justify-content-end gap-1">
+                <a asp-action="Index" class="btn btn-stone pc-btn-tactile flex-grow-1 d-inline-flex align-items-center justify-content-center" style="min-height: 42px; height: 42px;" title="Reset all filters">
+                    <i class="bi bi-arrow-counterclockwise me-1"></i> Reset
+                </a>
+                <div class="btn-group" role="group" style="min-height: 42px; height: 42px;">
+                    <button type="button" class="btn btn-stone active d-inline-flex align-items-center justify-content-center px-2" id="btnViewGrid" title="Card Grid View">
+                        <i class="bi bi-grid-fill"></i>
+                    </button>
+                    <button type="button" class="btn btn-stone d-inline-flex align-items-center justify-content-center px-2" id="btnViewTable" title="List View">
+                        <i class="bi bi-list-ul"></i>
+                    </button>
+                </div>
+            </div>
         </div>
     </form>
 </div>
 
-<!-- Products Table Card -->
-<div class="pc-card p-0 overflow-hidden">
-    <div class="pc-demo-topbar">
-        <span class="small fw-semibold text-dark"><i class="bi bi-laptop me-2 text-forest"></i>Personal Equipment Vault</span>
-        <span class="badge bg-light text-muted border small">Showing @Model.TotalCount device(s)</span>
+<!-- Product Ownership Display -->
+@if (Model.Products.Any())
+{
+    <!-- Stats Bar -->
+    <div class="d-flex align-items-center justify-content-between mb-3 px-1">
+        <div class="small text-muted">
+            Displaying <strong>@Model.TotalCount</strong> registered device(s)
+        </div>
     </div>
-    <div>
-        @if (Model.Products.Any())
+
+    <!-- 1. Grid of Bento Product Ownership Cards -->
+    <div class="row g-4 mb-4" id="productsGridView">
+        @foreach (var p in Model.Products)
         {
-            <div class="pc-table-wrapper border-0">
-                <table class="pc-table">
-                    <thead>
-                        <tr>
-                            <th>Product</th>
-                            <th>Brand &amp; Model</th>
-                            <th>Serial Number</th>
-                            <th>Category</th>
-                            <th>Purchase Date</th>
-                            <th>Warranty Expiry</th>
-                            <th>Status</th>
-                            <th>Proof</th>
-                            <th class="text-end">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var p in Model.Products)
-                        {
-                            <tr>
-                                <td>
-                                    <a asp-action="Details" asp-route-id="@p.Id" class="fw-semibold text-dark text-decoration-none">
-                                        @p.Name
-                                    </a>
-                                </td>
-                                <td class="small text-muted">
-                                    @p.Brand <span class="text-dark">@p.ModelNumber</span>
-                                </td>
-                                <td>
-                                    <span class="badge bg-light text-dark border font-monospace" style="font-size: 11px;">@p.SerialNumber</span>
-                                </td>
-                                <td>
-                                    <span class="badge bg-light text-dark border" style="font-size: 11px;">@p.CategoryName</span>
-                                </td>
-                                <td class="small text-muted tabular-nums">@p.PurchaseDate.ToString("dd MMM yyyy")</td>
-                                <td class="small tabular-nums">
-                                    <div>@p.WarrantyExpiryDate.ToString("dd MMM yyyy")</div>
-                                    <div class="text-muted" style="font-size: 11px;">@p.RemainingDays days remaining</div>
-                                </td>
-                                <td>
-                                    @if (p.WarrantyStatus == ProductCare.Web.Models.Enums.WarrantyStatus.Active)
+            var cardVariant = p.WarrantyStatus == ProductCare.Web.Models.Enums.WarrantyStatus.Active 
+                ? "pc-product-lime" 
+                : p.WarrantyStatus == ProductCare.Web.Models.Enums.WarrantyStatus.ExpiringSoon 
+                    ? "pc-product-peach" 
+                    : "pc-product-coral";
+
+            var totalDays = Math.Max(1, p.WarrantyDurationMonths * 30);
+            var remainingProgress = Math.Clamp((int)Math.Round((double)Math.Max(0, p.RemainingDays) / totalDays * 100), 0, 100);
+
+            <div class="col-md-6 col-xl-4">
+                <div class="pc-bento-product-card @cardVariant h-100 d-flex flex-column justify-content-between p-4">
+                    <div>
+                        <!-- Header with Brand Icon, Name & Status Pill -->
+                        <div class="d-flex align-items-start justify-content-between gap-2 mb-3">
+                            <div class="d-flex align-items-start gap-3">
+                                <div class="pc-device-icon-box flex-shrink-0" style="width: 48px; height: 48px; background: #FFFFFF; border: 1px solid var(--pc-border-card); border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.35rem; color: var(--pc-forest); box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);">
+                                    @if (p.CategoryName.Contains("Laptop") || p.CategoryName.Contains("Computer"))
                                     {
-                                        <span class="pc-badge pc-badge-active">Active</span>
+                                        <i class="bi bi-laptop"></i>
                                     }
-                                    else if (p.WarrantyStatus == ProductCare.Web.Models.Enums.WarrantyStatus.ExpiringSoon)
+                                    else if (p.CategoryName.Contains("Mobile") || p.CategoryName.Contains("Phone"))
                                     {
-                                        <span class="pc-badge pc-badge-expiring">Expiring Soon</span>
+                                        <i class="bi bi-phone"></i>
+                                    }
+                                    else if (p.CategoryName.Contains("Audio"))
+                                    {
+                                        <i class="bi bi-headphones"></i>
+                                    }
+                                    else if (p.CategoryName.Contains("Camera"))
+                                    {
+                                        <i class="bi bi-camera"></i>
+                                    }
+                                    else if (p.CategoryName.Contains("Watch"))
+                                    {
+                                        <i class="bi bi-smartwatch"></i>
+                                    }
+                                    else if (p.CategoryName.Contains("Television"))
+                                    {
+                                        <i class="bi bi-tv"></i>
                                     }
                                     else
                                     {
-                                        <span class="pc-badge pc-badge-expired">Expired</span>
+                                        <i class="bi bi-cpu"></i>
                                     }
-                                </td>
-                                <td>
-                                    @if (p.HasInvoice)
-                                    {
-                                        <a asp-action="DownloadInvoice" asp-route-id="@p.Id" class="badge" style="background-color: var(--pc-forest-soft); color: var(--pc-forest); text-decoration: none;" title="Download Verified Proof">
-                                            <i class="bi bi-file-earmark-check"></i> PDF
-                                        </a>
-                                    }
-                                    else
-                                    {
-                                        <span class="text-muted small">—</span>
-                                    }
-                                </td>
-                                <td class="text-end">
-                                    <div class="btn-group btn-group-sm">
-                                        <a asp-action="Details" asp-route-id="@p.Id" class="btn btn-stone btn-sm" title="View Details">
-                                            <i class="bi bi-eye"></i>
-                                        </a>
-                                        <a asp-action="Edit" asp-route-id="@p.Id" class="btn btn-stone btn-sm" title="Edit">
-                                            <i class="bi bi-pencil"></i>
-                                        </a>
-                                        <a asp-controller="ServiceRequests" asp-action="Create" asp-route-productId="@p.Id" class="btn btn-stone btn-sm text-forest" title="Raise Service Request">
-                                            <i class="bi bi-wrench"></i>
-                                        </a>
+                                </div>
+                                <div>
+                                    <span class="small fw-bold text-muted d-block mb-1 font-display text-uppercase" style="font-size: 10px; letter-spacing: 0.05em;">@p.Brand</span>
+                                    <h2 class="h6 fw-bold text-dark mb-1 font-display" style="line-height: 1.35;">
+                                        <a asp-action="Details" asp-route-id="@p.Id" class="text-dark text-decoration-none">@p.Name</a>
+                                    </h2>
+                                    <span class="small text-muted" style="font-size: 12px;">Model: @p.ModelNumber</span>
+                                </div>
+                            </div>
+
+                            <!-- Warranty Status Pill -->
+                            <div class="flex-shrink-0">
+                                @if (p.WarrantyStatus == ProductCare.Web.Models.Enums.WarrantyStatus.Active)
+                                {
+                                    <span class="pc-badge pc-badge-active" title="Warranty Valid">
+                                        <i class="bi bi-shield-check"></i> Active
+                                    </span>
+                                }
+                                else if (p.WarrantyStatus == ProductCare.Web.Models.Enums.WarrantyStatus.ExpiringSoon)
+                                {
+                                    <span class="pc-badge pc-badge-expiring" title="Expiring within 30 days">
+                                        <i class="bi bi-clock-history"></i> Expiring
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="pc-badge pc-badge-expired" title="Warranty Expired">
+                                        <i class="bi bi-exclamation-circle"></i> Expired
+                                    </span>
+                                }
+                            </div>
+                        </div>
+
+                        <!-- Middle Section: Serial & Dates Bento Inset -->
+                        <div class="p-3 rounded-3 mb-3 bg-white" style="border: 1px solid rgba(15, 23, 42, 0.08); box-shadow: 0 1px 3px rgba(15, 23, 42, 0.02);">
+                            <div class="d-flex align-items-center justify-content-between pb-2 mb-2 border-bottom">
+                                <div class="d-flex align-items-center gap-2 overflow-hidden">
+                                    <span class="small text-muted" style="font-size: 11px;">S/N:</span>
+                                    <span class="font-monospace small fw-bold text-dark text-truncate">@p.SerialNumber</span>
+                                </div>
+                                <button type="button" class="btn btn-link btn-sm p-0 text-muted pc-copy-btn" data-copy="@p.SerialNumber" title="Copy serial number" aria-label="Copy serial number">
+                                    <i class="bi bi-clipboard"></i>
+                                </button>
+                            </div>
+
+                            <div class="row g-2 small">
+                                <div class="col-6">
+                                    <div class="text-muted" style="font-size: 11px;">Purchase Date</div>
+                                    <div class="fw-semibold text-dark">@p.PurchaseDate.ToString("dd MMM yyyy")</div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="text-muted" style="font-size: 11px;">Warranty Expiry</div>
+                                    <div class="fw-semibold text-dark">@p.WarrantyExpiryDate.ToString("dd MMM yyyy")</div>
+                                </div>
+                                <div class="col-6 mt-2">
+                                    <div class="text-muted" style="font-size: 11px;">Coverage Left</div>
+                                    <div class="fw-bold @(p.RemainingDays > 30 ? "text-success" : p.RemainingDays > 0 ? "text-warning" : "text-danger")">
+                                        @(p.RemainingDays > 0 ? $"{p.RemainingDays} days" : "Expired")
                                     </div>
-                                </td>
-                            </tr>
+                                </div>
+                                <div class="col-6 mt-2">
+                                    <div class="text-muted" style="font-size: 11px;">Category</div>
+                                    <div class="fw-semibold text-dark text-truncate">@(string.IsNullOrEmpty(p.SubCategory) ? p.CategoryName : p.SubCategory)</div>
+                                </div>
+                            </div>
+
+                            <!-- Warranty Countdown Progress Bar -->
+                            <div class="mt-3">
+                                <div class="d-flex justify-content-between align-items-center small mb-1" style="font-size: 11px;">
+                                    <span class="text-muted">Coverage Remaining</span>
+                                    <span class="fw-bold @(p.RemainingDays > 30 ? "text-success" : p.RemainingDays > 0 ? "text-warning" : "text-danger")">@remainingProgress%</span>
+                                </div>
+                                <div class="progress" style="height: 6px; border-radius: 999px; background-color: rgba(15, 23, 42, 0.08);">
+                                    <div class="progress-bar @(p.RemainingDays > 30 ? "bg-success" : p.RemainingDays > 0 ? "bg-warning" : "bg-danger")" role="progressbar" style="width: @remainingProgress%;" aria-valuenow="@remainingProgress" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Active Service Ticket Indicator -->
+                        @if (p.ActiveServiceRequestsCount > 0)
+                        {
+                            <div class="mb-3 p-2 px-3 rounded-2 bg-white border d-flex align-items-center justify-content-between text-primary small shadow-sm" style="font-size: 12px; border-color: rgba(37, 99, 235, 0.25) !important;">
+                                <div class="d-flex align-items-center gap-2">
+                                    <i class="bi bi-wrench text-primary"></i>
+                                    <span>Active service ticket in progress</span>
+                                </div>
+                                <a asp-controller="ServiceRequests" asp-action="Index" class="small fw-semibold text-primary">Track &rarr;</a>
+                            </div>
                         }
-                    </tbody>
-                </table>
+                    </div>
+
+                    <!-- Footer: 4 Clear Actions (View Details, Edit, Report Issue, Delete) -->
+                    <div class="d-flex align-items-center gap-2 pt-3 border-top mt-auto" style="border-color: rgba(15, 23, 42, 0.08) !important;">
+                        <a asp-action="Details" asp-route-id="@p.Id" class="btn btn-stone btn-sm flex-grow-1 pc-btn-tactile" style="min-height: 36px; height: 36px; font-size: 12px;">
+                            <i class="bi bi-eye me-1"></i> Details
+                        </a>
+                        <a asp-action="Edit" asp-route-id="@p.Id" class="btn btn-stone btn-sm pc-btn-tactile" style="min-height: 36px; height: 36px; width: 36px; font-size: 12px;" title="Edit Product">
+                            <i class="bi bi-pencil"></i>
+                        </a>
+                        <a asp-controller="ServiceRequests" asp-action="Create" asp-route-productId="@p.Id" class="btn btn-forest btn-sm flex-grow-1 pc-btn-tactile" style="min-height: 36px; height: 36px; font-size: 12px;" title="Report hardware issue or request maintenance">
+                            <i class="bi bi-wrench me-1"></i> Report Issue
+                        </a>
+                        <button type="button" class="btn btn-stone text-danger btn-sm pc-btn-tactile pc-btn-delete" style="min-height: 36px; height: 36px; width: 36px; font-size: 12px;" 
+                                data-bs-toggle="modal" data-bs-target="#deleteProductModal" 
+                                data-id="@p.Id" data-name="@p.Name" data-serial="@p.SerialNumber" data-has-tickets="@(p.ActiveServiceRequestsCount > 0 ? "true" : "false")"
+                                title="Delete or Archive Product">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </div>
+                </div>
             </div>
         }
-        else
-        {
-            <div class="p-5 text-center text-muted">
-                <i class="bi bi-laptop fs-1 text-muted mb-3 d-block"></i>
-                <h5 class="fw-bold text-dark font-serif">No products found</h5>
-                <p class="small text-muted mb-3">No products match your active search or category filters.</p>
+    </div>
+
+    <!-- 2. Compact Table View (Toggleable) -->
+    <div class="pc-bento-card pc-bento-white p-0 overflow-hidden d-none mb-4" id="productsTableView">
+        <div class="pc-table-wrapper border-0">
+            <table class="pc-table">
+                <thead>
+                    <tr>
+                        <th>Device Name</th>
+                        <th>Brand</th>
+                        <th>Model</th>
+                        <th>Serial Number</th>
+                        <th>Purchase Date</th>
+                        <th>Expiry Date</th>
+                        <th>Status</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var p in Model.Products)
+                    {
+                        <tr>
+                            <td class="fw-bold text-dark">@p.Name</td>
+                            <td>@p.Brand</td>
+                            <td>@p.ModelNumber</td>
+                            <td><span class="font-monospace small">@p.SerialNumber</span></td>
+                            <td>@p.PurchaseDate.ToString("dd MMM yyyy")</td>
+                            <td>@p.WarrantyExpiryDate.ToString("dd MMM yyyy")</td>
+                            <td>
+                                <span class="pc-badge @(p.WarrantyStatus == ProductCare.Web.Models.Enums.WarrantyStatus.Active ? "pc-badge-active" : p.WarrantyStatus == ProductCare.Web.Models.Enums.WarrantyStatus.ExpiringSoon ? "pc-badge-expiring" : "pc-badge-expired")">
+                                    @(p.RemainingDays > 0 ? $"{p.RemainingDays}d left" : "Expired")
+                                </span>
+                            </td>
+                            <td class="text-end">
+                                <div class="btn-group btn-group-sm">
+                                    <a asp-action="Details" asp-route-id="@p.Id" class="btn btn-stone" title="Details"><i class="bi bi-eye"></i></a>
+                                    <a asp-action="Edit" asp-route-id="@p.Id" class="btn btn-stone" title="Edit"><i class="bi bi-pencil"></i></a>
+                                    <a asp-controller="ServiceRequests" asp-action="Create" asp-route-productId="@p.Id" class="btn btn-forest" title="Report Issue"><i class="bi bi-wrench"></i></a>
+                                    <button type="button" class="btn btn-stone text-danger pc-btn-delete" 
+                                            data-bs-toggle="modal" data-bs-target="#deleteProductModal" 
+                                            data-id="@p.Id" data-name="@p.Name" data-serial="@p.SerialNumber" data-has-tickets="@(p.ActiveServiceRequestsCount > 0 ? "true" : "false")"
+                                            title="Delete"><i class="bi bi-trash"></i></button>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Centralized Product Delete Confirmation Modal (Outside cards/tables for clean stacking context) -->
+    <div class="modal fade" id="deleteProductModal" tabindex="-1" aria-labelledby="deleteProductModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content pc-bento-card pc-bento-white shadow-lg border p-0">
+                <div class="modal-header border-bottom p-3 px-4">
+                    <h5 class="modal-title h6 fw-bold text-dark font-display mb-0" id="deleteProductModalLabel">
+                        <i class="bi bi-exclamation-triangle-fill text-danger me-2"></i>Confirm Removal
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="deleteProductForm" asp-action="Delete" method="post" class="m-0">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="id" id="deleteProductId" value="" />
+                    <div class="modal-body p-4">
+                        <p class="mb-3 text-dark">
+                            Are you sure you want to remove <strong id="deleteProductName">this product</strong> (<span class="font-monospace small" id="deleteProductSerial"></span>) from your registered inventory?
+                        </p>
+                        <div id="deleteProductArchiveNotice" class="alert alert-warning small mb-0 d-none">
+                            <i class="bi bi-info-circle me-1"></i>
+                            This device has active or historical service requests. To preserve your warranty and repair audit records, the product will be <strong>securely archived</strong> rather than permanently erased.
+                        </div>
+                        <div id="deleteProductHardNotice" class="alert alert-secondary small mb-0 d-none">
+                            <i class="bi bi-shield-check me-1"></i>
+                            No active service requests exist for this device. It will be permanently removed from your personal account.
+                        </div>
+                    </div>
+                    <div class="modal-footer border-top p-3 px-4">
+                        <button type="button" class="btn btn-stone btn-sm" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-danger btn-sm pc-btn-tactile">
+                            <i class="bi bi-trash me-1"></i> Confirm Removal
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="pc-bento-card pc-bento-white p-5 text-center shadow-sm">
+        <div class="py-4">
+            <div class="w-16 h-16 rounded-circle bg-light d-flex align-items-center justify-content-center text-forest mx-auto mb-3" style="width: 60px; height: 60px; background: rgba(40, 91, 80, 0.08) !important;">
+                <i class="bi bi-boxes fs-2"></i>
+            </div>
+            <h2 class="h5 fw-bold text-dark mb-1 font-display">No Registered Products Found</h2>
+            <p class="text-muted small mx-auto mb-4" style="max-width: 440px;">
+                @if (!string.IsNullOrEmpty(Model.SearchTerm) || Model.FilterCategory.HasValue || Model.FilterStatus.HasValue)
+                {
+                    <span>No devices matched your selected search criteria. Try clearing your filters to see all registered items.</span>
+                }
+                else
+                {
+                    <span>You haven't added any products to your ProductCare inventory yet. Register your laptops, phones, or electronics to start tracking warranties.</span>
+                }
+            </p>
+            <div class="d-flex justify-content-center gap-2">
+                @if (!string.IsNullOrEmpty(Model.SearchTerm) || Model.FilterCategory.HasValue || Model.FilterStatus.HasValue)
+                {
+                    <a asp-action="Index" class="btn btn-stone btn-sm">Clear All Filters</a>
+                }
                 <a asp-action="Create" class="btn btn-forest btn-sm">
-                    <i class="bi bi-plus-lg me-1"></i> Register a Device Now
+                    <i class="bi bi-plus-lg me-1"></i> Register a Product
                 </a>
             </div>
-        }
+        </div>
     </div>
-</div>
+}
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const btnGrid = document.getElementById('btnViewGrid');
+            const btnTable = document.getElementById('btnViewTable');
+            const gridView = document.getElementById('productsGridView');
+            const tableView = document.getElementById('productsTableView');
+
+            if (btnGrid && btnTable && gridView && tableView) {
+                btnGrid.addEventListener('click', function () {
+                    btnGrid.classList.add('active');
+                    btnTable.classList.remove('active');
+                    gridView.classList.remove('d-none');
+                    tableView.classList.add('d-none');
+                });
+
+                btnTable.addEventListener('click', function () {
+                    btnTable.classList.add('active');
+                    btnGrid.classList.remove('active');
+                    tableView.classList.remove('d-none');
+                    gridView.classList.add('d-none');
+                });
+            }
+
+            // Centralized Delete Confirmation Modal Binding
+            const deleteModalEl = document.getElementById('deleteProductModal');
+            if (deleteModalEl) {
+                deleteModalEl.addEventListener('show.bs.modal', function (event) {
+                    const button = event.relatedTarget;
+                    if (!button) return;
+                    const id = button.getAttribute('data-id');
+                    const name = button.getAttribute('data-name');
+                    const serial = button.getAttribute('data-serial');
+                    const hasTickets = button.getAttribute('data-has-tickets') === 'true';
+
+                    const form = document.getElementById('deleteProductForm');
+                    if (form && id) {
+                        form.action = `/Customer/Products/Delete/${id}`;
+                    }
+                    const inputId = document.getElementById('deleteProductId');
+                    if (inputId) inputId.value = id || '';
+
+                    const nameEl = document.getElementById('deleteProductName');
+                    if (nameEl) nameEl.textContent = name || 'this product';
+
+                    const serialEl = document.getElementById('deleteProductSerial');
+                    if (serialEl) serialEl.textContent = serial ? `S/N: ${serial}` : '';
+
+                    const archiveNotice = document.getElementById('deleteProductArchiveNotice');
+                    const hardNotice = document.getElementById('deleteProductHardNotice');
+                    if (hasTickets) {
+                        if (archiveNotice) archiveNotice.classList.remove('d-none');
+                        if (hardNotice) hardNotice.classList.add('d-none');
+                    } else {
+                        if (archiveNotice) archiveNotice.classList.add('d-none');
+                        if (hardNotice) hardNotice.classList.remove('d-none');
+                    }
+                });
+            }
+        });
+    </script>
+}

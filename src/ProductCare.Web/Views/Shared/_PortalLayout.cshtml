@@ -6,125 +6,112 @@
     <title>@ViewData["Title"] — ProductCare Workspace</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
-<body style="background-color: var(--pc-bg-main); color: var(--pc-text-primary);">
-    <div class="pc-portal-layout">
-        <!-- 250px Midnight Obsidian Sidebar -->
-        <aside class="pc-portal-sidebar">
-            <div>
-                <a class="pc-sidebar-brand" asp-area="" asp-controller="Home" asp-action="Index">
-                    <svg class="pc-brand-mark" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                        <rect width="32" height="32" rx="8" fill="#151F30" />
-                        <path d="M16 5.5L8 9.2V15.8C8 20.8 11.4 25.4 16 26.8C20.6 25.4 24 20.8 24 15.8V9.2L16 5.5Z" stroke="#38D9C5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                        <path d="M12 16.2L14.8 19L20.2 13.2" stroke="#F3B66D" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
-                    </svg>
-                    <span class="pc-brand-title">ProductCare</span>
-                </a>
+<body class="pc-portal-body">
+    <!-- Mobile Drawer Backdrop Overlay -->
+    <div class="pc-portal-backdrop d-lg-none" id="pcPortalBackdrop"></div>
 
-                <ul class="pc-sidebar-nav">
-                    @if (User.IsInRole("Admin"))
-                    {
-                        <li class="pc-sidebar-group-title">ADMINISTRATIVE OPS</li>
-                        <li class="pc-sidebar-item">
-                            <a class="pc-sidebar-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Dashboard" ? "active" : "")" asp-area="Admin" asp-controller="Dashboard" asp-action="Index">
-                                <i class="bi bi-speedometer2"></i>
-                                <span>Overview</span>
-                            </a>
-                        </li>
-                        <li class="pc-sidebar-item">
-                            <a class="pc-sidebar-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "ServiceRequests" ? "active" : "")" asp-area="Admin" asp-controller="ServiceRequests" asp-action="Index">
-                                <i class="bi bi-inbox"></i>
-                                <span>Ticket Queue</span>
-                            </a>
-                        </li>
+    <div class="pc-portal-layout" id="pcPortalLayout">
+        <!-- Slim Elegant Vertical Icon Rail (Inside Workspace Aesthetic) -->
+        <aside class="pc-portal-sidebar" id="pcPortalSidebar">
+            <div class="pc-sidebar-inner d-flex flex-column h-100 justify-content-between align-items-center w-100">
+                <!-- Top: ProductCare Emblem Only (No redundant full logo) -->
+                <div class="pc-sidebar-top text-center w-100 flex-shrink-0">
+                    <a class="pc-sidebar-emblem-link d-inline-flex align-items-center justify-content-center" asp-area="" asp-controller="Home" asp-action="Index" title="ProductCare Home">
+                        <img src="~/images/productcare-emblem.png" alt="ProductCare" height="24" class="pc-brand-emblem-icon" />
+                    </a>
+                    <button class="btn btn-sm text-white d-lg-none mt-2" id="pcSidebarMobileClose" type="button" aria-label="Close sidebar">
+                        <i class="bi bi-x-lg"></i>
+                    </button>
+                </div>
 
-                        <li class="pc-sidebar-group-title">VAULT DIRECTORY</li>
-                        <li class="pc-sidebar-item">
-                            <a class="pc-sidebar-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Customers" ? "active" : "")" asp-area="Admin" asp-controller="Customers" asp-action="Index">
-                                <i class="bi bi-people"></i>
-                                <span>Customers</span>
-                            </a>
-                        </li>
-                        <li class="pc-sidebar-item">
-                            <a class="pc-sidebar-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Products" ? "active" : "")" asp-area="Admin" asp-controller="Products" asp-action="Index">
-                                <i class="bi bi-boxes"></i>
-                                <span>Global Inventory</span>
-                            </a>
-                        </li>
+                <!-- Navigation Icons (Slim Icon Rail) -->
+                <nav class="pc-sidebar-nav-container w-100 py-2">
+                    <ul class="pc-sidebar-nav list-unstyled m-0 p-0 d-flex flex-column align-items-center gap-2">
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="pc-sidebar-item">
+                                <a class="pc-sidebar-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Dashboard" ? "active" : "")" asp-area="Admin" asp-controller="Dashboard" asp-action="Index" title="Overview" aria-label="Overview">
+                                    <i class="bi bi-speedometer2"></i>
+                                </a>
+                            </li>
+                            <li class="pc-sidebar-item">
+                                <a class="pc-sidebar-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "ServiceRequests" ? "active" : "")" asp-area="Admin" asp-controller="ServiceRequests" asp-action="Index" title="Ticket Queue" aria-label="Ticket Queue">
+                                    <i class="bi bi-inbox"></i>
+                                </a>
+                            </li>
+                            <li class="pc-sidebar-item">
+                                <a class="pc-sidebar-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Customers" ? "active" : "")" asp-area="Admin" asp-controller="Customers" asp-action="Index" title="Customers" aria-label="Customers">
+                                    <i class="bi bi-people"></i>
+                                </a>
+                            </li>
+                            <li class="pc-sidebar-item">
+                                <a class="pc-sidebar-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Products" ? "active" : "")" asp-area="Admin" asp-controller="Products" asp-action="Index" title="Global Inventory" aria-label="Global Inventory">
+                                    <i class="bi bi-boxes"></i>
+                                </a>
+                            </li>
+                            <li class="pc-sidebar-item">
+                                <a class="pc-sidebar-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "ServiceCenters" ? "active" : "")" asp-area="Admin" asp-controller="ServiceCenters" asp-action="Index" title="Service Centres" aria-label="Service Centres">
+                                    <i class="bi bi-building"></i>
+                                </a>
+                            </li>
+                            <li class="pc-sidebar-item">
+                                <a class="pc-sidebar-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Reports" ? "active" : "")" asp-area="Admin" asp-controller="Reports" asp-action="Index" title="Reports" aria-label="Reports">
+                                    <i class="bi bi-bar-chart-line"></i>
+                                </a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="pc-sidebar-item">
+                                <a class="pc-sidebar-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Dashboard" ? "active" : "")" asp-area="Customer" asp-controller="Dashboard" asp-action="Index" title="Overview" aria-label="Overview">
+                                    <i class="bi bi-grid-fill"></i>
+                                </a>
+                            </li>
+                            <li class="pc-sidebar-item">
+                                <a class="pc-sidebar-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Products" ? "active" : "")" asp-area="Customer" asp-controller="Products" asp-action="Index" title="My Products" aria-label="My Products">
+                                    <i class="bi bi-laptop"></i>
+                                </a>
+                            </li>
+                            <li class="pc-sidebar-item">
+                                <a class="pc-sidebar-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Warranty" ? "active" : "")" asp-area="Customer" asp-controller="Warranty" asp-action="Index" title="Warranty Status" aria-label="Warranty Status">
+                                    <i class="bi bi-shield-check"></i>
+                                </a>
+                            </li>
+                            <li class="pc-sidebar-item">
+                                <a class="pc-sidebar-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "ServiceRequests" ? "active" : "")" asp-area="Customer" asp-controller="ServiceRequests" asp-action="Index" title="Service Requests" aria-label="Service Requests">
+                                    <i class="bi bi-wrench-adjustable"></i>
+                                </a>
+                            </li>
+                            <li class="pc-sidebar-item">
+                                <a class="pc-sidebar-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "ServiceCenters" ? "active" : "")" asp-area="Customer" asp-controller="ServiceCenters" asp-action="Index" title="Authorized Centres" aria-label="Authorized Centres">
+                                    <i class="bi bi-geo-alt"></i>
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                </nav>
 
-                        <li class="pc-sidebar-group-title">INTELLIGENCE</li>
-                        <li class="pc-sidebar-item">
-                            <a class="pc-sidebar-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Reports" ? "active" : "")" asp-area="Admin" asp-controller="Reports" asp-action="Index">
-                                <i class="bi bi-bar-chart-line"></i>
-                                <span>Reports &amp; SQL Views</span>
-                            </a>
-                        </li>
-                    }
-                    else
-                    {
-                        <li class="pc-sidebar-group-title">OWNERSHIP VAULT</li>
-                        <li class="pc-sidebar-item">
-                            <a class="pc-sidebar-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Dashboard" ? "active" : "")" asp-area="Customer" asp-controller="Dashboard" asp-action="Index">
-                                <i class="bi bi-grid-fill"></i>
-                                <span>Ownership Overview</span>
-                            </a>
-                        </li>
+                <!-- Bottom: Profile Initials, Expand Overlay Toggle, Sign Out -->
+                <div class="pc-sidebar-bottom d-flex flex-column align-items-center gap-2 pb-1 w-100 flex-shrink-0 mt-auto">
+                    <!-- Compact Expand Toggle Button -->
+                    <button class="btn btn-sm pc-rail-flyout-btn d-none d-lg-flex align-items-center justify-content-center" id="pcRailExpandBtn" type="button" title="Expand navigation labels" aria-label="Expand navigation labels">
+                        <i class="bi bi-layout-sidebar-inset"></i>
+                    </button>
 
-                        <li class="pc-sidebar-group-title">DEVICE RECORDS</li>
-                        <li class="pc-sidebar-item">
-                            <a class="pc-sidebar-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Products" ? "active" : "")" asp-area="Customer" asp-controller="Products" asp-action="Index">
-                                <i class="bi bi-laptop"></i>
-                                <span>Product Inventory</span>
-                            </a>
-                        </li>
-                        <li class="pc-sidebar-item">
-                            <a class="pc-sidebar-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Warranty" ? "active" : "")" asp-area="Customer" asp-controller="Warranty" asp-action="Index">
-                                <i class="bi bi-shield-check"></i>
-                                <span>Warranty Timeline</span>
-                            </a>
-                        </li>
-
-                        <li class="pc-sidebar-group-title">SERVICE &amp; REPAIRS</li>
-                        <li class="pc-sidebar-item">
-                            <a class="pc-sidebar-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "ServiceRequests" ? "active" : "")" asp-area="Customer" asp-controller="ServiceRequests" asp-action="Index">
-                                <i class="bi bi-wrench-adjustable"></i>
-                                <span>Service Requests</span>
-                            </a>
-                        </li>
-                    }
-
-                    <li class="pc-sidebar-group-title">SYSTEM</li>
-                    <li class="pc-sidebar-item">
-                        <a class="pc-sidebar-link" href="/swagger" target="_blank">
-                            <i class="bi bi-code-slash"></i>
-                            <span>OpenAPI Docs</span>
-                        </a>
-                    </li>
-                    <li class="pc-sidebar-item">
-                        <a class="pc-sidebar-link" asp-area="" asp-controller="Home" asp-action="Privacy">
-                            <i class="bi bi-shield-lock"></i>
-                            <span>Compliance &amp; Privacy</span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-
-            <!-- Sidebar Footer User Profile -->
-            <div class="pt-3 border-top" style="border-color: var(--pc-border-hairline) !important;">
-                <div class="d-flex align-items-center justify-content-between p-2 rounded-3" style="background-color: rgba(255, 255, 255, 0.03);">
-                    <div class="d-flex align-items-center gap-2 overflow-hidden">
-                        <i class="bi bi-person-circle fs-5 text-electric-teal flex-shrink-0"></i>
-                        <div class="text-truncate">
-                            <div class="small fw-bold text-light text-truncate">@User.Identity?.Name</div>
-                            <div class="small text-muted" style="font-size: 11px;">
-                                @(User.IsInRole("Admin") ? "System Admin" : "Verified Customer")
-                            </div>
-                        </div>
+                    <!-- User Initials Avatar -->
+                    <div class="pc-user-avatar-circle" title="@User.Identity?.Name">
+                        @(User.Identity?.Name?.Length >= 2 ? User.Identity.Name.Substring(0, 2).ToUpper() : "PC")
                     </div>
+
+                    <!-- Sign Out Trigger -->
                     <form asp-area="" asp-controller="Account" asp-action="Logout" method="post" class="m-0 p-0">
                         @Html.AntiForgeryToken()
-                        <button type="submit" class="btn btn-link text-danger p-1" title="Sign Out" aria-label="Sign Out">
+                        <button type="submit" class="btn btn-link text-white-50 p-1 hover-white pc-logout-btn" title="Sign Out" aria-label="Sign Out">
                             <i class="bi bi-box-arrow-right"></i>
                         </button>
                     </form>
@@ -132,64 +119,154 @@
             </div>
         </aside>
 
-        <!-- Main Portal Content -->
+        <!-- Expandable Floating Navigation Overlay Flyout (Does NOT push or distort dashboard content) -->
+        <div class="pc-sidebar-flyout" id="pcSidebarFlyout">
+            <div class="pc-flyout-header d-flex align-items-center justify-content-between p-3 border-bottom border-secondary-subtle">
+                <div class="d-flex align-items-center gap-2">
+                    <img src="~/images/productcare-emblem.png" alt="ProductCare" height="22" />
+                    <span class="small fw-bold text-white font-display">ProductCare</span>
+                </div>
+                <button type="button" class="btn-close btn-close-white small" id="pcFlyoutCloseBtn" aria-label="Close menu"></button>
+            </div>
+            <div class="p-3">
+                <div class="text-white-50 small fw-semibold text-uppercase mb-2" style="font-size: 10px; letter-spacing: 0.06em;">Navigation</div>
+                <ul class="list-unstyled d-flex flex-column gap-1 m-0">
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <li><a class="pc-flyout-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Dashboard" ? "active" : "")" asp-area="Admin" asp-controller="Dashboard" asp-action="Index"><i class="bi bi-speedometer2 me-2"></i>Overview</a></li>
+                        <li><a class="pc-flyout-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "ServiceRequests" ? "active" : "")" asp-area="Admin" asp-controller="ServiceRequests" asp-action="Index"><i class="bi bi-inbox me-2"></i>Ticket Queue</a></li>
+                        <li><a class="pc-flyout-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Customers" ? "active" : "")" asp-area="Admin" asp-controller="Customers" asp-action="Index"><i class="bi bi-people me-2"></i>Customers</a></li>
+                        <li><a class="pc-flyout-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Products" ? "active" : "")" asp-area="Admin" asp-controller="Products" asp-action="Index"><i class="bi bi-boxes me-2"></i>Global Inventory</a></li>
+                        <li><a class="pc-flyout-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "ServiceCenters" ? "active" : "")" asp-area="Admin" asp-controller="ServiceCenters" asp-action="Index"><i class="bi bi-building me-2"></i>Service Centres</a></li>
+                        <li><a class="pc-flyout-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Reports" ? "active" : "")" asp-area="Admin" asp-controller="Reports" asp-action="Index"><i class="bi bi-bar-chart-line me-2"></i>Reports &amp; SQL</a></li>
+                    }
+                    else
+                    {
+                        <li><a class="pc-flyout-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Dashboard" ? "active" : "")" asp-area="Customer" asp-controller="Dashboard" asp-action="Index"><i class="bi bi-grid-fill me-2"></i>Overview</a></li>
+                        <li><a class="pc-flyout-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Products" ? "active" : "")" asp-area="Customer" asp-controller="Products" asp-action="Index"><i class="bi bi-laptop me-2"></i>My Products</a></li>
+                        <li><a class="pc-flyout-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Warranty" ? "active" : "")" asp-area="Customer" asp-controller="Warranty" asp-action="Index"><i class="bi bi-shield-check me-2"></i>Warranty Status</a></li>
+                        <li><a class="pc-flyout-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "ServiceRequests" ? "active" : "")" asp-area="Customer" asp-controller="ServiceRequests" asp-action="Index"><i class="bi bi-wrench-adjustable me-2"></i>Service Requests</a></li>
+                        <li><a class="pc-flyout-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "ServiceCenters" ? "active" : "")" asp-area="Customer" asp-controller="ServiceCenters" asp-action="Index"><i class="bi bi-geo-alt me-2"></i>Authorized Centres</a></li>
+                    }
+                </ul>
+            </div>
+            <div class="p-3 border-top border-secondary-subtle mt-auto">
+                <div class="small text-white-50" style="font-size: 11px;">Signed in as</div>
+                <div class="small fw-semibold text-white text-truncate">@User.Identity?.Name</div>
+            </div>
+        </div>
+
+        <!-- Main Portal Content (Pristine Inset Rounded Canvas) -->
         <div class="pc-portal-content">
-            <!-- Contextual Topbar -->
+            <!-- Contextual Topbar (Clean, Customer-Centric, No Confusing Partner Avatars) -->
             <header class="pc-portal-topbar">
-                <div class="d-flex align-items-center gap-3">
-                    <button class="btn btn-midnight btn-sm d-lg-none px-2 py-1" id="pcSidebarToggle" type="button" aria-label="Toggle navigation drawer">
+                <div class="d-flex align-items-center gap-2">
+                    <button class="btn btn-stone btn-sm d-lg-none px-2 py-1 pc-btn-tactile" id="pcSidebarToggle" type="button" aria-label="Toggle navigation drawer">
                         <i class="bi bi-list fs-5"></i>
                     </button>
-                    <div class="d-flex align-items-center gap-2">
-                        <span class="small text-muted font-display">ProductCare</span>
+                    <button class="btn btn-stone btn-sm d-none d-lg-inline-flex align-items-center justify-content-center pc-btn-tactile p-1 px-2" id="pcSidebarCollapseToggle" type="button" aria-label="Toggle navigation flyout" title="Show navigation labels">
+                        <i class="bi bi-layout-sidebar-inset"></i>
+                    </button>
+                    <nav class="d-flex align-items-center gap-2 ms-2" aria-label="Breadcrumb">
+                        <a asp-area="" asp-controller="Home" asp-action="Index" class="small text-muted text-decoration-none hover-forest font-display">ProductCare</a>
                         <i class="bi bi-chevron-right text-muted" style="font-size: 10px;"></i>
-                        <span class="small fw-semibold text-light">@ViewData["Title"]</span>
-                    </div>
+                        <span class="small fw-semibold text-dark font-display">@ViewData["Title"]</span>
+                    </nav>
                 </div>
 
-                <div class="d-flex align-items-center gap-3">
-                    <span class="pc-badge @(User.IsInRole("Admin") ? "pc-badge-expiring" : "pc-badge-active")">
-                        @(User.IsInRole("Admin") ? "ADMINISTRATOR" : "CUSTOMER VAULT")
-                    </span>
-                    <a class="btn btn-midnight btn-sm d-none d-sm-inline-flex" asp-area="" asp-controller="Home" asp-action="Index">
-                        <i class="bi bi-globe me-1"></i> Public Site
+                <div class="d-flex align-items-center gap-2 gap-md-3">
+                    <!-- Search Input Pill -->
+                    <div class="pc-search-pill d-none d-md-flex align-items-center">
+                        <i class="bi bi-search text-muted small"></i>
+                        <input type="text" placeholder="Search devices, tickets..." aria-label="Search" />
+                    </div>
+
+                    <!-- Notification Bell Circle Button -->
+                    <button type="button" class="pc-icon-circle-btn" title="Notifications" aria-label="Notifications">
+                        <i class="bi bi-bell"></i>
+                        <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle" style="width: 7px; height: 7px;"></span>
+                    </button>
+
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <span class="pc-badge pc-badge-expiring d-inline-flex align-items-center gap-1">
+                            <span class="pc-pulse-emerald" style="width: 6px; height: 6px;"></span>
+                            <span>Admin</span>
+                        </span>
+                    }
+
+                    <!-- Public Site Button -->
+                    <a class="btn btn-stone btn-sm d-inline-flex align-items-center gap-1 pc-btn-tactile rounded-pill px-3" asp-area="" asp-controller="Home" asp-action="Index">
+                        <i class="bi bi-globe"></i>
+                        <span class="d-none d-sm-inline">Public site</span>
                     </a>
+
+                    <!-- Customer Initials / Profile Control -->
+                    <div class="pc-user-initials-pill d-flex align-items-center justify-content-center fw-bold bg-dark text-white rounded-circle shadow-xs" style="width: 34px; height: 34px; font-size: 11px; letter-spacing: 0.05em;" title="@User.Identity?.Name">
+                        @(User.Identity?.Name?.Length >= 2 ? User.Identity.Name.Substring(0, 2).ToUpper() : "PC")
+                    </div>
                 </div>
             </header>
 
             <!-- Workspace Body Canvas -->
-            <main class="flex-grow-1 p-3 p-md-4">
+            <main class="pc-portal-main flex-grow-1 p-3 p-md-4">
                 <!-- Notifications -->
                 @if (TempData["SuccessMessage"] != null)
                 {
-                    <div class="alert alert-success alert-dismissible fade show shadow-sm mb-4" style="background-color: rgba(56, 217, 197, 0.15); border-color: rgba(56, 217, 197, 0.35); color: var(--pc-text-primary);" role="alert">
-                        <i class="bi bi-check-circle-fill me-2 text-electric-teal"></i> @TempData["SuccessMessage"]
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+                    <div class="alert alert-success alert-dismissible fade show shadow-sm mb-4" style="background-color: #F0FDF4; border-color: #BBF7D0; color: #166534;" role="alert">
+                        <i class="bi bi-check-circle-fill me-2 text-success"></i> @TempData["SuccessMessage"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                 }
                 @if (TempData["ErrorMessage"] != null)
                 {
-                    <div class="alert alert-danger alert-dismissible fade show shadow-sm mb-4" style="background-color: rgba(255, 107, 107, 0.15); border-color: rgba(255, 107, 107, 0.35); color: var(--pc-text-primary);" role="alert">
+                    <div class="alert alert-danger alert-dismissible fade show shadow-sm mb-4" style="background-color: #FEF2F2; border-color: #FECACA; color: #991B1B;" role="alert">
                         <i class="bi bi-exclamation-triangle-fill me-2 text-danger"></i> @TempData["ErrorMessage"]
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                 }
                 @if (TempData["InfoMessage"] != null)
                 {
-                    <div class="alert alert-info alert-dismissible fade show shadow-sm mb-4" style="background-color: rgba(102, 140, 255, 0.15); border-color: rgba(102, 140, 255, 0.35); color: var(--pc-text-primary);" role="alert">
-                        <i class="bi bi-info-circle-fill me-2 text-electric-blue"></i> @TempData["InfoMessage"]
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+                    <div class="alert alert-info alert-dismissible fade show shadow-sm mb-4" style="background-color: #EFF6FF; border-color: #BFDBFE; color: #1E40AF;" role="alert">
+                        <i class="bi bi-info-circle-fill me-2 text-primary"></i> @TempData["InfoMessage"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                 }
 
                 @RenderBody()
             </main>
+
+            @if (!User.IsInRole("Admin"))
+            {
+                <!-- Mobile Floating Bottom Tab Bar for Customer Workspace -->
+                <nav class="d-lg-none pc-mobile-tab-bar" aria-label="Mobile Navigation">
+                    <div class="pc-mobile-tab-pill">
+                        <a class="pc-mobile-tab-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "Dashboard" ? "active" : "")" asp-area="Customer" asp-controller="Dashboard" asp-action="Index">
+                            <i class="bi bi-grid-fill"></i>
+                            <span>Overview</span>
+                        </a>
+                        <a class="pc-mobile-tab-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "Products" ? "active" : "")" asp-area="Customer" asp-controller="Products" asp-action="Index">
+                            <i class="bi bi-laptop"></i>
+                            <span>Products</span>
+                        </a>
+                        <a class="pc-mobile-tab-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "Warranty" ? "active" : "")" asp-area="Customer" asp-controller="Warranty" asp-action="Index">
+                            <i class="bi bi-shield-check"></i>
+                            <span>Warranty</span>
+                        </a>
+                        <a class="pc-mobile-tab-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "ServiceRequests" ? "active" : "")" asp-area="Customer" asp-controller="ServiceRequests" asp-action="Index">
+                            <i class="bi bi-wrench-adjustable"></i>
+                            <span>Repairs</span>
+                        </a>
+                    </div>
+                </nav>
+            }
         </div>
     </div>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script type="module" src="~/lib/liquid-glass/liquid-glass.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

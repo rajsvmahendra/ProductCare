@@ -197,6 +197,47 @@ public class ServiceRequestWorkflowService : IServiceRequestWorkflowService
         );
     }
 
+    public async Task<WorkflowResult> EscalateTicketAsync(
+        int requestId,
+        string changedByUserId,
+        string changedByUserName,
+        string reason,
+        CancellationToken cancellationToken = default)
+    {
+        var request = await _context.ServiceRequests
+            .FirstOrDefaultAsync(sr => sr.Id == requestId, cancellationToken);
+
+        if (request == null)
+        {
+            return new WorkflowResult(false, $"Service request #{requestId} was not found.");
+        }
+
+        request.IsEscalated = true;
+        request.Priority = PriorityLevel.Urgent;
+        request.UpdatedAtUtc = DateTime.UtcNow;
+
+        var escalationRemarks = string.IsNullOrWhiteSpace(reason)
+            ? "[SLA ESCALATION] Issue flagged as critical / breached target."
+            : $"[SLA ESCALATION] Priority elevated to Urgent. Reason: {reason.Trim()}";
+
+        var history = new ServiceRequestHistory
+        {
+            ServiceRequestId = requestId,
+            FromStatus = request.Status,
+            ToStatus = request.Status,
+            ChangedByUserId = changedByUserId,
+            ChangedByUserName = changedByUserName,
+            Remarks = escalationRemarks,
+            CreatedAtUtc = DateTime.UtcNow
+        };
+
+        _context.ServiceRequestHistories.Add(history);
+        await _context.SaveChangesAsync(cancellationToken);
+
+        _logger.LogWarning("Ticket #{TicketNumber} escalated by {User}: {Reason}", request.TicketNumber, changedByUserName, escalationRemarks);
+        return new WorkflowResult(true, Request: request);
+    }
+
     public async Task<string> GenerateTicketNumberAsync(CancellationToken cancellationToken = default)
     {
         const string chars = "23456789ABCDEFGHJKLMNPQRSTUVWXYZ"; // Ambiguity-free alphanumeric

@@ -116,6 +116,8 @@ public class DbInitializerService : IDbInitializerService
 
         // 1. Provision Admin
         await ProvisionAdminUserAsync("admin@productcare.local", "Admin123!");
+        var adminUser = await _userManager.FindByEmailAsync("admin@productcare.local");
+        var adminUserId = adminUser?.Id ?? string.Empty;
 
         // 2. Provision Demo Customer 1 (John Doe)
         var johnEmail = "john.doe@example.com";
@@ -251,7 +253,7 @@ public class DbInitializerService : IDbInitializerService
                 ServiceRequest = sr1,
                 FromStatus = RequestStatus.Submitted,
                 ToStatus = RequestStatus.UnderReview,
-                ChangedByUserId = "usr-admin",
+                ChangedByUserId = adminUserId,
                 ChangedByUserName = "System Administrator",
                 Remarks = "Acknowledged and scheduled for diagnostic inspection.",
                 CreatedAtUtc = DateTime.UtcNow.AddDays(-4)
@@ -262,7 +264,7 @@ public class DbInitializerService : IDbInitializerService
                 ServiceRequest = sr1,
                 FromStatus = RequestStatus.UnderReview,
                 ToStatus = RequestStatus.Assigned,
-                ChangedByUserId = "usr-admin",
+                ChangedByUserId = adminUserId,
                 ChangedByUserName = "System Administrator",
                 Remarks = "Assigned to Alex Rivera.",
                 CreatedAtUtc = DateTime.UtcNow.AddDays(-3)
@@ -273,7 +275,7 @@ public class DbInitializerService : IDbInitializerService
                 ServiceRequest = sr1,
                 FromStatus = RequestStatus.Assigned,
                 ToStatus = RequestStatus.InProgress,
-                ChangedByUserId = "usr-admin",
+                ChangedByUserId = adminUserId,
                 ChangedByUserName = "System Administrator",
                 Remarks = "Replacement parts ordered from manufacturer.",
                 CreatedAtUtc = DateTime.UtcNow.AddDays(-1)
@@ -357,7 +359,7 @@ public class DbInitializerService : IDbInitializerService
                 ServiceRequest = sr2,
                 FromStatus = RequestStatus.Submitted,
                 ToStatus = RequestStatus.Assigned,
-                ChangedByUserId = "usr-admin",
+                ChangedByUserId = adminUserId,
                 ChangedByUserName = "System Administrator",
                 Remarks = "Assigned to David Miller.",
                 CreatedAtUtc = DateTime.UtcNow.AddDays(-3)
@@ -368,7 +370,7 @@ public class DbInitializerService : IDbInitializerService
                 ServiceRequest = sr2,
                 FromStatus = RequestStatus.Assigned,
                 ToStatus = RequestStatus.InProgress,
-                ChangedByUserId = "usr-admin",
+                ChangedByUserId = adminUserId,
                 ChangedByUserName = "System Administrator",
                 Remarks = "Technician dispatched to customer site.",
                 CreatedAtUtc = DateTime.UtcNow.AddDays(-2)
@@ -379,7 +381,7 @@ public class DbInitializerService : IDbInitializerService
                 ServiceRequest = sr2,
                 FromStatus = RequestStatus.InProgress,
                 ToStatus = RequestStatus.Resolved,
-                ChangedByUserId = "usr-admin",
+                ChangedByUserId = adminUserId,
                 ChangedByUserName = "System Administrator",
                 Remarks = "Installation inspected and verified.",
                 CreatedAtUtc = DateTime.UtcNow.AddDays(-1)
@@ -387,6 +389,139 @@ public class DbInitializerService : IDbInitializerService
 
             _context.ServiceRequests.Add(sr2);
             _context.ServiceRequestHistories.AddRange(h2_1, h2_2, h2_3, h2_4);
+            await _context.SaveChangesAsync();
+        }
+
+        // 5b. Seed Service Centers if not exists
+        if (!await _context.ServiceCenters.AnyAsync())
+        {
+            var sc1 = new ServiceCenter
+            {
+                Name = "Metro Tech Care & Repairs",
+                Address = "142 Commerce Boulevard, Suite 300",
+                City = "Springfield",
+                SupportedBrands = "Apple, Dell, HP, Lenovo, ASUS",
+                SupportedCategories = "Laptops, Computers, Tablets, Monitors",
+                Phone = "+1 (555) 234-5678",
+                Email = "support@metrotechcare.demo",
+                OpeningHours = "Mon-Fri: 9:00 AM - 6:00 PM, Sat: 10:00 AM - 3:00 PM",
+                Website = "https://metrotechcare.example.com",
+                MapUrl = "https://maps.google.com/?q=Metro+Tech+Care+Springfield",
+                IsActive = true,
+                IsVerified = false,
+                Notes = "Sample demonstration repair hub for laptop diagnostics, motherboard repair, and battery replacement."
+            };
+
+            var sc2 = new ServiceCenter
+            {
+                Name = "Apex Authorized Electronics Hub",
+                Address = "880 Precision Way, Technology Park",
+                City = "Springfield",
+                SupportedBrands = "Sony, Samsung, LG, Bose, JBL",
+                SupportedCategories = "AudioDevices, Televisions, HomeEntertainment, Wearables",
+                Phone = "+1 (555) 876-5432",
+                Email = "service@apexhub.demo",
+                OpeningHours = "Mon-Sat: 10:00 AM - 7:00 PM",
+                Website = "https://apexhub.example.com",
+                MapUrl = "https://maps.google.com/?q=Apex+Electronics+Hub+Springfield",
+                IsActive = true,
+                IsVerified = true,
+                Notes = "Authorized manufacturer diagnostic facility for display calibration, audio driver replacement, and board service."
+            };
+
+            var sc3 = new ServiceCenter
+            {
+                Name = "Campus Express Device Lab",
+                Address = "Student Union Building, Ground Floor, Room 12",
+                City = "University District",
+                SupportedBrands = "Apple, Samsung, Google, Dell, HP, Sony",
+                SupportedCategories = "MobilePhones, Laptops, Tablets, Smartwatches, GamingConsoles",
+                Phone = "+1 (555) 345-6789",
+                Email = "express@campusdevicelab.demo",
+                OpeningHours = "Mon-Fri: 8:30 AM - 7:00 PM, Sat: 9:00 AM - 1:00 PM",
+                Website = "https://campusdevicelab.example.com",
+                MapUrl = "https://maps.google.com/?q=Campus+Express+Device+Lab",
+                IsActive = true,
+                IsVerified = false,
+                Notes = "Sample on-campus rapid triage kiosk offering screen repairs, thermal re-pasting, and OS recovery."
+            };
+
+            var sc4 = new ServiceCenter
+            {
+                Name = "Precision Camera & Optical Service",
+                Address = "45 Studio Lane, Creative Quarter",
+                City = "Downtown",
+                SupportedBrands = "Sony, Canon, Nikon, Fujifilm, DJI",
+                SupportedCategories = "Cameras, OtherElectronics",
+                Phone = "+1 (555) 456-7890",
+                Email = "contact@precisioncamera.demo",
+                OpeningHours = "Tue-Sat: 10:00 AM - 5:30 PM",
+                Website = "https://precisioncamera.example.com",
+                MapUrl = "https://maps.google.com/?q=Precision+Camera+Service",
+                IsActive = true,
+                IsVerified = false,
+                Notes = "Sample optical diagnostics lab for sensor cleaning, shutter mechanism rebuilds, and lens calibration."
+            };
+
+            _context.ServiceCenters.AddRange(sc1, sc2, sc3, sc4);
+            await _context.SaveChangesAsync();
+        }
+
+        // 6. Seed Campus Network Quality Reports (EduRev P10)
+        if (!await _context.NetworkQualityReports.AnyAsync())
+        {
+            var adminUserRef = await _userManager.FindByEmailAsync("admin@productcare.local");
+            var adminId = adminUserRef?.Id ?? johnUser.Id;
+
+            var r1 = new NetworkQualityReport
+            {
+                UserId = johnUser.Id,
+                CampusZone = "Central Library",
+                NetworkType = "Campus Wi-Fi (Enterprise)",
+                DownloadSpeedMbps = 84.5,
+                LatencyMs = 19,
+                IsClientMeasured = true,
+                Notes = "Measured at main reading desk. Low jitter.",
+                MeasuredAtUtc = DateTime.UtcNow.AddHours(-3)
+            };
+
+            var r2 = new NetworkQualityReport
+            {
+                UserId = johnUser.Id,
+                CampusZone = "Hostel Block A",
+                NetworkType = "Campus Wi-Fi (Enterprise)",
+                DownloadSpeedMbps = 12.8,
+                LatencyMs = 88,
+                IsClientMeasured = false,
+                Notes = "Intermittent drops during evening peak hours.",
+                MeasuredAtUtc = DateTime.UtcNow.AddHours(-6)
+            };
+
+            var r3 = new NetworkQualityReport
+            {
+                UserId = sarahUser.Id,
+                CampusZone = "Computer Science Lab 3",
+                NetworkType = "Lab Gigabit Ethernet",
+                DownloadSpeedMbps = 112.4,
+                LatencyMs = 11,
+                IsClientMeasured = true,
+                Notes = "Excellent throughput on developer workstations.",
+                MeasuredAtUtc = DateTime.UtcNow.AddHours(-1)
+            };
+
+            var r4 = new NetworkQualityReport
+            {
+                UserId = sarahUser.Id,
+                CampusZone = "Auditorium & Student Wing",
+                NetworkType = "Campus Wi-Fi (Guest)",
+                DownloadSpeedMbps = 38.0,
+                LatencyMs = 35,
+                IsClientMeasured = true,
+                Notes = "Stable signal during student orientation seminar.",
+                MeasuredAtUtc = DateTime.UtcNow.AddHours(-12)
+            };
+
+            _context.NetworkQualityReports.AddRange(r1, r2, r3, r4);
             await _context.SaveChangesAsync();
         }
 

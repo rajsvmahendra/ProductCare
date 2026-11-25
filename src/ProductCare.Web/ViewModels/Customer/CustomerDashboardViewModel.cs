@@ -15,6 +15,7 @@ public class CustomerDashboardViewModel
     public int ResolvedServiceRequests { get; set; }
 
     // Lists
+    public List<ProductSummaryItem> RecentProducts { get; set; } = new();
     public List<ProductSummaryItem> ExpiringSoonProducts { get; set; } = new();
     public List<ServiceRequestSummaryItem> RecentServiceRequests { get; set; } = new();
 }
@@ -25,6 +26,10 @@ public class ProductSummaryItem
     public string Name { get; set; } = string.Empty;
     public string Brand { get; set; } = string.Empty;
     public string ModelNumber { get; set; } = string.Empty;
+    public string SerialNumber { get; set; } = string.Empty;
+    public string CategoryName { get; set; } = string.Empty;
+    public string? SubCategory { get; set; }
+    public DateOnly PurchaseDate { get; set; }
     public DateOnly ExpiryDate { get; set; }
     public int RemainingDays { get; set; }
     public string StatusBadgeCssClass { get; set; } = string.Empty;
@@ -36,11 +41,13 @@ public class ServiceRequestSummaryItem
     public int Id { get; set; }
     public string TicketNumber { get; set; } = string.Empty;
     public string ProductName { get; set; } = string.Empty;
+    public string? ServiceCenterName { get; set; }
     public string Subject { get; set; } = string.Empty;
     public string PriorityText { get; set; } = string.Empty;
     public string PriorityBadgeCssClass { get; set; } = string.Empty;
     public string StatusText { get; set; } = string.Empty;
     public string StatusBadgeCssClass { get; set; } = string.Empty;
+    public string NextActionText { get; set; } = string.Empty;
     public DateTime CreatedAtUtc { get; set; }
     public DateTime? UpdatedAtUtc { get; set; }
 }

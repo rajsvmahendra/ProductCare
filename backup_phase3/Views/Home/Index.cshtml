@@ -1,0 +1,706 @@
+@{
+    ViewData["Title"] = "Unified Product Warranty & Service Management";
+}
+
+<!-- =========================================================================
+     SECTION 1: TECHNOLOGY POSTER PRODUCT HERO
+     ========================================================================= -->
+<section class="pc-hero-section" id="overview">
+    <div class="container-xl px-3 px-md-4">
+        <div class="row align-items-center g-5 py-lg-4">
+            <!-- Left: Editorial Headline & Value Narrative -->
+            <div class="col-lg-7">
+                <div class="pc-hero-kicker mb-3">
+                    <span class="pc-pulse-emerald"></span>
+                    <span>Unified Device Portfolio &amp; Service Network</span>
+                </div>
+
+                <h1 class="pc-hero-headline mb-3">
+                    Every product has a story.<br />
+                    <span class="text-forest pc-hero-gradient-text">Give it the care it deserves.</span>
+                </h1>
+
+                <p class="pc-hero-lead mb-4">
+                    Keep hardware receipts organised, track active warranty timelines mathematically, and connect instantly with certified local repair hubs — all from one intelligent workspace.
+                </p>
+
+                <div class="d-flex flex-wrap align-items-center gap-3 mb-5 pc-hero-cta-group">
+                    <a class="btn btn-forest btn-lg pc-btn-tactile pc-btn-tactile-primary" href="#showcase">
+                        <span>Explore ProductCare</span>
+                        <i class="bi bi-arrow-down ms-1"></i>
+                    </a>
+
+                    @if (User.Identity?.IsAuthenticated == true)
+                    {
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <a class="btn btn-stone btn-lg pc-btn-tactile" asp-area="Admin" asp-controller="Dashboard" asp-action="Index">
+                                <span>Admin Workspace</span>
+                                <i class="bi bi-arrow-right ms-1"></i>
+                            </a>
+                        }
+                        else
+                        {
+                            <a class="btn btn-stone btn-lg pc-btn-tactile" asp-area="Customer" asp-controller="Dashboard" asp-action="Index">
+                                <span>Manage My Products</span>
+                                <i class="bi bi-arrow-right ms-1"></i>
+                            </a>
+                        }
+                    }
+                    else
+                    {
+                        <a class="btn btn-stone btn-lg pc-btn-tactile" asp-area="" asp-controller="Account" asp-action="Register">
+                            <span>Manage My Products</span>
+                            <i class="bi bi-arrow-right ms-1"></i>
+                        </a>
+                    }
+                </div>
+
+                <!-- Product Trust Highlights Row -->
+                <div class="pc-trust-badge-row">
+                    <div class="pc-trust-item">
+                        <i class="bi bi-shield-check text-forest"></i>
+                        <span>Dynamic Warranty Tracking</span>
+                    </div>
+                    <div class="pc-trust-item">
+                        <i class="bi bi-file-earmark-lock text-forest"></i>
+                        <span>Secure Invoice Vault</span>
+                    </div>
+                    <div class="pc-trust-item">
+                        <i class="bi bi-geo-alt text-forest"></i>
+                        <span>LPU &amp; Punjab Service Network</span>
+                    </div>
+                    <div class="pc-trust-item">
+                        <i class="bi bi-arrow-repeat text-forest"></i>
+                        <span>5-Stage Triage SLA</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right: 3D Dimensional Technology Poster Composition -->
+            <div class="col-lg-5 d-none d-lg-block">
+                <div class="pc-hero-poster-scene">
+                    <!-- Ambient Glow Layer -->
+                    <div class="pc-poster-glow"></div>
+
+                    <!-- Main Dimensional Hardware Surface Card -->
+                    <div class="pc-poster-main-card">
+                        <!-- Top Bezel Bar -->
+                        <div class="d-flex align-items-center justify-content-between mb-3 pb-3 border-bottom">
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="pc-poster-icon-box">
+                                    <i class="bi bi-laptop fs-4 text-forest"></i>
+                                </div>
+                                <div>
+                                    <div class="fw-bold text-dark font-display" style="font-size: 1.05rem;">MacBook Pro 16" M3 Max</div>
+                                    <div class="text-muted small" style="font-size: 11px;">S/N: C02G73276936 &bull; Apple</div>
+                                </div>
+                            </div>
+                            <span class="pc-badge pc-badge-active shadow-xs">
+                                <i class="bi bi-shield-check me-1"></i> Under Warranty
+                            </span>
+                        </div>
+
+                        <!-- Mathematical Coverage Visual Bar -->
+                        <div class="pc-poster-metric-box mb-3">
+                            <div class="d-flex justify-content-between small text-muted mb-1">
+                                <span>Purchase Date</span>
+                                <span class="fw-semibold text-dark">15 Jan 2026</span>
+                            </div>
+                            <div class="d-flex justify-content-between small text-muted mb-2">
+                                <span>Standard Term</span>
+                                <span class="fw-semibold text-dark">24 Months</span>
+                            </div>
+                            <!-- Radial & Track Progress Indicator -->
+                            <div class="progress mb-2" style="height: 6px; background-color: rgba(16, 185, 129, 0.15); border-radius: 999px;">
+                                <div class="progress-bar" role="progressbar" style="width: 58%; background: linear-gradient(90deg, #10B981, #285B50); border-radius: 999px;" aria-valuenow="58" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center mt-2 small">
+                                <span class="text-muted" style="font-size: 11px;">Valid through 15 Jan 2028</span>
+                                <span class="fw-bold text-forest" style="font-size: 11px;"><i class="bi bi-clock-history me-1"></i>420 days remaining</span>
+                            </div>
+                        </div>
+
+                        <!-- Active Service Work Order Badge -->
+                        <div class="pc-poster-ticket-box">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <span class="small fw-bold text-dark">
+                                    <i class="bi bi-wrench me-1 text-forest"></i>Ticket #PC-20261121-UAJJ
+                                </span>
+                                <span class="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle" style="font-size: 10px;">IN PROGRESS</span>
+                            </div>
+                            <p class="small text-muted mb-2" style="font-size: 11px; line-height: 1.4;">Display backlight inspection &amp; thermal diagnostics.</p>
+                            <div class="d-flex justify-content-between align-items-center small text-muted pt-2 border-top">
+                                <span class="d-flex align-items-center gap-1 text-truncate" style="max-width: 60%; font-size: 11px;">
+                                    <i class="bi bi-building text-forest"></i> LPU Uni-Mall Kiosk
+                                </span>
+                                <span class="text-forest fw-semibold" style="font-size: 11px;"><i class="bi bi-person-check me-1"></i>Bench Diagnostic</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Floating Element 1: Liquid Glass Shield -->
+                    <div class="pc-floating-glass-badge pc-float-shield">
+                        <div class="pc-badge-icon-emerald">
+                            <i class="bi bi-shield-fill-check"></i>
+                        </div>
+                        <div>
+                            <div class="fw-bold text-dark" style="font-size: 12px;">Active Protection</div>
+                            <div class="text-muted" style="font-size: 10px;">Deterministic Math</div>
+                        </div>
+                    </div>
+
+                    <!-- Floating Element 2: Digital Proof Pill -->
+                    <div class="pc-floating-glass-badge pc-float-invoice">
+                        <div class="pc-badge-icon-stone">
+                            <i class="bi bi-receipt"></i>
+                        </div>
+                        <div>
+                            <div class="fw-bold text-dark" style="font-size: 12px;">Invoice Proof #9842</div>
+                            <div class="text-muted" style="font-size: 10px;">Apple Store &bull; ₹2,499.00</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- =========================================================================
+     SECTION 2: INTERACTIVE PRODUCT SHOWCASE (LIVE PRODUCT CAPABILITIES)
+     ========================================================================= -->
+<section class="py-5 pc-showcase-section" id="showcase">
+    <div class="container-xl px-3 px-md-4 py-4">
+        <!-- Section Header -->
+        <div class="text-center mb-5">
+            <span class="pc-hero-kicker mb-2">INTERACTIVE CAPABILITY SHOWCASE</span>
+            <h2 class="display-6 fw-bold text-dark font-display mb-2">Experience ProductCare in Action</h2>
+            <p class="text-muted mx-auto" style="max-width: 660px;">
+                Switch between core platform capabilities below to explore how ProductCare safeguards your hardware portfolio through every stage of ownership.
+            </p>
+
+            <!-- Interactive Tab Switchers -->
+            <div class="d-inline-flex flex-wrap justify-content-center p-1 rounded-pill mt-3 pc-showcase-nav" role="tablist">
+                <button type="button" class="pc-showcase-tab active" data-target="tab-registration" role="tab" aria-selected="true">
+                    <i class="bi bi-mic me-1"></i> Product Registration
+                </button>
+                <button type="button" class="pc-showcase-tab" data-target="tab-warranty" role="tab" aria-selected="false">
+                    <i class="bi bi-shield-check me-1"></i> Warranty Protection
+                </button>
+                <button type="button" class="pc-showcase-tab" data-target="tab-service" role="tab" aria-selected="false">
+                    <i class="bi bi-geo-alt me-1"></i> Service Directory
+                </button>
+                <button type="button" class="pc-showcase-tab" data-target="tab-tracking" role="tab" aria-selected="false">
+                    <i class="bi bi-arrow-repeat me-1"></i> 5-Stage Repair Journey
+                </button>
+            </div>
+        </div>
+
+        <!-- Showcase Stage Container -->
+        <div class="pc-showcase-stage pc-card pc-glass-card p-4 p-md-5">
+            <!-- Stamped Preview Label -->
+            <div class="d-flex align-items-center justify-content-between mb-4 pb-3 border-bottom">
+                <div class="d-flex align-items-center gap-2">
+                    <span class="pc-glass-badge pc-glass-badge-sample">
+                        <i class="bi bi-eye"></i> Interactive Capability Preview
+                    </span>
+                    <span class="text-muted small d-none d-sm-inline">All four workflows are live in your workspace</span>
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                    <a asp-area="Customer" asp-controller="Products" asp-action="Create" class="btn btn-forest btn-sm pc-btn-tactile">
+                        <span>Try in Your Workspace</span>
+                        <i class="bi bi-arrow-right ms-1"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Panel 1: Product Registration -->
+            <div class="pc-showcase-panel active" id="tab-registration">
+                <div class="row align-items-center g-4">
+                    <div class="col-lg-6">
+                        <div class="pc-hero-kicker mb-2">SMART ONBOARDING</div>
+                        <h3 class="h4 fw-bold text-dark font-display mb-3">Speak or Type — Your Specs Fill Instantly</h3>
+                        <p class="text-muted mb-4">
+                            Registering new equipment takes seconds. Tap the microphone to speak your hardware details, or start typing to choose from 30+ popular laptop and smartphone models with automatic form-factor and category mapping.
+                        </p>
+                        <div class="d-flex flex-column gap-3 mb-4">
+                            <div class="d-flex align-items-center gap-3 p-3 rounded-3" style="background-color: var(--pc-surface-secondary); border: 1px solid var(--pc-border-card);">
+                                <div class="pc-device-icon-box">
+                                    <i class="bi bi-mic text-forest"></i>
+                                </div>
+                                <div>
+                                    <div class="fw-semibold text-dark small">Consumer-Friendly Voice Input</div>
+                                    <div class="text-muted" style="font-size: 12px;">"Apple MacBook Pro 16 inch M3 Max laptop, serial C02G73276936"</div>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center gap-3 p-3 rounded-3" style="background-color: var(--pc-surface-secondary); border: 1px solid var(--pc-border-card);">
+                                <div class="pc-device-icon-box">
+                                    <i class="bi bi-lightning-charge text-forest"></i>
+                                </div>
+                                <div>
+                                    <div class="fw-semibold text-dark small">Debounced Live Autocomplete</div>
+                                    <div class="text-muted" style="font-size: 12px;">Auto-populates Brand, Category, Model Number, and Specifications</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="p-4 rounded-3 border" style="background-color: #FFFFFF; box-shadow: var(--pc-shadow-card);">
+                            <div class="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom">
+                                <span class="small fw-bold text-dark"><i class="bi bi-magic me-2 text-forest"></i>Voice &amp; Catalog Recognition Preview</span>
+                                <span class="badge bg-success-subtle text-success border border-success-subtle small">Parsed 100%</span>
+                            </div>
+                            <div class="mb-3">
+                                <label class="small text-muted fw-semibold">Device Name</label>
+                                <div class="form-control form-control-sm bg-light text-dark fw-semibold">MacBook Pro 16-inch M3 Max</div>
+                            </div>
+                            <div class="row g-2 mb-3">
+                                <div class="col-6">
+                                    <label class="small text-muted fw-semibold">Brand</label>
+                                    <div class="form-control form-control-sm bg-light text-dark">Apple</div>
+                                </div>
+                                <div class="col-6">
+                                    <label class="small text-muted fw-semibold">Category</label>
+                                    <div class="form-control form-control-sm bg-light text-dark">Laptops (Ultrabook)</div>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="small text-muted fw-semibold">Extracted Serial Number</label>
+                                <div class="form-control form-control-sm bg-light font-monospace text-dark">C02G73276936</div>
+                            </div>
+                            <div class="d-flex align-items-center justify-content-between pt-2 border-top small text-muted">
+                                <span><i class="bi bi-paperclip me-1"></i>Digital Receipt Vaulted</span>
+                                <span class="text-forest fw-semibold">Ready to Save &rarr;</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Panel 2: Warranty Protection -->
+            <div class="pc-showcase-panel" id="tab-warranty">
+                <div class="row align-items-center g-4">
+                    <div class="col-lg-6">
+                        <div class="pc-hero-kicker mb-2">PRECISION WARRANTY MATH</div>
+                        <h3 class="h4 fw-bold text-dark font-display mb-3">Never Guess Your Coverage Status Again</h3>
+                        <p class="text-muted mb-4">
+                            ProductCare eliminates ambiguity. Every device calculation runs on deterministic date math. You get an exact day-by-day countdown, proactive 30-day expiration alerts, and verified proof attached to the hardware profile.
+                        </p>
+                        <div class="row g-3 mb-3">
+                            <div class="col-6">
+                                <div class="p-3 rounded-3 border bg-light text-center">
+                                    <div class="h3 fw-bold text-forest mb-0 font-display">420</div>
+                                    <div class="small text-muted">Days Active Coverage</div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="p-3 rounded-3 border bg-light text-center">
+                                    <div class="h3 fw-bold text-warning mb-0 font-display">30</div>
+                                    <div class="small text-muted">Day Renewal Alert</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="p-4 rounded-3 border" style="background-color: #FFFFFF; box-shadow: var(--pc-shadow-card);">
+                            <div class="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom">
+                                <div class="d-flex align-items-center gap-2">
+                                    <span class="pc-status-dot-active"></span>
+                                    <span class="fw-bold text-dark small">Active Warranty Timeline</span>
+                                </div>
+                                <span class="badge bg-success-subtle text-success border border-success-subtle">Valid Coverage</span>
+                            </div>
+                            <div class="text-center py-3">
+                                <div class="display-5 fw-bold text-dark font-display mb-1">420 <span class="fs-6 text-muted fw-normal">days left</span></div>
+                                <div class="small text-muted">Purchase: 15 Jan 2026 &bull; Expiry: 15 Jan 2028</div>
+                            </div>
+                            <div class="progress mb-3" style="height: 8px;">
+                                <div class="progress-bar bg-success" role="progressbar" style="width: 58%;" aria-valuenow="58" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                            <div class="p-2 rounded-2 bg-light border small text-muted d-flex align-items-center justify-content-between">
+                                <span><i class="bi bi-shield-check text-forest me-1"></i>Original Manufacturer Term</span>
+                                <span class="fw-semibold text-dark">24 Months</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Panel 3: Service Support -->
+            <div class="pc-showcase-panel" id="tab-service">
+                <div class="row align-items-center g-4">
+                    <div class="col-lg-6">
+                        <div class="pc-hero-kicker mb-2">LOCAL PUNJAB NETWORK</div>
+                        <h3 class="h4 fw-bold text-dark font-display mb-3">Certified Support at LPU &amp; Nearby Hubs</h3>
+                        <p class="text-muted mb-4">
+                            When equipment needs maintenance, find authentic walk-in assistance right on campus at the Uni-Mall, in Phagwara on GT Road, in Model Town Jalandhar, or at the Law Gate student hub.
+                        </p>
+                        <div class="d-flex flex-column gap-2 mb-3">
+                            <div class="small text-dark fw-semibold d-flex align-items-center gap-2">
+                                <i class="bi bi-check2-circle text-forest fs-5"></i>
+                                <span>Direct walk-in diagnostics at LPU Uni-Mall Ground Floor</span>
+                            </div>
+                            <div class="small text-dark fw-semibold d-flex align-items-center gap-2">
+                                <i class="bi bi-check2-circle text-forest fs-5"></i>
+                                <span>Real phone hotlines and verified operating schedules</span>
+                            </div>
+                            <div class="small text-dark fw-semibold d-flex align-items-center gap-2">
+                                <i class="bi bi-check2-circle text-forest fs-5"></i>
+                                <span>One-click Google Maps directions to repair benches</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="p-4 rounded-3 border" style="background-color: #FFFFFF; box-shadow: var(--pc-shadow-card);">
+                            <div class="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom">
+                                <span class="small fw-bold text-dark"><i class="bi bi-building me-2 text-forest"></i>LPU Uni-Mall Device Care &amp; Triage Kiosk</span>
+                                <span class="pc-glass-badge pc-glass-badge-sample">Sample Hub</span>
+                            </div>
+                            <div class="small text-muted mb-2"><i class="bi bi-geo-alt text-forest me-1"></i>Uni-Mall, Ground Floor, Central Plaza, LPU Campus, Phagwara</div>
+                            <div class="p-3 rounded-2 bg-light border mb-3 small">
+                                <div class="d-flex justify-content-between mb-1">
+                                    <span class="text-muted">Telephone Hotline:</span>
+                                    <a href="tel:+911824517000" class="text-forest fw-semibold text-decoration-none">+91 1824 517000</a>
+                                </div>
+                                <div class="d-flex justify-content-between mb-1">
+                                    <span class="text-muted">Operating Hours:</span>
+                                    <span class="fw-semibold text-dark">Mon-Sat: 9:00 AM - 7:30 PM</span>
+                                </div>
+                                <div class="d-flex justify-content-between">
+                                    <span class="text-muted">Supported Brands:</span>
+                                    <span class="fw-semibold text-dark">Apple, Dell, HP, Lenovo, ASUS</span>
+                                </div>
+                            </div>
+                            <a href="https://maps.google.com/?q=Lovely+Professional+University+Uni+Mall+Phagwara" target="_blank" rel="noopener noreferrer" class="btn btn-stone btn-sm w-100">
+                                <i class="bi bi-map me-1"></i> Open Google Maps Directions
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Panel 4: Repair Tracking -->
+            <div class="pc-showcase-panel" id="tab-tracking">
+                <div class="row align-items-center g-4">
+                    <div class="col-lg-6">
+                        <div class="pc-hero-kicker mb-2">END-TO-END SLA AUDIT</div>
+                        <h3 class="h4 fw-bold text-dark font-display mb-3">Live 5-Stage Repair Journey Tracker</h3>
+                        <p class="text-muted mb-4">
+                            Never wonder where your device is or what repair work has been completed. Track every transition in real time from ticket submission to technician allocation, bench diagnostics, resolution proof, and final pickup.
+                        </p>
+                        <div class="p-3 rounded-3 border bg-light small mb-3">
+                            <div class="text-forest fw-bold mb-1"><i class="bi bi-chat-left-quote me-1"></i>Technician Bench Remark</div>
+                            <div class="text-muted">"Display backlight bleeding repaired; thermal paste replaced; burn-in test complete at bench."</div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="p-4 rounded-3 border" style="background-color: #FFFFFF; box-shadow: var(--pc-shadow-card);">
+                            <div class="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom">
+                                <span class="small fw-bold text-dark">Ticket #PC-20261121-UAJJ</span>
+                                <span class="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle">Step 3 of 5</span>
+                            </div>
+                            <!-- 5-Step Repair Progress Bar -->
+                            <div class="pc-repair-journey p-0 my-3">
+                                <div class="pc-journey-step completed">
+                                    <div class="pc-journey-dot">✓</div>
+                                    <span class="pc-journey-title">1. Intake</span>
+                                </div>
+                                <div class="pc-journey-step completed">
+                                    <div class="pc-journey-dot">✓</div>
+                                    <span class="pc-journey-title">2. Review</span>
+                                </div>
+                                <div class="pc-journey-step active">
+                                    <div class="pc-journey-dot">3</div>
+                                    <span class="pc-journey-title">3. Repairing</span>
+                                </div>
+                                <div class="pc-journey-step">
+                                    <div class="pc-journey-dot">4</div>
+                                    <span class="pc-journey-title">4. Pickup</span>
+                                </div>
+                                <div class="pc-journey-step">
+                                    <div class="pc-journey-dot">5</div>
+                                    <span class="pc-journey-title">5. Closed</span>
+                                </div>
+                            </div>
+                            <div class="small text-muted pt-2 border-top d-flex justify-content-between align-items-center">
+                                <span><i class="bi bi-person-check text-forest me-1"></i>Alex Rivera (Specialist)</span>
+                                <span class="text-dark fw-semibold">Target: 23 Nov 2026</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- =========================================================================
+     SECTION 3: CONNECTED 5-STAGE PRODUCT JOURNEY
+     ========================================================================= -->
+<section class="py-5" id="journey" style="background-color: #FFFFFF;">
+    <div class="container-xl px-3 px-md-4 py-4">
+        <div class="text-center mb-5">
+            <span class="pc-hero-kicker mb-2">END-TO-END OWNERSHIP LIFECYCLE</span>
+            <h2 class="display-6 fw-bold text-dark font-display mb-2">The 5-Stage Care Journey</h2>
+            <p class="text-muted mx-auto" style="max-width: 620px;">
+                From the moment you unbox a new device to warranty milestones and repair resolutions, every step is clear, transparent, and effortlessly trackable.
+            </p>
+        </div>
+
+        <!-- Connected Desktop & Mobile Stepper Grid -->
+        <div class="row g-4 pc-journey-grid">
+            <!-- Step 1 -->
+            <div class="col-md-6 col-lg-4">
+                <div class="pc-card pc-glass-card h-100 p-4 d-flex flex-column justify-content-between pc-journey-card">
+                    <div>
+                        <div class="d-flex align-items-center justify-content-between mb-3">
+                            <div class="pc-step-number">STAGE 01</div>
+                            <i class="bi bi-mic text-forest fs-4"></i>
+                        </div>
+                        <h3 class="h5 fw-bold text-dark mb-2 font-display">Register Your Product</h3>
+                        <p class="small text-muted mb-0">
+                            Add devices via quick manual entry, smart suggestions catalog, or by speaking your product details. Attach digital receipts for safe, permanent record-keeping.
+                        </p>
+                    </div>
+                    <div class="mt-4 pt-3 border-top small text-forest fw-semibold d-flex align-items-center gap-1">
+                        <span>Voice &amp; catalog assistance</span>
+                        <i class="bi bi-arrow-right"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="col-md-6 col-lg-4">
+                <div class="pc-card pc-glass-card h-100 p-4 d-flex flex-column justify-content-between pc-journey-card">
+                    <div>
+                        <div class="d-flex align-items-center justify-content-between mb-3">
+                            <div class="pc-step-number">STAGE 02</div>
+                            <i class="bi bi-shield-check text-forest fs-4"></i>
+                        </div>
+                        <h3 class="h5 fw-bold text-dark mb-2 font-display">Track Real-Time Warranty</h3>
+                        <p class="small text-muted mb-0">
+                            Never guess whether your device is still covered. Deterministic warranty calculations show active days remaining, 30-day expiry notices, and verified coverage timelines.
+                        </p>
+                    </div>
+                    <div class="mt-4 pt-3 border-top small text-forest fw-semibold d-flex align-items-center gap-1">
+                        <span>Mathematical accuracy</span>
+                        <i class="bi bi-arrow-right"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="col-md-6 col-lg-4">
+                <div class="pc-card pc-glass-card h-100 p-4 d-flex flex-column justify-content-between pc-journey-card">
+                    <div>
+                        <div class="d-flex align-items-center justify-content-between mb-3">
+                            <div class="pc-step-number">STAGE 03</div>
+                            <i class="bi bi-geo-alt text-forest fs-4"></i>
+                        </div>
+                        <h3 class="h5 fw-bold text-dark mb-2 font-display">Find Nearby Service Support</h3>
+                        <p class="small text-muted mb-0">
+                            Discover local repair partners tailored to LPU, Phagwara, and Jalandhar. Filter by brand and category, review operating hours, and get real map directions.
+                        </p>
+                    </div>
+                    <div class="mt-4 pt-3 border-top small text-forest fw-semibold d-flex align-items-center gap-1">
+                        <span>LPU &amp; Punjab directory</span>
+                        <i class="bi bi-arrow-right"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 4 -->
+            <div class="col-md-6 col-lg-6">
+                <div class="pc-card pc-glass-card h-100 p-4 d-flex flex-column justify-content-between pc-journey-card">
+                    <div>
+                        <div class="d-flex align-items-center justify-content-between mb-3">
+                            <div class="pc-step-number">STAGE 04</div>
+                            <i class="bi bi-wrench text-forest fs-4"></i>
+                        </div>
+                        <h3 class="h5 fw-bold text-dark mb-2 font-display">Submit Service Tickets Seamlessly</h3>
+                        <p class="small text-muted mb-0">
+                            Report issues with pre-populated device details, failure descriptions, and optional diagnostic attachments. Route directly to designated service hubs or central triage.
+                        </p>
+                    </div>
+                    <div class="mt-4 pt-3 border-top small text-forest fw-semibold d-flex align-items-center gap-1">
+                        <span>Zero repetitive data entry</span>
+                        <i class="bi bi-arrow-right"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 5 -->
+            <div class="col-md-12 col-lg-6">
+                <div class="pc-card pc-glass-card h-100 p-4 d-flex flex-column justify-content-between pc-journey-card">
+                    <div>
+                        <div class="d-flex align-items-center justify-content-between mb-3">
+                            <div class="pc-step-number">STAGE 05</div>
+                            <i class="bi bi-check-circle text-forest fs-4"></i>
+                        </div>
+                        <h3 class="h5 fw-bold text-dark mb-2 font-display">Follow the 5-Stage Repair Journey</h3>
+                        <p class="small text-muted mb-0">
+                            Track your hardware from intake triage through technician allocation, bench diagnostics, resolution proof, and final pickup with full audit history and status updates.
+                        </p>
+                    </div>
+                    <div class="mt-4 pt-3 border-top small text-forest fw-semibold d-flex align-items-center gap-1">
+                        <span>Transparent progress tracker</span>
+                        <i class="bi bi-arrow-right"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- =========================================================================
+     SECTION 4: SERVICE CENTRE NETWORK (LPU & PUNJAB HUBS)
+     ========================================================================= -->
+<section class="py-5" id="network" style="background-color: var(--pc-canvas);">
+    <div class="container-xl px-3 px-md-4 py-4">
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-end mb-5 gap-3">
+            <div>
+                <span class="pc-hero-kicker mb-2">PUNJAB REGIONAL SUPPORT</span>
+                <h2 class="display-6 fw-bold text-dark font-display mb-1">LPU Campus &amp; Local Service Directory</h2>
+                <p class="text-muted small mb-0">Walk-in diagnostic desks and certified hardware repair partners across Lovely Professional University, Phagwara, and Jalandhar.</p>
+            </div>
+            <div>
+                <a asp-area="Customer" asp-controller="ServiceCenters" asp-action="Index" class="btn btn-forest btn-sm pc-btn-tactile">
+                    <i class="bi bi-geo-alt me-1"></i> Explore Full Directory
+                </a>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <!-- Hub 1: LPU Uni-Mall -->
+            <div class="col-md-6 col-lg-3">
+                <div class="pc-card pc-glass-card h-100 p-4 d-flex flex-column justify-content-between">
+                    <div>
+                        <div class="d-flex align-items-center justify-content-between mb-3">
+                            <span class="pc-glass-badge pc-glass-badge-sample">Sample Listing</span>
+                            <span class="small text-muted" style="font-size: 11px;">LPU Campus</span>
+                        </div>
+                        <h4 class="h6 fw-bold text-dark mb-1 font-display">LPU Uni-Mall Device Care</h4>
+                        <p class="small text-muted mb-2">Ground Floor, Central Plaza, Lovely Professional University, Phagwara</p>
+                        <div class="d-flex flex-wrap gap-1 mb-3">
+                            <span class="badge bg-light text-dark border" style="font-size: 10px;">Apple</span>
+                            <span class="badge bg-light text-dark border" style="font-size: 10px;">Dell</span>
+                            <span class="badge bg-light text-dark border" style="font-size: 10px;">HP</span>
+                            <span class="badge bg-light text-dark border" style="font-size: 10px;">Samsung</span>
+                        </div>
+                    </div>
+                    <div class="pt-2 border-top small text-muted">
+                        <i class="bi bi-telephone text-forest me-1"></i> +91 1824 517000
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hub 2: Phagwara GT Road -->
+            <div class="col-md-6 col-lg-3">
+                <div class="pc-card pc-glass-card h-100 p-4 d-flex flex-column justify-content-between">
+                    <div>
+                        <div class="d-flex align-items-center justify-content-between mb-3">
+                            <span class="pc-glass-badge pc-glass-badge-sample">Sample Listing</span>
+                            <span class="small text-muted" style="font-size: 11px;">Phagwara</span>
+                        </div>
+                        <h4 class="h6 fw-bold text-dark mb-1 font-display">Phagwara GT Road Hardware Hub</h4>
+                        <p class="small text-muted mb-2">Opp. Bus Stand, Grand Trunk Road, Phagwara, Punjab</p>
+                        <div class="d-flex flex-wrap gap-1 mb-3">
+                            <span class="badge bg-light text-dark border" style="font-size: 10px;">Dell</span>
+                            <span class="badge bg-light text-dark border" style="font-size: 10px;">Lenovo</span>
+                            <span class="badge bg-light text-dark border" style="font-size: 10px;">ASUS</span>
+                            <span class="badge bg-light text-dark border" style="font-size: 10px;">Acer</span>
+                        </div>
+                    </div>
+                    <div class="pt-2 border-top small text-muted">
+                        <i class="bi bi-telephone text-forest me-1"></i> +91 1824 502211
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hub 3: Jalandhar Model Town -->
+            <div class="col-md-6 col-lg-3">
+                <div class="pc-card pc-glass-card h-100 p-4 d-flex flex-column justify-content-between">
+                    <div>
+                        <div class="d-flex align-items-center justify-content-between mb-3">
+                            <span class="pc-glass-badge pc-glass-badge-sample">Sample Listing</span>
+                            <span class="small text-muted" style="font-size: 11px;">Jalandhar</span>
+                        </div>
+                        <h4 class="h6 fw-bold text-dark mb-1 font-display">Jalandhar Model Town Care</h4>
+                        <p class="small text-muted mb-2">Circular Road, Near Model Town Central Market, Jalandhar</p>
+                        <div class="d-flex flex-wrap gap-1 mb-3">
+                            <span class="badge bg-light text-dark border" style="font-size: 10px;">Apple</span>
+                            <span class="badge bg-light text-dark border" style="font-size: 10px;">Sony</span>
+                            <span class="badge bg-light text-dark border" style="font-size: 10px;">Bose</span>
+                            <span class="badge bg-light text-dark border" style="font-size: 10px;">LG</span>
+                        </div>
+                    </div>
+                    <div class="pt-2 border-top small text-muted">
+                        <i class="bi bi-telephone text-forest me-1"></i> +91 181 2450800
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hub 4: Law Gate Maheru -->
+            <div class="col-md-6 col-lg-3">
+                <div class="pc-card pc-glass-card h-100 p-4 d-flex flex-column justify-content-between">
+                    <div>
+                        <div class="d-flex align-items-center justify-content-between mb-3">
+                            <span class="pc-glass-badge pc-glass-badge-sample">Sample Listing</span>
+                            <span class="small text-muted" style="font-size: 11px;">Law Gate</span>
+                        </div>
+                        <h4 class="h6 fw-bold text-dark mb-1 font-display">Law Gate Student Assistance</h4>
+                        <p class="small text-muted mb-2">Shop 22, University Market Road, Maheru, Phagwara</p>
+                        <div class="d-flex flex-wrap gap-1 mb-3">
+                            <span class="badge bg-light text-dark border" style="font-size: 10px;">Xiaomi</span>
+                            <span class="badge bg-light text-dark border" style="font-size: 10px;">Realme</span>
+                            <span class="badge bg-light text-dark border" style="font-size: 10px;">OnePlus</span>
+                            <span class="badge bg-light text-dark border" style="font-size: 10px;">Samsung</span>
+                        </div>
+                    </div>
+                    <div class="pt-2 border-top small text-muted">
+                        <i class="bi bi-telephone text-forest me-1"></i> +91 1824 501234
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- =========================================================================
+     SECTION 5: CALL TO ACTION & LIVE WORKSPACE PREVIEW
+     ========================================================================= -->
+<section class="py-5" id="experience" style="background-color: #FFFFFF;">
+    <div class="container-xl px-3 px-md-4">
+        <div class="pc-cta-banner p-4 p-md-5 text-center">
+            <div class="mx-auto" style="max-width: 660px;">
+                <span class="pc-hero-kicker mb-2 text-white" style="background: rgba(255,255,255,0.15); border-color: rgba(255,255,255,0.3);">START MANAGING YOUR HARDWARE</span>
+                <h2 class="display-6 fw-bold text-white mb-3 font-display">
+                    Your devices. Your warranty records.<br />
+                    <span>Organised in one place.</span>
+                </h2>
+                <p class="text-white-50 mb-4 fs-6">
+                    Sign in to view your verified hardware portfolio, check real-time coverage timelines, and access dedicated service centre triage.
+                </p>
+                <div class="d-flex flex-wrap justify-content-center gap-3">
+                    @if (User.Identity?.IsAuthenticated == true)
+                    {
+                        <a class="btn btn-light btn-lg pc-btn-tactile text-forest fw-bold" asp-area="Customer" asp-controller="Dashboard" asp-action="Index">
+                            <span>Open My Workspace</span>
+                            <i class="bi bi-arrow-right ms-1"></i>
+                        </a>
+                    }
+                    else
+                    {
+                        <a class="btn btn-light btn-lg pc-btn-tactile text-forest fw-bold" asp-area="" asp-controller="Account" asp-action="Register">
+                            <span>Create Free Account</span>
+                            <i class="bi bi-arrow-right ms-1"></i>
+                        </a>
+                        <a class="btn btn-outline-light btn-lg pc-btn-tactile" asp-area="" asp-controller="Account" asp-action="Login">
+                            <span>Sign In</span>
+                        </a>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

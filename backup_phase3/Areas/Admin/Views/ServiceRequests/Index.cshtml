@@ -1,0 +1,139 @@
+@model ProductCare.Web.ViewModels.Admin.AdminServiceRequestListViewModel
+@{
+    ViewData["Title"] = "Campus Work Order Queue";
+}
+
+<!-- Page Header & Queue Counts -->
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
+    <div>
+        <span class="d-inline-block text-uppercase fw-bold small text-muted mb-1" style="letter-spacing: 0.06em; font-size: 0.72rem;">DISPATCH &amp; TRIAGE</span>
+        <h1 class="h3 fw-bold text-dark mb-1 font-display">Campus Issue &amp; Work Order Queue</h1>
+        <p class="text-muted small mb-0">Triage incoming campus maintenance requests, enforce SLA compliance, and route to field technicians.</p>
+    </div>
+    <div class="d-flex align-items-center gap-2 flex-wrap">
+        <span class="pc-badge pc-badge-expiring">Pending: @Model.PendingCount</span>
+        <span class="pc-badge pc-badge-progress">In Progress: @Model.InProgressCount</span>
+        <span class="pc-badge pc-badge-active">Resolved: @Model.ResolvedCount</span>
+        @if (Model.OverdueCount > 0)
+        {
+            <span class="badge bg-danger px-2 py-1"><i class="bi bi-exclamation-triangle-fill me-1"></i>SLA Breached: @Model.OverdueCount</span>
+        }
+        else
+        {
+            <span class="badge bg-success px-2 py-1"><i class="bi bi-shield-check me-1"></i>SLA 100% On-Target</span>
+        }
+    </div>
+</div>
+
+<!-- Filters Toolbar -->
+<div class="pc-card mb-4 p-3">
+    <form method="get" class="row g-2 align-items-center">
+        <div class="col-md-3">
+            <div class="input-group input-group-sm">
+                <span class="input-group-text"><i class="bi bi-search"></i></span>
+                <input type="text" name="search" value="@Model.SearchTerm" class="form-control" placeholder="Ticket #, reporter, location..." />
+            </div>
+        </div>
+        <div class="col-md-2">
+            <select name="status" class="form-select form-select-sm" asp-for="FilterStatus" asp-items="Html.GetEnumSelectList<ProductCare.Web.Models.Enums.RequestStatus>()">
+                <option value="">-- All Statuses --</option>
+            </select>
+        </div>
+        <div class="col-md-2">
+            <select name="priority" class="form-select form-select-sm" asp-for="FilterPriority" asp-items="Html.GetEnumSelectList<ProductCare.Web.Models.Enums.PriorityLevel>()">
+                <option value="">-- All Priorities --</option>
+            </select>
+        </div>
+        <div class="col-md-2">
+            <input type="text" name="location" value="@Model.FilterLocation" class="form-control form-control-sm" placeholder="Filter by building..." />
+        </div>
+        <div class="col-md-1 d-flex align-items-center">
+            <div class="form-check form-check-inline m-0">
+                <input type="checkbox" name="overdueOnly" value="true" class="form-check-input" id="checkOverdue" @(Model.FilterOverdueOnly == true ? "checked" : "") />
+                <label class="form-check-label text-danger small fw-bold" for="checkOverdue" style="font-size: 11px;">Overdue</label>
+            </div>
+        </div>
+        <div class="col-md-2 d-flex gap-2">
+            <button type="submit" class="btn btn-forest w-100 btn-sm">Filter</button>
+            <a asp-action="Index" class="btn btn-stone btn-sm d-flex align-items-center justify-content-center" title="Reset Filters">
+                <i class="bi bi-arrow-counterclockwise"></i>
+            </a>
+        </div>
+    </form>
+</div>
+
+<!-- Master Queue Table Card -->
+<div class="pc-card p-0 overflow-hidden">
+    <div class="d-flex align-items-center justify-content-between p-3 border-bottom" style="background-color: var(--pc-surface-secondary);">
+        <span class="small fw-semibold text-dark"><i class="bi bi-inbox me-2 text-forest"></i>Active Operational Queue</span>
+        <span class="badge bg-light text-muted border small">Total: @Model.TotalTickets</span>
+    </div>
+    <div>
+        @if (Model.Tickets.Any())
+        {
+            <div class="pc-table-wrapper border-0">
+                <table class="pc-table">
+                    <thead>
+                        <tr>
+                            <th>Ticket #</th>
+                            <th>Reporter</th>
+                            <th>Campus Location</th>
+                            <th>Subject &amp; Category</th>
+                            <th>SLA Countdown</th>
+                            <th>Status</th>
+                            <th>Assigned Tech</th>
+                            <th class="text-end">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var t in Model.Tickets)
+                        {
+                            <tr>
+                                <td class="font-monospace fw-bold small text-dark">
+                                    <a asp-action="Details" asp-route-id="@t.Id" class="text-dark text-decoration-none">
+                                        #@t.TicketNumber
+                                    </a>
+                                    @if (t.IsEscalated)
+                                    {
+                                        <div class="badge bg-danger mt-1" style="font-size: 9px;"><i class="bi bi-lightning-charge-fill me-1"></i>ESCALATED</div>
+                                    }
+                                </td>
+                                <td>
+                                    <div class="fw-semibold text-dark small">@t.CustomerName</div>
+                                    <div class="small text-muted" style="font-size: 11px;">@t.CustomerEmail</div>
+                                </td>
+                                <td class="small text-dark">
+                                    <i class="bi bi-geo-alt text-muted me-1"></i>@(t.CampusLocation ?? "Campus Facility")
+                                </td>
+                                <td>
+                                    <div class="fw-semibold text-dark small text-truncate" style="max-width: 200px;">@t.Subject</div>
+                                    <div class="small text-muted" style="font-size: 11px;">@t.CategoryName &bull; @t.ProductName</div>
+                                </td>
+                                <td>
+                                    <span class="@t.SlaBadgeCssClass" style="font-size: 11px;">@t.SlaBadgeText</span>
+                                </td>
+                                <td><span class="@t.StatusBadgeCssClass" style="font-size: 11px;">@t.StatusDisplayText</span></td>
+                                <td class="small text-dark">
+                                    @(string.IsNullOrEmpty(t.AssignedTechnician) ? "Unassigned" : t.AssignedTechnician)
+                                </td>
+                                <td class="text-end">
+                                    <a asp-action="Details" asp-route-id="@t.Id" class="btn btn-stone btn-sm" style="font-size: 11px; padding: 4px 8px;">
+                                        Triage &rarr;
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <div class="p-5 text-center text-muted">
+                <i class="bi bi-inbox fs-1 text-muted mb-3 d-block"></i>
+                <h5 class="fw-bold text-dark">No work orders matching filters</h5>
+                <p class="small text-muted mb-0">All service requests have been triaged or no tickets match the applied search.</p>
+            </div>
+        }
+    </div>
+</div>

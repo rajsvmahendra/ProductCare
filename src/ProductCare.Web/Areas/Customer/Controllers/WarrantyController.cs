@@ -30,7 +30,7 @@ public class WarrantyController : Controller
 
         var products = await _context.Products
             .AsNoTracking()
-            .Where(p => p.UserId == CurrentUserId)
+            .Where(p => p.UserId == CurrentUserId && !p.IsArchived)
             .OrderBy(p => p.WarrantyExpiryDate)
             .ToListAsync();
 

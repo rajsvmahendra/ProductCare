@@ -1,0 +1,159 @@
+@model ProductCare.Web.ViewModels.Customer.ServiceRequestCreateViewModel
+@{
+    ViewData["Title"] = "Raise Service & Repair Ticket";
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-10 col-xl-9">
+        <div class="d-flex flex-column flex-sm-row align-items-start align-items-sm-center justify-content-between mb-4 gap-3">
+            <div>
+                <span class="d-inline-block text-uppercase fw-bold small text-muted mb-1" style="letter-spacing: 0.08em; font-size: 0.72rem;">HARDWARE REPAIR &amp; MAINTENANCE INTAKE</span>
+                <h1 class="h3 fw-bold text-dark mb-1 font-display">Submit Service Request</h1>
+                <p class="text-muted small mb-0">Report hardware defects, request maintenance, or route device to an authorized service centre.</p>
+            </div>
+            <a asp-action="Index" class="btn btn-stone btn-sm">
+                <i class="bi bi-arrow-left me-1"></i> Back to Requests
+            </a>
+        </div>
+
+        <!-- 5-Stage Repair Journey Tracker Overview -->
+        <div class="pc-card pc-glass-card mb-4 p-4">
+            <div class="d-flex align-items-center justify-content-between mb-2">
+                <span class="small fw-bold text-dark font-display"><i class="bi bi-arrow-right-circle-fill me-2 text-forest"></i>Standard 5-Stage Repair Lifecycle</span>
+                <span class="badge bg-light text-muted border small">Transparent SLAs</span>
+            </div>
+
+            <div class="pc-repair-journey">
+                <div class="pc-journey-step active">
+                    <div class="pc-journey-dot"><i class="bi bi-send-fill"></i></div>
+                    <span class="pc-journey-title">1. Request Received</span>
+                </div>
+                <div class="pc-journey-step">
+                    <div class="pc-journey-dot">2</div>
+                    <span class="pc-journey-title">2. Centre Reviewing</span>
+                </div>
+                <div class="pc-journey-step">
+                    <div class="pc-journey-dot">3</div>
+                    <span class="pc-journey-title">3. Repair in Progress</span>
+                </div>
+                <div class="pc-journey-step">
+                    <div class="pc-journey-dot">4</div>
+                    <span class="pc-journey-title">4. Ready for Collection</span>
+                </div>
+                <div class="pc-journey-step">
+                    <div class="pc-journey-dot">5</div>
+                    <span class="pc-journey-title">5. Resolved</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Request Submission Form -->
+        <div class="pc-card pc-glass-card p-4 p-md-5">
+            <form asp-action="Create" method="post" enctype="multipart/form-data">
+                @Html.AntiForgeryToken()
+
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger py-2 small mb-4" role="alert"></div>
+
+                <!-- Product / Asset Selection -->
+                <div class="mb-4">
+                    <div class="d-flex align-items-center justify-content-between mb-2">
+                        <label asp-for="ProductId" class="form-label fw-semibold mb-0">Target Registered Device</label>
+                        <a asp-controller="Products" asp-action="Create" class="small fw-semibold text-forest text-decoration-none">+ Register New Device</a>
+                    </div>
+                    <select asp-for="ProductId" id="productSelect" class="form-select" asp-items="Model.AvailableProducts" required autofocus></select>
+                    <span asp-validation-for="ProductId" class="text-danger small"></span>
+                </div>
+
+                <!-- Service Centre Selection & Intelligent Match -->
+                <div class="mb-4">
+                    <label asp-for="ServiceCenterId" class="form-label fw-semibold">Designated Service Centre (Optional)</label>
+                    <select asp-for="ServiceCenterId" class="form-select" asp-items="Model.AvailableServiceCenters">
+                        <option value="">-- General Service Dispatch (Auto-Assigned by System) --</option>
+                    </select>
+                    <span asp-validation-for="ServiceCenterId" class="text-danger small"></span>
+                    <div class="form-text small text-muted mt-1">
+                        <i class="bi bi-geo-alt text-forest"></i> Select a specific authorized repair partner or on-campus device lab, or leave blank for central triage dispatch.
+                    </div>
+                </div>
+
+                <!-- Pickup / Handover Location -->
+                <div class="mb-4">
+                    <label asp-for="CampusLocation" class="form-label fw-semibold">Device Handover &amp; Pickup Location</label>
+                    <input asp-for="CampusLocation" class="form-control" list="campusLocationsList" placeholder="e.g. Uni-Mall Tech Desk or Block 34" required />
+                    <datalist id="campusLocationsList">
+                        <option value="Uni-Mall Tech Desk - Ground Floor" />
+                        <option value="Block 34 - Computer Science Wing" />
+                        <option value="Block 38 - Engineering Hub" />
+                        <option value="Central Library - Intake Desk" />
+                        <option value="Boys Hostel BH-1 Reception" />
+                        <option value="Girls Hostel GH-2 Reception" />
+                        <option value="Main Gate - Visitor Intake" />
+                        <option value="Law Gate Student Complex" />
+                    </datalist>
+                    <span asp-validation-for="CampusLocation" class="text-danger small"></span>
+                </div>
+
+                <!-- Category & Priority -->
+                <div class="row g-3 mb-4">
+                    <div class="col-md-6">
+                        <label asp-for="Category" class="form-label fw-semibold">Issue Category</label>
+                        <select asp-for="Category" class="form-select" asp-items="Html.GetEnumSelectList<ProductCare.Web.Models.Enums.RequestCategory>()"></select>
+                        <span asp-validation-for="Category" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Priority" class="form-label fw-semibold">Severity / Priority Level</label>
+                        <select asp-for="Priority" class="form-select" asp-items="Html.GetEnumSelectList<ProductCare.Web.Models.Enums.PriorityLevel>()"></select>
+                        <span asp-validation-for="Priority" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <!-- SLA Information Box -->
+                <div class="p-3 mb-4 rounded-2 border" style="background-color: var(--pc-surface-secondary); border-color: var(--pc-border-hairline) !important;">
+                    <div class="d-flex align-items-center gap-2 mb-2">
+                        <i class="bi bi-clock-history text-forest"></i>
+                        <span class="fw-semibold small text-dark">SLA Response Commitments:</span>
+                    </div>
+                    <div class="row g-2 small text-muted">
+                        <div class="col-6 col-md-3"><strong>Urgent:</strong> 4 Hours</div>
+                        <div class="col-6 col-md-3"><strong>High:</strong> 24 Hours</div>
+                        <div class="col-6 col-md-3"><strong>Medium:</strong> 48 Hours</div>
+                        <div class="col-6 col-md-3"><strong>Low:</strong> 72 Hours</div>
+                    </div>
+                </div>
+
+                <!-- Subject -->
+                <div class="mb-4">
+                    <label asp-for="Subject" class="form-label fw-semibold">Problem Summary</label>
+                    <input asp-for="Subject" class="form-control" placeholder="e.g. Battery drainage issue / Screen flickering under load" required />
+                    <span asp-validation-for="Subject" class="text-danger small"></span>
+                </div>
+
+                <!-- Description -->
+                <div class="mb-4">
+                    <label asp-for="Description" class="form-label fw-semibold">Detailed Symptoms &amp; Observations</label>
+                    <textarea asp-for="Description" class="form-control" rows="4" placeholder="Describe error codes, physical observations, circumstances of the defect..." required></textarea>
+                    <span asp-validation-for="Description" class="text-danger small"></span>
+                </div>
+
+                <!-- Attachment -->
+                <div class="mb-4">
+                    <label asp-for="Attachment" class="form-label fw-semibold">Diagnostic Photo / Attachment (Optional)</label>
+                    <input asp-for="Attachment" type="file" class="form-control" accept=".jpg,.jpeg,.png,.pdf,.txt" />
+                    <div class="form-text small text-muted">Attach error screenshot, equipment photo, or diagnostic log (JPG, PNG, PDF up to 10MB). Stored safely outside web root.</div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="d-flex align-items-center justify-content-end gap-2 pt-3 border-top" style="border-color: var(--pc-stone) !important;">
+                    <a asp-action="Index" class="btn btn-stone">Cancel</a>
+                    <button type="submit" class="btn btn-forest px-4">
+                        <i class="bi bi-send me-1"></i> Submit Service Ticket
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

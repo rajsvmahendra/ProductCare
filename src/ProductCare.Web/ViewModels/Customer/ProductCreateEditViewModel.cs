@@ -31,6 +31,10 @@ public class ProductCreateEditViewModel
     [Display(Name = "Category")]
     public ProductCategory Category { get; set; } = ProductCategory.Electronics;
 
+    [Display(Name = "Subcategory / Form Factor")]
+    [StringLength(100, ErrorMessage = "Subcategory cannot exceed 100 characters.")]
+    public string? SubCategory { get; set; }
+
     [Required(ErrorMessage = "Purchase date is required.")]
     [DataType(DataType.Date)]
     [Display(Name = "Purchase Date")]

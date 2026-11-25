@@ -18,6 +18,11 @@ public class ServiceRequest
 
     public string UserId { get; set; } = string.Empty;
 
+    /// <summary>
+    /// Optional assigned or selected service centre for repair intake.
+    /// </summary>
+    public int? ServiceCenterId { get; set; }
+
     public RequestCategory Category { get; set; } = RequestCategory.Repair;
 
     public string Subject { get; set; } = string.Empty;
@@ -38,10 +43,42 @@ public class ServiceRequest
 
     public DateTime? ResolvedAtUtc { get; set; }
 
+    /// <summary>
+    /// P10 Campus Location / Facility where the issue is situated.
+    /// E.g. "Main Academic Block, Floor 2, Room 204", "Hostel Block B", "Central Library".
+    /// </summary>
+    public string? CampusLocation { get; set; }
+
+    /// <summary>
+    /// P10 SLA deadline calculated from priority level and submission timestamp.
+    /// </summary>
+    public DateTime? SlaDeadlineUtc { get; set; }
+
+    /// <summary>
+    /// P10 SLA escalation flag indicating high-priority breach or supervisor escalation.
+    /// </summary>
+    public bool IsEscalated { get; set; } = false;
+
+    /// <summary>
+    /// Attached photo or diagnostic log (safe magic-byte storage).
+    /// </summary>
+    public string? AttachmentFileName { get; set; }
+
+    public string? AttachmentOriginalFileName { get; set; }
+
+    public string? AttachmentContentType { get; set; }
+
+    /// <summary>
+    /// Resolution proof photograph or inspection certificate submitted upon completion.
+    /// </summary>
+    public string? ResolutionProofFileName { get; set; }
+
     // Navigation properties
     public virtual Product Product { get; set; } = null!;
 
     public virtual ApplicationUser User { get; set; } = null!;
+
+    public virtual ServiceCenter? ServiceCenter { get; set; }
 
     public virtual ICollection<ServiceRequestHistory> StatusHistories { get; set; } = new List<ServiceRequestHistory>();
 }

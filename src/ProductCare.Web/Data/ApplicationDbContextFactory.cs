@@ -14,7 +14,7 @@ public class ApplicationDbContextFactory : IDesignTimeDbContextFactory<Applicati
         var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
 
         // Default SQL Server LocalDB connection string per project specification
-        const string connectionString = "Server=(localdb)\\MSSQLLocalDB;Database=ProductCareDb;Trusted_Connection=True;MultipleActiveResultSets=true;TrustServerCertificate=True";
+        const string connectionString = "Server=(localdb)\\ProductCareTest;Database=ProductCareDb;Trusted_Connection=True;MultipleActiveResultSets=true;TrustServerCertificate=True";
 
         optionsBuilder.UseSqlServer(connectionString);
 

@@ -31,6 +31,9 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
         builder.Property(p => p.Category)
             .IsRequired();
 
+        builder.Property(p => p.SubCategory)
+            .HasMaxLength(100);
+
         builder.Property(p => p.PurchaseStore)
             .HasMaxLength(150);
 
@@ -49,7 +52,16 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
         builder.Property(p => p.Notes)
             .HasMaxLength(1000);
 
+        builder.Property(p => p.IsArchived)
+            .IsRequired()
+            .HasDefaultValue(false);
+
+        builder.Property(p => p.ArchivedAtUtc);
+
         // Indexes for performance
+        builder.HasIndex(p => new { p.UserId, p.IsArchived })
+            .HasDatabaseName("IX_Products_UserId_IsArchived");
+
         builder.HasIndex(p => p.UserId)
             .HasDatabaseName("IX_Products_UserId");
 

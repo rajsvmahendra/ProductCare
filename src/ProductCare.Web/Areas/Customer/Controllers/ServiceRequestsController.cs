@@ -18,17 +18,23 @@ public class ServiceRequestsController : Controller
     private readonly ApplicationDbContext _context;
     private readonly IServiceRequestWorkflowService _workflowService;
     private readonly IWarrantyCalculatorService _warrantyCalculator;
+    private readonly ISlaCalculationService _slaService;
+    private readonly IInvoiceStorageService _storageService;
     private readonly ILogger<ServiceRequestsController> _logger;
 
     public ServiceRequestsController(
         ApplicationDbContext context,
         IServiceRequestWorkflowService workflowService,
         IWarrantyCalculatorService warrantyCalculator,
+        ISlaCalculationService slaService,
+        IInvoiceStorageService storageService,
         ILogger<ServiceRequestsController> logger)
     {
         _context = context;
         _workflowService = workflowService;
         _warrantyCalculator = warrantyCalculator;
+        _slaService = slaService;
+        _storageService = storageService;
         _logger = logger;
     }
 
@@ -45,6 +51,7 @@ public class ServiceRequestsController : Controller
         var query = _context.ServiceRequests
             .AsNoTracking()
             .Include(sr => sr.Product)
+            .Include(sr => sr.ServiceCenter)
             .Where(sr => sr.UserId == CurrentUserId);
 
         if (status.HasValue)
@@ -72,9 +79,15 @@ public class ServiceRequestsController : Controller
                 sr.Product.Brand.Contains(term));
         }
 
-        var tickets = await query
+        var rawTickets = await query
             .OrderByDescending(sr => sr.CreatedAtUtc)
-            .Select(sr => new CustomerServiceRequestListItem
+            .ToListAsync();
+
+        var tickets = rawTickets.Select(sr =>
+        {
+            var isOverdue = _slaService.IsOverdue(sr.SlaDeadlineUtc, sr.ResolvedAtUtc);
+            var (slaText, slaBadge) = _slaService.GetSlaStatusBadge(sr.SlaDeadlineUtc, sr.ResolvedAtUtc);
+            return new CustomerServiceRequestListItem
             {
                 Id = sr.Id,
                 TicketNumber = sr.TicketNumber,
@@ -88,10 +101,17 @@ public class ServiceRequestsController : Controller
                 Status = sr.Status,
                 StatusBadgeCssClass = GetStatusBadgeClass(sr.Status),
                 StatusDisplayText = FormatStatusText(sr.Status),
+                CampusLocation = sr.CampusLocation,
+                ServiceCenterName = sr.ServiceCenter?.Name,
+                SlaDeadlineUtc = sr.SlaDeadlineUtc,
+                IsOverdue = isOverdue,
+                IsEscalated = sr.IsEscalated,
+                SlaBadgeText = slaText,
+                SlaBadgeCssClass = slaBadge,
                 CreatedAtUtc = sr.CreatedAtUtc,
                 UpdatedAtUtc = sr.UpdatedAtUtc
-            })
-            .ToListAsync();
+            };
+        }).ToList();
 
         var model = new ServiceRequestListViewModel
         {
@@ -111,6 +131,7 @@ public class ServiceRequestsController : Controller
         var request = await _context.ServiceRequests
             .AsNoTracking()
             .Include(sr => sr.Product)
+            .Include(sr => sr.ServiceCenter)
             .Include(sr => sr.StatusHistories.OrderBy(h => h.CreatedAtUtc))
             .FirstOrDefaultAsync(sr => sr.Id == id && sr.UserId == CurrentUserId);
 
@@ -136,6 +157,10 @@ public class ServiceRequestsController : Controller
             CreatedAtUtc = h.CreatedAtUtc
         }).ToList();
 
+        var isOverdue = _slaService.IsOverdue(request.SlaDeadlineUtc, request.ResolvedAtUtc);
+        var isApproaching = _slaService.IsApproachingBreach(request.SlaDeadlineUtc, request.ResolvedAtUtc);
+        var (slaText, slaBadge) = _slaService.GetSlaStatusBadge(request.SlaDeadlineUtc, request.ResolvedAtUtc);
+
         var model = new ServiceRequestDetailsViewModel
         {
             Id = request.Id,
@@ -149,6 +174,15 @@ public class ServiceRequestsController : Controller
             StatusDisplayText = FormatStatusText(request.Status),
             Subject = request.Subject,
             Description = request.Description,
+            CampusLocation = request.CampusLocation,
+            SlaDeadlineUtc = request.SlaDeadlineUtc,
+            IsOverdue = isOverdue,
+            IsApproachingBreach = isApproaching,
+            IsEscalated = request.IsEscalated,
+            SlaBadgeText = slaText,
+            SlaBadgeCssClass = slaBadge,
+            AttachmentFileName = request.AttachmentFileName,
+            ResolutionProofFileName = request.ResolutionProofFileName,
             AssignedTechnician = request.AssignedTechnician,
             AdminRemarks = request.AdminRemarks,
             CreatedAtUtc = request.CreatedAtUtc,
@@ -162,6 +196,12 @@ public class ServiceRequestsController : Controller
             ProductWarrantyExpiryDate = request.Product.WarrantyExpiryDate,
             ProductWarrantyStatusBadge = productWarranty.StatusBadgeCssClass,
             ProductWarrantyStatusText = productWarranty.StatusDisplayText,
+            ServiceCenterId = request.ServiceCenterId,
+            ServiceCenterName = request.ServiceCenter?.Name,
+            ServiceCenterAddress = request.ServiceCenter?.Address,
+            ServiceCenterCity = request.ServiceCenter?.City,
+            ServiceCenterPhone = request.ServiceCenter?.Phone,
+            ServiceCenterIsVerified = request.ServiceCenter?.IsVerified,
             StatusHistory = historyItems
         };
 
@@ -169,7 +209,7 @@ public class ServiceRequestsController : Controller
     }
 
     [HttpGet]
-    public async Task<IActionResult> Create(int? productId)
+    public async Task<IActionResult> Create(int? productId, int? centerId)
     {
         var products = await _context.Products
             .AsNoTracking()
@@ -183,14 +223,27 @@ public class ServiceRequestsController : Controller
             return RedirectToAction("Create", "Products");
         }
 
+        var centers = await _context.ServiceCenters
+            .AsNoTracking()
+            .Where(sc => sc.IsActive)
+            .OrderBy(sc => sc.Name)
+            .ToListAsync();
+
         var model = new ServiceRequestCreateViewModel
         {
             ProductId = productId ?? products.First().Id,
+            ServiceCenterId = centerId,
             AvailableProducts = products.Select(p => new SelectListItem
             {
                 Value = p.Id.ToString(),
                 Text = $"{p.Name} ({p.Brand} - S/N: {p.SerialNumber})",
                 Selected = productId.HasValue && p.Id == productId.Value
+            }).ToList(),
+            AvailableServiceCenters = centers.Select(sc => new SelectListItem
+            {
+                Value = sc.Id.ToString(),
+                Text = $"{sc.Name} — {sc.City} ({(sc.IsVerified ? "Verified Partner" : "Sample Hub")})",
+                Selected = centerId.HasValue && sc.Id == centerId.Value
             }).ToList()
         };
 
@@ -218,10 +271,23 @@ public class ServiceRequestsController : Controller
                 .OrderBy(p => p.Name)
                 .ToListAsync();
 
+            var centers = await _context.ServiceCenters
+                .AsNoTracking()
+                .Where(sc => sc.IsActive)
+                .OrderBy(sc => sc.Name)
+                .ToListAsync();
+
             model.AvailableProducts = userProducts.Select(p => new SelectListItem
             {
                 Value = p.Id.ToString(),
                 Text = $"{p.Name} ({p.Brand} - S/N: {p.SerialNumber})"
+            }).ToList();
+
+            model.AvailableServiceCenters = centers.Select(sc => new SelectListItem
+            {
+                Value = sc.Id.ToString(),
+                Text = $"{sc.Name} — {sc.City} ({(sc.IsVerified ? "Verified Partner" : "Sample Hub")})",
+                Selected = model.ServiceCenterId.HasValue && sc.Id == model.ServiceCenterId.Value
             }).ToList();
 
             return View(model);
@@ -229,17 +295,41 @@ public class ServiceRequestsController : Controller
 
         var ticketNumber = await _workflowService.GenerateTicketNumberAsync();
         var utcNow = DateTime.UtcNow;
+        var slaDeadline = _slaService.CalculateSlaDeadline(utcNow, model.Priority);
+        var suggestedTech = _slaService.GetRecommendedTechnician(model.Category, model.CampusLocation);
+
+        string? attachmentFileName = null;
+        string? attachmentOriginalFileName = null;
+        string? attachmentContentType = null;
+
+        if (model.Attachment != null && model.Attachment.Length > 0)
+        {
+            var saveResult = await _storageService.SaveInvoiceAsync(model.Attachment);
+            if (saveResult.Success)
+            {
+                attachmentFileName = saveResult.StoredFileName;
+                attachmentOriginalFileName = saveResult.OriginalFileName;
+                attachmentContentType = saveResult.ContentType;
+            }
+        }
 
         var request = new ServiceRequest
         {
             TicketNumber = ticketNumber,
             ProductId = model.ProductId,
             UserId = CurrentUserId,
+            ServiceCenterId = model.ServiceCenterId,
             Category = model.Category,
             Priority = model.Priority,
             Status = RequestStatus.Submitted,
             Subject = model.Subject.Trim(),
             Description = model.Description.Trim(),
+            CampusLocation = model.CampusLocation.Trim(),
+            SlaDeadlineUtc = slaDeadline,
+            AssignedTechnician = suggestedTech,
+            AttachmentFileName = attachmentFileName,
+            AttachmentOriginalFileName = attachmentOriginalFileName,
+            AttachmentContentType = attachmentContentType,
             CreatedAtUtc = utcNow
         };
 

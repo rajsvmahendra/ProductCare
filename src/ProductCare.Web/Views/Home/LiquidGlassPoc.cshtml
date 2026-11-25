@@ -1,0 +1,88 @@
+@{
+    ViewData["Title"] = "Liquid Glass WebGL Proof of Concept";
+}
+
+<div class="container py-5 mt-5">
+    <div class="text-center mb-5">
+        <span class="badge bg-success-subtle text-success border border-success px-3 py-2 rounded-pill font-monospace small mb-2">
+            <i class="bi bi-cpu me-1"></i> WebGL 1.0 Ray-Tracing Engine Active
+        </span>
+        <h1 class="h2 fw-bold font-display text-dark">Liquid Glass Web Component Proof of Concept</h1>
+        <p class="text-muted">Direct verification of ray-traced liquid glass custom element (MuhammadaliMS/liquid-glass) running inside ProductCare.</p>
+    </div>
+
+    <!-- POC Scene 1: Standalone Hero Container with Aurora & Controls -->
+    <div class="mb-5">
+        <h2 class="h5 fw-bold font-display text-dark mb-3">1. WebGL Aurora Scene with Interactive Panes</h2>
+        <liquid-glass id="pocAuroraScene" class="pc-poc-scene" backdrop="aurora" colors="#1E3D34 #285B50 #A7F3D0 #FFFFFF" dim="0.08" style="height: 380px; border-radius: 24px; position: relative; overflow: hidden;">
+            <div class="h-100 d-flex flex-column justify-content-between p-4">
+                <div class="d-flex justify-content-between align-items-center">
+                    <span class="badge bg-light text-dark border px-3 py-2 rounded-pill font-monospace" glass>
+                        <i class="bi bi-shield-check text-success me-1"></i> Ray-Traced Glass Badge
+                    </span>
+                    <button type="button" class="btn btn-stone btn-sm px-3 py-2 rounded-pill" glass>
+                        <i class="bi bi-sliders me-1"></i> Glass Button
+                    </button>
+                </div>
+
+                <div class="text-center py-4">
+                    <h3 class="h3 fw-bold text-dark font-display mb-2">Refraction &amp; Edge Bulge Engine</h3>
+                    <p class="text-dark small mb-3">Move your cursor near the edges of these glass elements to see physical cursor pull.</p>
+                    <div class="d-flex justify-content-center gap-3">
+                        <button type="button" class="btn btn-forest px-4 py-2 rounded-pill" glass style="--glass-tint: rgba(40, 91, 80, 0.85); color: #fff;">
+                            <i class="bi bi-lightning-charge me-1"></i> Primary Glass CTA
+                        </button>
+                        <button type="button" class="btn btn-stone px-4 py-2 rounded-pill" glass>
+                            <i class="bi bi-info-circle me-1"></i> Secondary Glass
+                        </button>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-center">
+                    <div class="p-2 px-4 rounded-pill d-flex align-items-center gap-3" glass style="--glass-depth: 1.4; --glass-dome: 1.2;">
+                        <span class="small fw-semibold text-dark">Segmented Glass Control:</span>
+                        <span class="badge bg-success text-white rounded-pill px-3 py-1">Active</span>
+                        <span class="small text-muted">Standby</span>
+                        <span class="small text-muted">Offline</span>
+                    </div>
+                </div>
+            </div>
+        </liquid-glass>
+    </div>
+
+    <!-- Diagnostic Panel -->
+    <div class="card p-4 border rounded-3 bg-white shadow-sm">
+        <h3 class="h6 fw-bold font-display text-dark mb-3">WebGL Diagnostic Verification</h3>
+        <div id="webglStatus" class="font-monospace small text-muted">
+            Checking WebGL renderer status...
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="module">
+        document.addEventListener('DOMContentLoaded', async () => {
+            await customElements.whenDefined('liquid-glass');
+            const statusEl = document.getElementById('webglStatus');
+            const scene = document.getElementById('pocAuroraScene');
+
+            setTimeout(() => {
+                const isReady = scene?.hasAttribute('data-ready');
+                const renderer = scene?.getAttribute('data-renderer');
+                const canvas = scene?.shadowRoot?.querySelector('canvas');
+                const gl = canvas?.getContext('webgl') || canvas?.getContext('experimental-webgl');
+
+                let statusHtml = `
+                    <div class="d-flex flex-column gap-2">
+                        <div>&bull; Custom Element Defined: <strong class="text-success">true (&lt;liquid-glass&gt;)</strong></div>
+                        <div>&bull; Component Initialized: <strong class="${isReady ? 'text-success' : 'text-danger'}">${isReady ? 'YES (data-ready)' : 'NO'}</strong></div>
+                        <div>&bull; Active Renderer: <strong class="${renderer === 'webgl' ? 'text-success' : 'text-warning'}">${renderer || 'none'}</strong></div>
+                        <div>&bull; Canvas In Shadow DOM: <strong>${canvas ? `${canvas.width}x${canvas.height} px` : 'NOT FOUND'}</strong></div>
+                        <div>&bull; WebGL Context Valid: <strong class="${gl ? 'text-success' : 'text-danger'}">${gl ? 'YES (' + gl.getParameter(gl.RENDERER) + ')' : 'NO'}</strong></div>
+                    </div>
+                `;
+                if (statusEl) statusEl.innerHTML = statusHtml;
+            }, 600);
+        });
+    </script>
+}

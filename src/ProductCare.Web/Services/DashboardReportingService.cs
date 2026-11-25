@@ -16,15 +16,21 @@ public class DashboardReportingService : IDashboardReportingService
 {
     private readonly ApplicationDbContext _context;
     private readonly IWarrantyCalculatorService _warrantyCalculator;
+    private readonly ISlaCalculationService _slaService;
+    private readonly INetworkQualityService _networkService;
     private readonly ILogger<DashboardReportingService> _logger;
 
     public DashboardReportingService(
         ApplicationDbContext context,
         IWarrantyCalculatorService warrantyCalculator,
+        ISlaCalculationService slaService,
+        INetworkQualityService networkService,
         ILogger<DashboardReportingService> logger)
     {
         _context = context;
         _warrantyCalculator = warrantyCalculator;
+        _slaService = slaService;
+        _networkService = networkService;
         _logger = logger;
     }
 
@@ -38,7 +44,7 @@ public class DashboardReportingService : IDashboardReportingService
 
         var products = await _context.Products
             .AsNoTracking()
-            .Where(p => p.UserId == userId)
+            .Where(p => p.UserId == userId && !p.IsArchived)
             .OrderBy(p => p.WarrantyExpiryDate)
             .ToListAsync(cancellationToken);
 
@@ -48,6 +54,28 @@ public class DashboardReportingService : IDashboardReportingService
         var expiredCount = 0;
 
         var expiringSoonList = new List<ProductSummaryItem>();
+        var recentProductsList = new List<ProductSummaryItem>();
+
+        // Build recent products (ordered by registration date)
+        foreach (var p in products.OrderByDescending(p => p.CreatedAtUtc).Take(4))
+        {
+            var w = _warrantyCalculator.GetWarrantyDetails(p.WarrantyExpiryDate, today);
+            recentProductsList.Add(new ProductSummaryItem
+            {
+                Id = p.Id,
+                Name = p.Name,
+                Brand = p.Brand,
+                ModelNumber = p.ModelNumber,
+                SerialNumber = p.SerialNumber,
+                CategoryName = p.Category.ToString(),
+                SubCategory = p.SubCategory,
+                PurchaseDate = p.PurchaseDate,
+                ExpiryDate = w.ExpiryDate,
+                RemainingDays = w.RemainingDays,
+                StatusBadgeCssClass = w.StatusBadgeCssClass,
+                StatusText = w.StatusDisplayText
+            });
+        }
 
         foreach (var p in products)
         {
@@ -66,6 +94,10 @@ public class DashboardReportingService : IDashboardReportingService
                         Name = p.Name,
                         Brand = p.Brand,
                         ModelNumber = p.ModelNumber,
+                        SerialNumber = p.SerialNumber,
+                        CategoryName = p.Category.ToString(),
+                        SubCategory = p.SubCategory,
+                        PurchaseDate = p.PurchaseDate,
                         ExpiryDate = warranty.ExpiryDate,
                         RemainingDays = warranty.RemainingDays,
                         StatusBadgeCssClass = warranty.StatusBadgeCssClass,
@@ -81,6 +113,7 @@ public class DashboardReportingService : IDashboardReportingService
         var tickets = await _context.ServiceRequests
             .AsNoTracking()
             .Include(sr => sr.Product)
+            .Include(sr => sr.ServiceCenter)
             .Where(sr => sr.UserId == userId)
             .OrderByDescending(sr => sr.UpdatedAtUtc ?? sr.CreatedAtUtc)
             .Take(5)
@@ -103,18 +136,36 @@ public class DashboardReportingService : IDashboardReportingService
             .AsNoTracking()
             .CountAsync(sr => sr.UserId == userId && (sr.Status == RequestStatus.Resolved || sr.Status == RequestStatus.Closed), cancellationToken);
 
-        var recentTicketItems = tickets.Select(t => new ServiceRequestSummaryItem
+        var recentTicketItems = tickets.Select(t =>
         {
-            Id = t.Id,
-            TicketNumber = t.TicketNumber,
-            ProductName = t.Product?.Name ?? "N/A",
-            Subject = t.Subject,
-            PriorityText = t.Priority.ToString(),
-            PriorityBadgeCssClass = GetPriorityBadgeClass(t.Priority),
-            StatusText = FormatStatusText(t.Status),
-            StatusBadgeCssClass = GetStatusBadgeClass(t.Status),
-            CreatedAtUtc = t.CreatedAtUtc,
-            UpdatedAtUtc = t.UpdatedAtUtc
+            var nextAction = t.Status switch
+            {
+                RequestStatus.Submitted => "Under initial triage",
+                RequestStatus.UnderReview => "Awaiting technician allocation",
+                RequestStatus.Assigned => "Bench diagnostic in queue",
+                RequestStatus.InProgress => "Active hardware service",
+                RequestStatus.WaitingForCustomer => "Customer feedback requested",
+                RequestStatus.Resolved => "Ready for pickup / resolved",
+                RequestStatus.Closed => "Case closed",
+                RequestStatus.Rejected => "Inspection closed",
+                _ => "Review ticket details"
+            };
+
+            return new ServiceRequestSummaryItem
+            {
+                Id = t.Id,
+                TicketNumber = t.TicketNumber,
+                ProductName = t.Product?.Name ?? "N/A",
+                ServiceCenterName = t.ServiceCenter?.Name,
+                Subject = t.Subject,
+                PriorityText = t.Priority.ToString(),
+                PriorityBadgeCssClass = GetPriorityBadgeClass(t.Priority),
+                StatusText = FormatStatusText(t.Status),
+                StatusBadgeCssClass = GetStatusBadgeClass(t.Status),
+                NextActionText = nextAction,
+                CreatedAtUtc = t.CreatedAtUtc,
+                UpdatedAtUtc = t.UpdatedAtUtc
+            };
         }).ToList();
 
         return new CustomerDashboardViewModel
@@ -126,6 +177,7 @@ public class DashboardReportingService : IDashboardReportingService
             ExpiredWarranties = expiredCount,
             OpenServiceRequests = openTicketsCount,
             ResolvedServiceRequests = resolvedTicketsCount,
+            RecentProducts = recentProductsList,
             ExpiringSoonProducts = expiringSoonList,
             RecentServiceRequests = recentTicketItems
         };
@@ -146,13 +198,25 @@ public class DashboardReportingService : IDashboardReportingService
         var closedCount = await _context.ServiceRequests.CountAsync(sr => sr.Status == RequestStatus.Closed, cancellationToken);
         var rejectedCount = await _context.ServiceRequests.CountAsync(sr => sr.Status == RequestStatus.Rejected, cancellationToken);
 
-        var recentTickets = await _context.ServiceRequests
+        var allRequests = await _context.ServiceRequests
+            .AsNoTracking()
+            .ToListAsync(cancellationToken);
+
+        var overdueCount = allRequests.Count(sr => _slaService.IsOverdue(sr.SlaDeadlineUtc, sr.ResolvedAtUtc));
+
+        var rawRecent = await _context.ServiceRequests
             .AsNoTracking()
             .Include(sr => sr.Product)
             .Include(sr => sr.User)
             .OrderByDescending(sr => sr.CreatedAtUtc)
             .Take(8)
-            .Select(sr => new AdminRecentTicketItem
+            .ToListAsync(cancellationToken);
+
+        var recentTickets = rawRecent.Select(sr =>
+        {
+            var isOverdue = _slaService.IsOverdue(sr.SlaDeadlineUtc, sr.ResolvedAtUtc);
+            var (slaText, slaBadge) = _slaService.GetSlaStatusBadge(sr.SlaDeadlineUtc, sr.ResolvedAtUtc);
+            return new AdminRecentTicketItem
             {
                 Id = sr.Id,
                 TicketNumber = sr.TicketNumber,
@@ -164,7 +228,66 @@ public class DashboardReportingService : IDashboardReportingService
                 PriorityBadgeCssClass = GetPriorityBadgeClass(sr.Priority),
                 StatusText = FormatStatusText(sr.Status),
                 StatusBadgeCssClass = GetStatusBadgeClass(sr.Status),
+                CampusLocation = sr.CampusLocation,
+                IsOverdue = isOverdue,
+                SlaBadgeText = slaText,
+                SlaBadgeCssClass = slaBadge,
                 CreatedAtUtc = sr.CreatedAtUtc
+            };
+        }).ToList();
+
+        var terminalStatuses = new[] { RequestStatus.Resolved, RequestStatus.Closed, RequestStatus.Rejected };
+
+        var workloads = allRequests
+            .Where(sr => !string.IsNullOrWhiteSpace(sr.AssignedTechnician) && !terminalStatuses.Contains(sr.Status))
+            .GroupBy(sr => sr.AssignedTechnician!)
+            .Select(g => new TechnicianWorkloadItem
+            {
+                TechnicianName = g.Key,
+                ActiveTicketCount = g.Count()
+            })
+            .OrderByDescending(w => w.ActiveTicketCount)
+            .Take(5)
+            .ToList();
+
+        var locationSummaries = allRequests
+            .Where(sr => !string.IsNullOrWhiteSpace(sr.CampusLocation))
+            .GroupBy(sr => sr.CampusLocation!)
+            .Select(g => new LocationIssueItem
+            {
+                Location = g.Key,
+                TotalCount = g.Count(),
+                OpenCount = g.Count(r => !terminalStatuses.Contains(r.Status)),
+                OverdueCount = g.Count(r => _slaService.IsOverdue(r.SlaDeadlineUtc, r.ResolvedAtUtc))
+            })
+            .OrderByDescending(l => l.TotalCount)
+            .Take(5)
+            .ToList();
+
+        var zoneSummaries = await _networkService.GetZoneSummariesAsync(cancellationToken);
+        var networkZoneHealth = zoneSummaries.Select(z => new NetworkZoneHealthItem
+        {
+            Zone = z.CampusZone,
+            AvgSpeedMbps = z.AverageDownloadSpeedMbps,
+            AvgLatencyMs = z.AverageLatencyMs,
+            ReportsCount = z.TotalReports,
+            HealthStatus = z.HealthStatus,
+            BadgeClass = z.HealthBadgeCssClass
+        }).ToList();
+
+        var serviceCenters = await _context.ServiceCenters
+            .AsNoTracking()
+            .Include(sc => sc.ServiceRequests)
+            .OrderBy(sc => sc.Name)
+            .Select(sc => new AdminServiceCenterSummaryItem
+            {
+                Id = sc.Id,
+                Name = sc.Name,
+                City = sc.City,
+                SupportedBrands = sc.SupportedBrands,
+                IsActive = sc.IsActive,
+                IsVerified = sc.IsVerified,
+                ActiveTicketCount = sc.ServiceRequests.Count(r => !terminalStatuses.Contains(r.Status))
             })
             .ToListAsync(cancellationToken);
 
@@ -178,7 +301,12 @@ public class DashboardReportingService : IDashboardReportingService
             ResolvedRequests = resolvedCount,
             ClosedRequests = closedCount,
             RejectedRequests = rejectedCount,
-            RecentTickets = recentTickets
+            OverdueRequests = overdueCount,
+            RecentTickets = recentTickets,
+            TechnicianWorkloads = workloads,
+            LocationSummaries = locationSummaries,
+            NetworkZoneSummaries = networkZoneHealth,
+            ServiceCenterSummaries = serviceCenters
         };
     }
 

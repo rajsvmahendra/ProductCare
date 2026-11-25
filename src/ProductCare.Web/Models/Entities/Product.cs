@@ -21,6 +21,11 @@ public class Product
 
     public ProductCategory Category { get; set; } = ProductCategory.Other;
 
+    /// <summary>
+    /// Specific subcategory or hardware form factor (e.g. Ultrabook, Gaming Laptop, OLED TV, ANC Headphones).
+    /// </summary>
+    public string? SubCategory { get; set; }
+
     public DateOnly PurchaseDate { get; set; }
 
     public int WarrantyDurationMonths { get; set; }
@@ -45,6 +50,14 @@ public class Product
     public long? InvoiceFileSize { get; set; }
 
     public string? Notes { get; set; }
+
+    /// <summary>
+    /// Indicates whether the product has been archived/soft-deleted by the customer.
+    /// Preserves service request history and referential integrity.
+    /// </summary>
+    public bool IsArchived { get; set; } = false;
+
+    public DateTime? ArchivedAtUtc { get; set; }
 
     public DateTime CreatedAtUtc { get; set; } = DateTime.UtcNow;
 

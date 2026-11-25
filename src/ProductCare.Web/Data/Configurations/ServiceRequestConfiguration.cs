@@ -30,6 +30,21 @@ public class ServiceRequestConfiguration : IEntityTypeConfiguration<ServiceReque
         builder.Property(sr => sr.AdminRemarks)
             .HasMaxLength(2000);
 
+        builder.Property(sr => sr.CampusLocation)
+            .HasMaxLength(255);
+
+        builder.Property(sr => sr.AttachmentFileName)
+            .HasMaxLength(255);
+
+        builder.Property(sr => sr.AttachmentOriginalFileName)
+            .HasMaxLength(255);
+
+        builder.Property(sr => sr.AttachmentContentType)
+            .HasMaxLength(100);
+
+        builder.Property(sr => sr.ResolutionProofFileName)
+            .HasMaxLength(255);
+
         // Unique index on TicketNumber
         builder.HasIndex(sr => sr.TicketNumber)
             .IsUnique()
@@ -48,11 +63,19 @@ public class ServiceRequestConfiguration : IEntityTypeConfiguration<ServiceReque
         builder.HasIndex(sr => sr.CreatedAtUtc)
             .HasDatabaseName("IX_ServiceRequests_CreatedAtUtc");
 
+        builder.HasIndex(sr => sr.ServiceCenterId)
+            .HasDatabaseName("IX_ServiceRequests_ServiceCenterId");
+
         // Relationships
         builder.HasOne(sr => sr.Product)
             .WithMany(p => p.ServiceRequests)
             .HasForeignKey(sr => sr.ProductId)
             .OnDelete(DeleteBehavior.Restrict);
+
+        builder.HasOne(sr => sr.ServiceCenter)
+            .WithMany(sc => sc.ServiceRequests)
+            .HasForeignKey(sr => sr.ServiceCenterId)
+            .OnDelete(DeleteBehavior.SetNull);
 
         builder.HasOne(sr => sr.User)
             .WithMany(u => u.ServiceRequests)

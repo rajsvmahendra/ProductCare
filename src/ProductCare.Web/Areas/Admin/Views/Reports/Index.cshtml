@@ -6,8 +6,8 @@
 <!-- Page Header -->
 <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
     <div>
-        <span class="d-inline-block text-uppercase fw-bold small text-muted mb-1" style="letter-spacing: 0.08em; font-size: 0.72rem;">DATA &amp; METRICS</span>
-        <h1 class="h3 fw-bold text-dark mb-1 font-serif">Reports &amp; Operational Intelligence</h1>
+        <span class="d-inline-block text-uppercase fw-bold small text-muted mb-1" style="letter-spacing: 0.06em; font-size: 0.72rem;">DATA &amp; METRICS</span>
+        <h1 class="h3 fw-bold text-dark mb-1 font-display">Reports &amp; Operational Intelligence</h1>
         <p class="text-muted small mb-0">System analytics and warranty distributions aggregated from SQL Server Stored Procedures and Views.</p>
     </div>
 </div>
@@ -39,25 +39,25 @@
     <div class="col-sm-6 col-md-3">
         <div class="pc-kpi-card">
             <div class="pc-kpi-label">Filtered Tickets</div>
-            <div class="pc-kpi-val" style="color: var(--pc-status-progress);">@Model.TotalTicketsCount</div>
+            <div class="pc-kpi-val text-primary">@Model.TotalTicketsCount</div>
         </div>
     </div>
     <div class="col-sm-6 col-md-3">
         <div class="pc-kpi-card">
             <div class="pc-kpi-label">Active Coverage</div>
-            <div class="pc-kpi-val" style="color: var(--pc-status-active);">@Model.ActiveWarrantiesCount</div>
+            <div class="pc-kpi-val text-success">@Model.ActiveWarrantiesCount</div>
         </div>
     </div>
     <div class="col-sm-6 col-md-3">
         <div class="pc-kpi-card">
             <div class="pc-kpi-label">Expiring Soon</div>
-            <div class="pc-kpi-val" style="color: var(--pc-amber);">@Model.ExpiringSoonWarrantiesCount</div>
+            <div class="pc-kpi-val text-warning">@Model.ExpiringSoonWarrantiesCount</div>
         </div>
     </div>
     <div class="col-sm-6 col-md-3">
         <div class="pc-kpi-card">
             <div class="pc-kpi-label">Expired Warranties</div>
-            <div class="pc-kpi-val" style="color: var(--pc-status-expired);">@Model.ExpiredWarrantiesCount</div>
+            <div class="pc-kpi-val text-danger">@Model.ExpiredWarrantiesCount</div>
         </div>
     </div>
 </div>
@@ -66,7 +66,7 @@
     <!-- Stored Procedure Table: Ticket Statistics by Category -->
     <div class="col-lg-6">
         <div class="pc-card p-0 overflow-hidden h-100">
-            <div class="pc-demo-topbar">
+            <div class="d-flex align-items-center justify-content-between p-3 border-bottom" style="background-color: var(--pc-surface-secondary);">
                 <div>
                     <span class="small fw-semibold text-dark"><i class="bi bi-database me-2 text-forest"></i>Stored Procedure: Ticket Statistics</span>
                     <div class="text-muted" style="font-size: 10px;">Executed via sp_GetServiceTicketStatistics</div>
@@ -91,10 +91,10 @@
                                 {
                                     <tr>
                                         <td class="fw-semibold text-dark small">@stat.CategoryName</td>
-                                        <td class="tabular-nums fw-bold text-dark">@stat.TotalTickets</td>
-                                        <td class="tabular-nums text-muted">@stat.SubmittedCount</td>
-                                        <td class="tabular-nums text-dark">@stat.InProgressCount</td>
-                                        <td class="tabular-nums text-success">@stat.ResolvedCount</td>
+                                        <td class="fw-bold text-dark">@stat.TotalTickets</td>
+                                        <td class="text-muted">@stat.SubmittedCount</td>
+                                        <td class="text-dark">@stat.InProgressCount</td>
+                                        <td class="text-success">@stat.ResolvedCount</td>
                                     </tr>
                                 }
                             </tbody>
@@ -103,19 +103,19 @@
                 }
                 else
                 {
-                    <div class="p-4 text-center text-muted small">No ticket statistics returned for this date range.</div>
+                    <div class="p-4 text-center text-muted small">No ticket statistics found for the selected range.</div>
                 }
             </div>
         </div>
     </div>
 
-    <!-- SQL View Table: Warranty Summary Forecast -->
+    <!-- SQL View Table: Active Warranty Details -->
     <div class="col-lg-6">
         <div class="pc-card p-0 overflow-hidden h-100">
-            <div class="pc-demo-topbar">
+            <div class="d-flex align-items-center justify-content-between p-3 border-bottom" style="background-color: var(--pc-surface-secondary);">
                 <div>
-                    <span class="small fw-semibold text-dark"><i class="bi bi-table me-2 text-forest"></i>SQL Server View: Warranty Forecast</span>
-                    <div class="text-muted" style="font-size: 10px;">Projected via vw_ProductWarrantySummary</div>
+                    <span class="small fw-semibold text-dark"><i class="bi bi-table me-2 text-forest"></i>SQL View: Active Warranties</span>
+                    <div class="text-muted" style="font-size: 10px;">Queried via vw_ProductWarrantySummary</div>
                 </div>
             </div>
             <div>
@@ -126,10 +126,9 @@
                             <thead>
                                 <tr>
                                     <th>Product</th>
-                                    <th>Owner</th>
-                                    <th>Expires</th>
+                                    <th>Customer</th>
+                                    <th>Expiry Date</th>
                                     <th>Remaining</th>
-                                    <th>Status</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -138,33 +137,12 @@
                                     <tr>
                                         <td>
                                             <div class="fw-semibold text-dark small">@w.ProductName</div>
-                                            <div class="text-muted" style="font-size: 10px;">@w.Brand &middot; @w.SerialNumber</div>
+                                            <div class="text-muted" style="font-size: 10px;">@w.Brand &bull; @w.CategoryName</div>
                                         </td>
-                                        <td class="small text-muted">@w.CustomerName</td>
-                                        <td class="small tabular-nums">@w.WarrantyExpiryDate.ToString("dd MMM yyyy")</td>
-                                        <td class="small tabular-nums">
-                                            @if (w.DaysRemaining > 0)
-                                            {
-                                                <span class="fw-semibold text-dark">@w.DaysRemaining d</span>
-                                            }
-                                            else
-                                            {
-                                                <span class="text-muted">Expired</span>
-                                            }
-                                        </td>
+                                        <td class="small text-dark">@w.CustomerName</td>
+                                        <td class="small text-muted">@w.WarrantyExpiryDate.ToString("dd MMM yyyy")</td>
                                         <td>
-                                            @if (w.DaysRemaining > 30)
-                                            {
-                                                <span class="pc-badge pc-badge-active" style="font-size: 10px;">Active</span>
-                                            }
-                                            else if (w.DaysRemaining > 0)
-                                            {
-                                                <span class="pc-badge pc-badge-expiring" style="font-size: 10px;">Expiring</span>
-                                            }
-                                            else
-                                            {
-                                                <span class="pc-badge pc-badge-expired" style="font-size: 10px;">Expired</span>
-                                            }
+                                            <span class="badge bg-light text-success border">@w.DaysRemaining days</span>
                                         </td>
                                     </tr>
                                 }
@@ -174,7 +152,7 @@
                 }
                 else
                 {
-                    <div class="p-4 text-center text-muted small">No warranty view records available.</div>
+                    <div class="p-4 text-center text-muted small">No active warranties found.</div>
                 }
             </div>
         </div>

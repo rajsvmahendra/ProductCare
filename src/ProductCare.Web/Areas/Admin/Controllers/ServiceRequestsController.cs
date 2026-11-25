@@ -18,17 +18,20 @@ public class ServiceRequestsController : Controller
     private readonly ApplicationDbContext _context;
     private readonly IServiceRequestWorkflowService _workflowService;
     private readonly IWarrantyCalculatorService _warrantyCalculator;
+    private readonly ISlaCalculationService _slaService;
     private readonly ILogger<ServiceRequestsController> _logger;
 
     public ServiceRequestsController(
         ApplicationDbContext context,
         IServiceRequestWorkflowService workflowService,
         IWarrantyCalculatorService warrantyCalculator,
+        ISlaCalculationService slaService,
         ILogger<ServiceRequestsController> logger)
     {
         _context = context;
         _workflowService = workflowService;
         _warrantyCalculator = warrantyCalculator;
+        _slaService = slaService;
         _logger = logger;
     }
 
@@ -40,12 +43,15 @@ public class ServiceRequestsController : Controller
         RequestStatus? status,
         PriorityLevel? priority,
         RequestCategory? category,
+        string? location,
+        bool? overdueOnly,
         string? search)
     {
         var query = _context.ServiceRequests
             .AsNoTracking()
             .Include(sr => sr.Product)
             .Include(sr => sr.User)
+            .Include(sr => sr.ServiceCenter)
             .AsQueryable();
 
         if (status.HasValue)
@@ -63,6 +69,11 @@ public class ServiceRequestsController : Controller
             query = query.Where(sr => sr.Category == category.Value);
         }
 
+        if (!string.IsNullOrWhiteSpace(location))
+        {
+            query = query.Where(sr => sr.CampusLocation != null && sr.CampusLocation.Contains(location.Trim()));
+        }
+
         if (!string.IsNullOrWhiteSpace(search))
         {
             var term = search.Trim();
@@ -72,12 +83,21 @@ public class ServiceRequestsController : Controller
                 sr.User.FullName.Contains(term) ||
                 sr.User.Email!.Contains(term) ||
                 sr.Product.Name.Contains(term) ||
+                (sr.CampusLocation != null && sr.CampusLocation.Contains(term)) ||
                 sr.Product.SerialNumber.Contains(term));
         }
 
-        var tickets = await query
+        var rawTickets = await query
             .OrderByDescending(sr => sr.CreatedAtUtc)
-            .Select(sr => new AdminTicketListItem
+            .ToListAsync();
+
+        var tickets = rawTickets.Select(sr =>
+        {
+            var isOverdue = _slaService.IsOverdue(sr.SlaDeadlineUtc, sr.ResolvedAtUtc);
+            var isApproaching = _slaService.IsApproachingBreach(sr.SlaDeadlineUtc, sr.ResolvedAtUtc);
+            var (slaText, slaBadge) = _slaService.GetSlaStatusBadge(sr.SlaDeadlineUtc, sr.ResolvedAtUtc);
+
+            return new AdminTicketListItem
             {
                 Id = sr.Id,
                 TicketNumber = sr.TicketNumber,
@@ -96,10 +116,23 @@ public class ServiceRequestsController : Controller
                 StatusBadgeCssClass = GetStatusBadgeClass(sr.Status),
                 StatusDisplayText = FormatStatusText(sr.Status),
                 AssignedTechnician = sr.AssignedTechnician,
+                CampusLocation = sr.CampusLocation,
+                ServiceCenterName = sr.ServiceCenter?.Name,
+                SlaDeadlineUtc = sr.SlaDeadlineUtc,
+                IsOverdue = isOverdue,
+                IsApproachingBreach = isApproaching,
+                IsEscalated = sr.IsEscalated,
+                SlaBadgeText = slaText,
+                SlaBadgeCssClass = slaBadge,
                 CreatedAtUtc = sr.CreatedAtUtc,
                 UpdatedAtUtc = sr.UpdatedAtUtc
-            })
-            .ToListAsync();
+            };
+        }).ToList();
+
+        if (overdueOnly.HasValue && overdueOnly.Value)
+        {
+            tickets = tickets.Where(t => t.IsOverdue).ToList();
+        }
 
         var pendingStatuses = new[] { RequestStatus.Submitted, RequestStatus.UnderReview };
         var inProgressStatuses = new[] { RequestStatus.Assigned, RequestStatus.InProgress, RequestStatus.WaitingForCustomer };
@@ -107,6 +140,7 @@ public class ServiceRequestsController : Controller
         var pendingCount = await _context.ServiceRequests.CountAsync(sr => pendingStatuses.Contains(sr.Status));
         var inProgressCount = await _context.ServiceRequests.CountAsync(sr => inProgressStatuses.Contains(sr.Status));
         var resolvedCount = await _context.ServiceRequests.CountAsync(sr => sr.Status == RequestStatus.Resolved);
+        var overdueCount = rawTickets.Count(t => _slaService.IsOverdue(t.SlaDeadlineUtc, t.ResolvedAtUtc));
 
         var model = new AdminServiceRequestListViewModel
         {
@@ -114,11 +148,14 @@ public class ServiceRequestsController : Controller
             FilterStatus = status,
             FilterPriority = priority,
             FilterCategory = category,
+            FilterLocation = location,
+            FilterOverdueOnly = overdueOnly,
             SearchTerm = search,
             TotalTickets = tickets.Count,
             PendingCount = pendingCount,
             InProgressCount = inProgressCount,
-            ResolvedCount = resolvedCount
+            ResolvedCount = resolvedCount,
+            OverdueCount = overdueCount
         };
 
         return View(model);
@@ -131,6 +168,7 @@ public class ServiceRequestsController : Controller
             .AsNoTracking()
             .Include(sr => sr.Product)
             .Include(sr => sr.User)
+            .Include(sr => sr.ServiceCenter)
             .Include(sr => sr.StatusHistories.OrderBy(h => h.CreatedAtUtc))
             .FirstOrDefaultAsync(sr => sr.Id == id);
 
@@ -162,6 +200,11 @@ public class ServiceRequestsController : Controller
             CreatedAtUtc = h.CreatedAtUtc
         }).ToList();
 
+        var isOverdue = _slaService.IsOverdue(request.SlaDeadlineUtc, request.ResolvedAtUtc);
+        var isApproaching = _slaService.IsApproachingBreach(request.SlaDeadlineUtc, request.ResolvedAtUtc);
+        var (slaText, slaBadge) = _slaService.GetSlaStatusBadge(request.SlaDeadlineUtc, request.ResolvedAtUtc);
+        var recommendedTech = _slaService.GetRecommendedTechnician(request.Category, request.CampusLocation);
+
         var model = new AdminServiceRequestDetailsViewModel
         {
             Id = request.Id,
@@ -175,6 +218,16 @@ public class ServiceRequestsController : Controller
             StatusDisplayText = FormatStatusText(request.Status),
             Subject = request.Subject,
             Description = request.Description,
+            CampusLocation = request.CampusLocation,
+            SlaDeadlineUtc = request.SlaDeadlineUtc,
+            IsOverdue = isOverdue,
+            IsApproachingBreach = isApproaching,
+            IsEscalated = request.IsEscalated,
+            SlaBadgeText = slaText,
+            SlaBadgeCssClass = slaBadge,
+            AttachmentFileName = request.AttachmentFileName,
+            ResolutionProofFileName = request.ResolutionProofFileName,
+            RecommendedTechnician = recommendedTech,
             CurrentAssignedTechnician = request.AssignedTechnician,
             CurrentAdminRemarks = request.AdminRemarks,
             CreatedAtUtc = request.CreatedAtUtc,
@@ -193,11 +246,36 @@ public class ServiceRequestsController : Controller
             ProductWarrantyExpiryDate = request.Product.WarrantyExpiryDate,
             ProductWarrantyStatusBadge = warranty.StatusBadgeCssClass,
             ProductWarrantyStatusText = warranty.StatusDisplayText,
+            ServiceCenterId = request.ServiceCenterId,
+            ServiceCenterName = request.ServiceCenter?.Name,
+            ServiceCenterAddress = request.ServiceCenter?.Address,
+            ServiceCenterCity = request.ServiceCenter?.City,
+            ServiceCenterIsVerified = request.ServiceCenter?.IsVerified,
             AllowedNextStatuses = allowedListItems,
             StatusHistory = historyItems
         };
 
         return View(model);
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Escalate(int id, string? reason)
+    {
+        var result = await _workflowService.EscalateTicketAsync(
+            id,
+            CurrentUserId,
+            CurrentUserName,
+            reason ?? "Administrative priority override / SLA risk.");
+
+        if (!result.Success)
+        {
+            TempData["ErrorMessage"] = result.ErrorMessage;
+            return RedirectToAction(nameof(Details), new { id });
+        }
+
+        TempData["SuccessMessage"] = $"Ticket #{result.Request!.TicketNumber} escalated to Urgent successfully.";
+        return RedirectToAction(nameof(Details), new { id });
     }
 
     [HttpPost]

@@ -1,0 +1,184 @@
+@model ProductCare.Web.ViewModels.Customer.ServiceCenterListViewModel
+@{
+    ViewData["Title"] = "Find a Service Centre";
+}
+
+<!-- Page Header -->
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
+    <div>
+        <span class="d-inline-block text-uppercase fw-bold small text-muted mb-1" style="letter-spacing: 0.08em; font-size: 0.72rem;">DIAGNOSTICS &amp; REPAIR NETWORK</span>
+        <h1 class="h3 fw-bold text-dark mb-1 font-display">Authorized &amp; Campus Service Centres</h1>
+        <p class="text-muted small mb-0">Locate certified warranty repair providers, on-campus intake kiosks, and authorized hardware facilities.</p>
+    </div>
+    <div>
+        <a asp-controller="ServiceRequests" asp-action="Create" class="btn btn-forest btn-sm">
+            <i class="bi bi-wrench me-1"></i>
+            <span>Raise Service Ticket</span>
+        </a>
+    </div>
+</div>
+
+<!-- Search & Filtering Toolbar -->
+<div class="pc-card pc-glass-card mb-4 p-3">
+    <form method="get" class="row g-2 align-items-center">
+        <div class="col-lg-3 col-md-3">
+            <div class="input-group">
+                <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted"></i></span>
+                <input type="text" name="search" value="@Model.SearchTerm" class="form-control border-start-0" placeholder="Search center, brand, address..." />
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-3">
+            <select name="locality" class="form-select">
+                <option value="">-- All Localities / Hubs --</option>
+                @foreach (var loc in Model.AvailableLocalities)
+                {
+                    <option value="@loc" selected="@(Model.FilterLocality == loc)">@loc</option>
+                }
+            </select>
+        </div>
+        <div class="col-lg-2 col-md-2">
+            <select name="city" class="form-select">
+                <option value="">-- All Cities --</option>
+                @foreach (var city in Model.AvailableCities)
+                {
+                    <option value="@city" selected="@(Model.FilterCity == city)">@city</option>
+                }
+            </select>
+        </div>
+        <div class="col-lg-2 col-md-2">
+            <input type="text" name="brand" value="@Model.FilterBrand" class="form-control" placeholder="Brand (Apple, Dell)..." />
+        </div>
+        <div class="col-lg-2 col-md-2 d-flex gap-2">
+            <button type="submit" class="btn btn-forest w-100 btn-sm">Search</button>
+            <a asp-action="Index" class="btn btn-stone btn-sm d-flex align-items-center justify-content-center" title="Reset Filters">
+                <i class="bi bi-arrow-counterclockwise"></i>
+            </a>
+        </div>
+    </form>
+</div>
+
+<!-- Service Centers Grid -->
+@if (Model.Centers.Any())
+{
+    <div class="row g-4">
+        @foreach (var c in Model.Centers)
+        {
+            <div class="col-lg-6">
+                <div class="pc-card pc-glass-card pc-glass-card-interactive h-100 p-4 d-flex flex-column justify-content-between">
+                    <div>
+                        <!-- Header with Verified / Sample Badge -->
+                        <div class="d-flex align-items-start justify-content-between gap-2 mb-3">
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="w-12 h-12 rounded-3 bg-light d-flex align-items-center justify-content-center text-forest" style="width: 44px; height: 44px; background-color: var(--pc-forest-soft) !important;">
+                                    <i class="bi bi-building fs-4 text-forest"></i>
+                                </div>
+                                <div>
+                                    <h2 class="h5 fw-bold text-dark mb-0 font-display">@c.Name</h2>
+                                    <div class="small text-muted d-flex align-items-center gap-1">
+                                        <i class="bi bi-geo-alt text-forest"></i> @c.Address@(string.IsNullOrEmpty(c.Locality) ? "" : $", {c.Locality}"), <strong>@c.City@(string.IsNullOrEmpty(c.State) ? "" : $", {c.State}")</strong>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div>
+                                @if (c.IsVerified)
+                                {
+                                    <span class="pc-glass-badge pc-glass-badge-verified" title="Official Verified Service Partner">
+                                        <i class="bi bi-patch-check-fill"></i> Verified Facility
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="pc-glass-badge pc-glass-badge-sample" title="Demonstration Listing for Testing & Evaluation">
+                                        <i class="bi bi-info-circle"></i> Sample Listing
+                                    </span>
+                                }
+                            </div>
+                        </div>
+
+                        <!-- Supported Brands -->
+                        <div class="mb-3">
+                            <span class="small text-muted d-block mb-1" style="font-size: 11px;">Supported Brands:</span>
+                            <div class="d-flex flex-wrap gap-1">
+                                @foreach (var b in c.SupportedBrands.Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries))
+                                {
+                                    <span class="badge bg-light text-dark border small" style="font-size: 11px;">@b</span>
+                                }
+                            </div>
+                        </div>
+
+                        <!-- Supported Categories -->
+                        <div class="mb-3">
+                            <span class="small text-muted d-block mb-1" style="font-size: 11px;">Supported Categories:</span>
+                            <div class="d-flex flex-wrap gap-1">
+                                @foreach (var cat in c.SupportedCategories.Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries))
+                                {
+                                    <span class="badge bg-light text-forest border small" style="font-size: 11px; background-color: rgba(40, 91, 80, 0.05) !important;">@cat</span>
+                                }
+                            </div>
+                        </div>
+
+                        <!-- Operating Hours & Contact Info -->
+                        <div class="p-3 rounded-2 mb-3" style="background-color: var(--pc-surface-secondary); border: 1px solid var(--pc-border-hairline);">
+                            <div class="row g-2 small">
+                                <div class="col-sm-6">
+                                    <div class="text-muted" style="font-size: 11px;">Operating Hours</div>
+                                    <div class="fw-semibold text-dark"><i class="bi bi-clock me-1 text-muted"></i>@c.OpeningHours</div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="text-muted" style="font-size: 11px;">Contact Phone</div>
+                                    <div><a href="tel:@c.Phone" class="fw-semibold text-forest text-decoration-none"><i class="bi bi-telephone me-1"></i>@c.Phone</a></div>
+                                </div>
+                                <div class="col-sm-6 mt-2">
+                                    <div class="text-muted" style="font-size: 11px;">Email Inquiries</div>
+                                    <div><a href="mailto:@c.Email" class="fw-semibold text-forest text-decoration-none text-truncate d-block"><i class="bi bi-envelope me-1"></i>@c.Email</a></div>
+                                </div>
+                                <div class="col-sm-6 mt-2">
+                                    <div class="text-muted" style="font-size: 11px;">Workload Status</div>
+                                    <div class="fw-semibold text-dark"><i class="bi bi-speedometer me-1 text-muted"></i>@(c.OpenTicketCount) active work order(s)</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        @if (!string.IsNullOrEmpty(c.Notes))
+                        {
+                            <p class="small text-muted mb-3 fst-italic">
+                                <i class="bi bi-chat-left-quote me-1 text-forest"></i>@c.Notes
+                            </p>
+                        }
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="d-flex align-items-center gap-2 pt-3 border-top" style="border-color: var(--pc-stone) !important;">
+                        @if (!string.IsNullOrEmpty(c.MapUrl))
+                        {
+                            <a href="@c.MapUrl" target="_blank" rel="noopener noreferrer" class="btn btn-stone btn-sm" title="Open Map Directions">
+                                <i class="bi bi-map me-1"></i> Map Directions
+                            </a>
+                        }
+                        @if (!string.IsNullOrEmpty(c.Website))
+                        {
+                            <a href="@c.Website" target="_blank" rel="noopener noreferrer" class="btn btn-stone btn-sm" title="Visit Center Website">
+                                <i class="bi bi-globe me-1"></i> Website
+                            </a>
+                        }
+                        <a asp-controller="ServiceRequests" asp-action="Create" asp-route-centerId="@c.Id" class="btn btn-forest btn-sm ms-auto" title="Route a service request directly to this facility">
+                            <i class="bi bi-wrench me-1"></i> Request Service Here
+                        </a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <div class="pc-card pc-glass-card p-5 text-center text-muted">
+        <i class="bi bi-geo-alt fs-1 text-muted mb-3 d-block"></i>
+        <h5 class="fw-bold text-dark font-display">No service centres match your query</h5>
+        <p class="small text-muted mb-3">Try widening your search terms or clearing the city and brand filters.</p>
+        <a asp-action="Index" class="btn btn-stone btn-sm">
+            <i class="bi bi-arrow-counterclockwise me-1"></i> Reset Directory Filters
+        </a>
+    </div>
+}

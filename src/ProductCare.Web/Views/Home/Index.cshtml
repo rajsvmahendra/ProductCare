@@ -1,165 +1,427 @@
 @{
-    ViewData["Title"] = "Midnight Precision — The Ownership Intelligence Platform";
+    ViewData["Title"] = "Unified Product Warranty & Service Management";
 }
 
 <!-- =========================================================================
-     1. CINEMATIC ASYMMETRIC HERO & GROUNDED PRODUCT DEMONSTRATION
+     SECTION 1: TECHNOLOGY POSTER PRODUCT HERO
      ========================================================================= -->
-<section class="pc-hero-section">
-    <div class="container-xl px-3 px-md-4">
-        <div class="row align-items-center g-5">
-            <!-- Left Editorial Text -->
+<section class="pc-hero-section" id="overview">
+    <div class="container-xl px-3 px-md-4" style="max-width: 1240px;">
+        <div class="row align-items-center justify-content-between g-4 g-lg-5 py-lg-3">
+            <!-- Left: Editorial Headline & Value Narrative -->
             <div class="col-lg-6">
-                <div class="pc-hero-kicker">
-                    <span class="pulse-dot"></span>
-                    <span>THE OWNERSHIP INTELLIGENCE PLATFORM</span>
-                </div>
-                <h1 class="pc-hero-headline">
-                    Your products.<br />
-                    Their proof.<br />
-                    <span class="text-electric-teal">Every service journey.</span>
+                <h1 class="pc-hero-headline mb-3">
+                    Every product has a story.<br />
+                    <span class="text-forest pc-hero-gradient-text">Give it the care it deserves.</span>
                 </h1>
-                <p class="pc-hero-lead">
-                    One intelligent ownership platform for purchase records, dynamic warranty coverage, and governed after-sales service tracking.
+
+                <p class="pc-hero-lead mb-4">
+                    Keep hardware receipts organised, track active warranty timelines mathematically, and connect instantly with certified local repair hubs — all from one intelligent workspace.
                 </p>
 
-                <div class="d-flex flex-wrap align-items-center gap-3 mb-4">
+                <div class="d-flex flex-wrap align-items-center gap-3 mb-5 pc-hero-cta-group">
+                    <a class="btn btn-forest btn-lg pc-btn-tactile pc-btn-tactile-primary" href="#showcase">
+                        <span>Explore ProductCare</span>
+                        <i class="bi bi-arrow-down ms-1"></i>
+                    </a>
+
                     @if (User.Identity?.IsAuthenticated == true)
                     {
                         @if (User.IsInRole("Admin"))
                         {
-                            <a class="btn btn-electric" asp-area="Admin" asp-controller="Dashboard" asp-action="Index">
-                                <span>Open Administrator Portal</span>
-                                <i class="bi bi-arrow-right"></i>
+                            <a class="btn btn-stone btn-lg pc-btn-tactile" asp-area="Admin" asp-controller="Dashboard" asp-action="Index">
+                                <span>Admin Workspace</span>
+                                <i class="bi bi-arrow-right ms-1"></i>
                             </a>
                         }
                         else
                         {
-                            <a class="btn btn-electric" asp-area="Customer" asp-controller="Dashboard" asp-action="Index">
-                                <span>Enter My Product Vault</span>
-                                <i class="bi bi-arrow-right"></i>
+                            <a class="btn btn-stone btn-lg pc-btn-tactile" asp-area="Customer" asp-controller="Dashboard" asp-action="Index">
+                                <span>Manage My Products</span>
+                                <i class="bi bi-arrow-right ms-1"></i>
                             </a>
                         }
                     }
                     else
                     {
-                        <a class="btn btn-electric btn-lg" asp-area="" asp-controller="Account" asp-action="Register">
-                            <span>Open Your Ownership Desk</span>
-                            <i class="bi bi-arrow-right"></i>
-                        </a>
-                        <a class="btn btn-midnight btn-lg" href="#demonstration">
-                            <i class="bi bi-eye me-1"></i>
-                            <span>Explore Platform</span>
+                        <a class="btn btn-stone btn-lg pc-btn-tactile" asp-area="" asp-controller="Account" asp-action="Register">
+                            <span>Manage My Products</span>
+                            <i class="bi bi-arrow-right ms-1"></i>
                         </a>
                     }
                 </div>
 
+                <!-- Product Trust Highlights Row -->
                 <div class="pc-trust-badge-row">
                     <div class="pc-trust-item">
-                        <i class="bi bi-shield-check"></i>
-                        <span>Zero Subscription Fees</span>
+                        <i class="bi bi-shield-check text-forest"></i>
+                        <span>Dynamic Warranty Tracking</span>
                     </div>
                     <div class="pc-trust-item">
-                        <i class="bi bi-file-earmark-lock"></i>
-                        <span>Cryptographic Invoices</span>
+                        <i class="bi bi-file-earmark-lock text-forest"></i>
+                        <span>Secure Invoice Vault</span>
                     </div>
                     <div class="pc-trust-item">
-                        <i class="bi bi-diagram-3"></i>
-                        <span>8-Stage State Machine</span>
+                        <i class="bi bi-geo-alt text-forest"></i>
+                        <span>Certified Service Directory</span>
                     </div>
                     <div class="pc-trust-item">
-                        <i class="bi bi-cpu"></i>
-                        <span>Sub-second Warranty Math</span>
+                        <i class="bi bi-arrow-repeat text-forest"></i>
+                        <span>5-Stage Repair SLA</span>
                     </div>
                 </div>
             </div>
 
-            <!-- Right: Grounded Ownership Lifecycle Centerpiece -->
-            <div class="col-lg-6" id="demonstration">
-                <div class="pc-demo-container">
-                    <div class="pc-demo-topbar">
-                        <div class="d-flex align-items-center gap-2">
-                            <div class="pc-demo-window-controls">
-                                <span class="pc-demo-dot" style="background-color: #FF5F56;"></span>
-                                <span class="pc-demo-dot" style="background-color: #FFBD2E;"></span>
-                                <span class="pc-demo-dot" style="background-color: #27C93F;"></span>
-                            </div>
-                            <span class="small fw-semibold ms-2 font-display text-muted" style="font-size: 0.8rem; letter-spacing: 0.05em;">
-                                VAULT RECORD &middot; DEMONSTRATION
-                            </span>
-                        </div>
-                        <span class="pc-badge pc-badge-active">
-                            <i class="bi bi-check-circle-fill"></i> ACTIVE COVERAGE
-                        </span>
-                    </div>
+            <!-- Right: 3D Dimensional Technology Poster Composition -->
+            <div class="col-lg-6 d-none d-lg-block">
+                <liquid-glass id="heroGlassScene" class="pc-hero-liquid-scene" backdrop="/lib/liquid-glass/backdrops/ceramic.webp" dim="0" style="min-height: 0; overflow: visible; background: transparent;">
+                    <div class="pc-hero-poster-scene">
+                        <!-- Ambient Glow Layer -->
+                        <div class="pc-poster-glow"></div>
 
-                    <div class="pc-demo-body">
-                        <!-- Product Identification -->
-                        <div class="d-flex align-items-start justify-content-between mb-4 pb-3 border-bottom" style="border-color: var(--pc-border-hairline) !important;">
-                            <div>
-                                <span class="badge mb-2 px-2 py-1" style="background-color: rgba(56, 217, 197, 0.12); color: var(--pc-electric-teal); border: 1px solid rgba(56, 217, 197, 0.25);">
-                                    Computers &amp; Workstations
+                        <!-- Main Dimensional Hardware Surface Card -->
+                        <div class="pc-poster-main-card">
+                            <!-- Top Bezel Bar -->
+                            <div class="d-flex align-items-center justify-content-between mb-3 pb-3 border-bottom">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="pc-poster-icon-box">
+                                        <i class="bi bi-laptop fs-4 text-forest"></i>
+                                    </div>
+                                    <div>
+                                        <div class="fw-bold text-dark font-display" style="font-size: 1.05rem;">MacBook Pro 16" M3 Max</div>
+                                        <div class="text-muted small" style="font-size: 11px;">S/N: C02G73276936 &bull; Apple</div>
+                                    </div>
+                                </div>
+                                <span class="pc-badge pc-badge-active shadow-xs">
+                                    <i class="bi bi-shield-check me-1"></i> Under Warranty
                                 </span>
-                                <h4 class="mb-1 fw-bold text-light font-display">Apple MacBook Pro 16" (M3 Max)</h4>
-                                <div class="small text-muted font-mono">S/N: C02G1001MD6R &middot; Model: A2485</div>
                             </div>
-                            <div class="text-end">
-                                <div class="small text-muted">Purchase Date</div>
-                                <div class="fw-semibold text-light tabular-nums">14 Oct 2025</div>
-                            </div>
-                        </div>
 
-                        <!-- Real Lifecycle Details Grid -->
-                        <div class="row g-3 mb-4">
-                            <!-- Invoice Record Well -->
-                            <div class="col-sm-6">
-                                <div class="pc-demo-card">
-                                    <div class="small text-muted mb-1 d-flex align-items-center justify-content-between">
-                                        <span class="fw-bold font-display" style="letter-spacing: 0.04em; font-size: 0.75rem;">PURCHASE PROOF</span>
-                                        <i class="bi bi-file-earmark-pdf text-danger"></i>
-                                    </div>
-                                    <div class="fw-semibold text-light small text-truncate">AppleStore_Invoice_2025.pdf</div>
-                                    <div class="small text-electric-teal mt-1" style="font-size: 11px;">
-                                        <i class="bi bi-shield-check"></i> 2.4 MB Verified &amp; Encrypted
-                                    </div>
+                            <!-- Mathematical Coverage Visual Bar -->
+                            <div class="pc-poster-metric-box mb-3">
+                                <div class="d-flex justify-content-between small text-muted mb-1">
+                                    <span>Purchase Date</span>
+                                    <span class="fw-semibold text-dark">15 Jan 2026</span>
+                                </div>
+                                <div class="d-flex justify-content-between small text-muted mb-2">
+                                    <span>Standard Term</span>
+                                    <span class="fw-semibold text-dark">24 Months</span>
+                                </div>
+                                <!-- Radial & Track Progress Indicator -->
+                                <div class="progress mb-2" style="height: 6px; background-color: rgba(16, 185, 129, 0.15); border-radius: 999px;">
+                                    <div class="progress-bar" role="progressbar" style="width: 58%; background: linear-gradient(90deg, #10B981, #285B50); border-radius: 999px;" aria-valuenow="58" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center mt-2 small">
+                                    <span class="text-muted" style="font-size: 11px;">Valid through 15 Jan 2028</span>
+                                    <span class="fw-bold text-forest" style="font-size: 11px;"><i class="bi bi-clock-history me-1"></i>420 days remaining</span>
                                 </div>
                             </div>
 
-                            <!-- Warranty Countdown Radar Well -->
-                            <div class="col-sm-6">
-                                <div class="pc-demo-card">
-                                    <div class="small text-muted mb-1 d-flex align-items-center justify-content-between">
-                                        <span class="fw-bold font-display" style="letter-spacing: 0.04em; font-size: 0.75rem;">WARRANTY COMMITMENT</span>
-                                        <span class="badge" style="background-color: rgba(56, 217, 197, 0.15); color: var(--pc-electric-teal); font-size: 10px;">36 Months</span>
-                                    </div>
-                                    <div class="fw-bold text-light tabular-nums">695 Days Remaining</div>
-                                    <div class="small text-muted" style="font-size: 11px;">
-                                        Expires: 14 Oct 2028
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Connected Active Service Ticket -->
-                        <div class="pc-demo-card" style="background: linear-gradient(135deg, rgba(102, 140, 255, 0.08) 0%, rgba(21, 31, 48, 0.8) 100%); border-color: rgba(102, 140, 255, 0.25);">
-                            <div class="d-flex align-items-center justify-content-between mb-2">
-                                <div class="d-flex align-items-center gap-2">
-                                    <span class="pc-badge pc-badge-progress">
-                                        <i class="bi bi-arrow-repeat"></i> IN PROGRESS
+                            <!-- Active Service Work Order Badge -->
+                            <div class="pc-poster-ticket-box">
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <span class="small fw-bold text-dark">
+                                         <i class="bi bi-wrench me-1 text-forest"></i>Ticket #PC-20261121-UAJJ
                                     </span>
-                                    <span class="small fw-bold text-light font-mono">PC-20261118-4091</span>
+                                    <span class="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle" style="font-size: 10px;">IN PROGRESS</span>
                                 </div>
-                                <span class="badge" style="background-color: rgba(243, 182, 109, 0.15); color: var(--pc-warm-amber); border: 1px solid rgba(243, 182, 109, 0.3); font-size: 10px;">
-                                    Priority: High
-                                </span>
+                                <p class="small text-muted mb-2" style="font-size: 11px; line-height: 1.4;">Display backlight inspection &amp; thermal diagnostics.</p>
+                                <div class="d-flex justify-content-between align-items-center small text-muted pt-2 border-top">
+                                    <span class="d-flex align-items-center gap-1 text-truncate" style="max-width: 60%; font-size: 11px;">
+                                        <i class="bi bi-building text-forest"></i> LPU Uni-Mall Kiosk
+                                    </span>
+                                    <span class="text-forest fw-semibold" style="font-size: 11px;"><i class="bi bi-person-check me-1"></i>Bench Diagnostic</span>
+                                </div>
                             </div>
-                            <div class="fw-semibold text-light small mb-1">Keyboard Backlight Failure &amp; Sensor Calibration</div>
-                            <p class="small text-muted mb-2" style="font-size: 12px; line-height: 1.5;">
-                                Diagnostics confirmed sensor continuity failure. Authorized replacement logic board dispatched.
-                            </p>
-                            <div class="d-flex align-items-center justify-content-between pt-2 border-top small" style="border-color: var(--pc-border-hairline) !important; font-size: 11px;">
-                                <span class="text-muted"><i class="bi bi-person-badge text-electric-blue"></i> Tech: Marcus Vance</span>
-                                <span class="text-muted"><i class="bi bi-clock"></i> Updated 2 hours ago</span>
+                        </div>
+
+                        <!-- Floating Element 1: Liquid Glass Shield -->
+                        <div class="pc-floating-glass-badge pc-float-shield" glass>
+                            <div class="pc-badge-icon-emerald">
+                                <i class="bi bi-shield-fill-check"></i>
+                            </div>
+                            <div>
+                                <div class="fw-bold text-dark" style="font-size: 12px;">Active Protection</div>
+                                <div class="text-muted" style="font-size: 10px;">Live Calculation</div>
+                            </div>
+                        </div>
+
+                        <!-- Floating Element 2: Digital Proof Pill -->
+                        <div class="pc-floating-glass-badge pc-float-invoice" glass>
+                            <div class="pc-badge-icon-stone">
+                                <i class="bi bi-receipt"></i>
+                            </div>
+                            <div>
+                                <div class="fw-bold text-dark" style="font-size: 12px;">Invoice Proof #9842</div>
+                                <div class="text-muted" style="font-size: 10px;">Apple Store &bull; ₹2,499.00</div>
+                            </div>
+                        </div>
+                    </div>
+                </liquid-glass>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- =========================================================================
+     SECTION 2: INTERACTIVE PRODUCT SHOWCASE (LIVE PRODUCT CAPABILITIES)
+     ========================================================================= -->
+<section class="py-4 pc-showcase-section" id="showcase">
+    <div class="container-xl px-3 px-md-4">
+        <!-- Section Header -->
+        <div class="text-center mb-5">
+            <span class="pc-hero-kicker mb-2">INTERACTIVE CAPABILITY SHOWCASE</span>
+            <h2 class="display-6 fw-bold text-dark font-display mb-2">Experience ProductCare in Action</h2>
+            <p class="text-muted mx-auto" style="max-width: 660px;">
+                Switch between core platform capabilities below to explore how ProductCare safeguards your hardware portfolio through every stage of ownership.
+            </p>
+
+            <!-- Interactive Tab Switchers -->
+            <div class="d-inline-flex flex-wrap justify-content-center p-1 rounded-pill mt-3 pc-showcase-nav" role="tablist">
+                <button type="button" class="pc-showcase-tab active" data-target="tab-registration" role="tab" aria-selected="true">
+                    <i class="bi bi-mic me-1"></i> Product Registration
+                </button>
+                <button type="button" class="pc-showcase-tab" data-target="tab-warranty" role="tab" aria-selected="false">
+                    <i class="bi bi-shield-check me-1"></i> Warranty Protection
+                </button>
+                <button type="button" class="pc-showcase-tab" data-target="tab-service" role="tab" aria-selected="false">
+                    <i class="bi bi-geo-alt me-1"></i> Service Directory
+                </button>
+                <button type="button" class="pc-showcase-tab" data-target="tab-tracking" role="tab" aria-selected="false">
+                    <i class="bi bi-arrow-repeat me-1"></i> 5-Stage Repair Journey
+                </button>
+            </div>
+        </div>
+
+        <!-- Showcase Stage Container -->
+        <div class="pc-showcase-stage pc-card pc-glass-card p-4 p-md-5">
+            <!-- Stamped Preview Label -->
+            <div class="d-flex align-items-center justify-content-between mb-4 pb-3 border-bottom">
+                <div class="d-flex align-items-center gap-2">
+                    <span class="pc-glass-badge pc-glass-badge-sample">
+                        <i class="bi bi-eye"></i> Interactive Capability Preview
+                    </span>
+                    <span class="text-muted small d-none d-sm-inline">All four workflows are live in your workspace</span>
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                    <a asp-area="Customer" asp-controller="Products" asp-action="Create" class="btn btn-forest btn-sm pc-btn-tactile">
+                        <span>Try in Your Workspace</span>
+                        <i class="bi bi-arrow-right ms-1"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Panel 1: Product Registration -->
+            <div class="pc-showcase-panel active" id="tab-registration">
+                <div class="row align-items-center g-4">
+                    <div class="col-lg-6">
+                        <div class="pc-hero-kicker mb-2">SMART ONBOARDING</div>
+                        <h3 class="h4 fw-bold text-dark font-display mb-3">Speak or Type — Your Specs Fill Instantly</h3>
+                        <p class="text-muted mb-4">
+                            Registering new equipment takes seconds. Tap the microphone to speak your hardware details, or start typing to choose from 30+ popular laptop and smartphone models with automatic form-factor and category mapping.
+                        </p>
+                        <div class="d-flex flex-column gap-3 mb-4">
+                            <div class="d-flex align-items-center gap-3 p-3 rounded-3" style="background-color: var(--pc-surface-secondary); border: 1px solid var(--pc-border-card);">
+                                <div class="pc-device-icon-box">
+                                    <i class="bi bi-mic text-forest"></i>
+                                </div>
+                                <div>
+                                    <div class="fw-semibold text-dark small">Consumer-Friendly Voice Input</div>
+                                    <div class="text-muted" style="font-size: 12px;">"Apple MacBook Pro 16 inch M3 Max laptop, serial C02G73276936"</div>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center gap-3 p-3 rounded-3" style="background-color: var(--pc-surface-secondary); border: 1px solid var(--pc-border-card);">
+                                <div class="pc-device-icon-box">
+                                    <i class="bi bi-lightning-charge text-forest"></i>
+                                </div>
+                                <div>
+                                    <div class="fw-semibold text-dark small">Debounced Live Autocomplete</div>
+                                    <div class="text-muted" style="font-size: 12px;">Auto-populates Brand, Category, Model Number, and Specifications</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="p-4 rounded-3 border" style="background-color: #FFFFFF; box-shadow: var(--pc-shadow-card);">
+                            <div class="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom">
+                                <span class="small fw-bold text-dark"><i class="bi bi-magic me-2 text-forest"></i>Voice &amp; Catalog Recognition Preview</span>
+                                <span class="badge bg-success-subtle text-success border border-success-subtle small">Parsed 100%</span>
+                            </div>
+                            <div class="mb-3">
+                                <label class="small text-muted fw-semibold">Device Name</label>
+                                <div class="form-control form-control-sm bg-light text-dark fw-semibold">MacBook Pro 16-inch M3 Max</div>
+                            </div>
+                            <div class="row g-2 mb-3">
+                                <div class="col-6">
+                                    <label class="small text-muted fw-semibold">Brand</label>
+                                    <div class="form-control form-control-sm bg-light text-dark">Apple</div>
+                                </div>
+                                <div class="col-6">
+                                    <label class="small text-muted fw-semibold">Category</label>
+                                    <div class="form-control form-control-sm bg-light text-dark">Laptops (Ultrabook)</div>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="small text-muted fw-semibold">Extracted Serial Number</label>
+                                <div class="form-control form-control-sm bg-light font-monospace text-dark">C02G73276936</div>
+                            </div>
+                            <div class="d-flex align-items-center justify-content-between pt-2 border-top small text-muted">
+                                <span><i class="bi bi-paperclip me-1"></i>Digital Receipt Vaulted</span>
+                                <span class="text-forest fw-semibold">Ready to Save &rarr;</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Panel 2: Warranty Protection -->
+            <div class="pc-showcase-panel" id="tab-warranty">
+                <div class="row align-items-center g-4">
+                    <div class="col-lg-6">
+                        <div class="pc-hero-kicker mb-2">PRECISION WARRANTY TIMELINES</div>
+                        <h3 class="h4 fw-bold text-dark font-display mb-3">Never Guess Your Coverage Status Again</h3>
+                        <p class="text-muted mb-4">
+                            ProductCare eliminates ambiguity. Every device calculation runs on verified calendar dates. You get an exact day-by-day countdown, proactive 30-day expiration alerts, and verified proof attached to the hardware profile.
+                        </p>
+                        <div class="row g-3 mb-3">
+                            <div class="col-6">
+                                <div class="p-3 rounded-3 border bg-light text-center">
+                                    <div class="h3 fw-bold text-forest mb-0 font-display">420</div>
+                                    <div class="small text-muted">Days Active Coverage</div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="p-3 rounded-3 border bg-light text-center">
+                                    <div class="h3 fw-bold text-warning mb-0 font-display">30</div>
+                                    <div class="small text-muted">Day Renewal Alert</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="p-4 rounded-3 border" style="background-color: #FFFFFF; box-shadow: var(--pc-shadow-card);">
+                            <div class="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom">
+                                <div class="d-flex align-items-center gap-2">
+                                    <span class="pc-status-dot-active"></span>
+                                    <span class="fw-bold text-dark small">Active Warranty Timeline</span>
+                                </div>
+                                <span class="badge bg-success-subtle text-success border border-success-subtle">Valid Coverage</span>
+                            </div>
+                            <div class="text-center py-3">
+                                <div class="display-5 fw-bold text-dark font-display mb-1">420 <span class="fs-6 text-muted fw-normal">days left</span></div>
+                                <div class="small text-muted">Purchase: 15 Jan 2026 &bull; Expiry: 15 Jan 2028</div>
+                            </div>
+                            <div class="progress mb-3" style="height: 8px;">
+                                <div class="progress-bar bg-success" role="progressbar" style="width: 58%;" aria-valuenow="58" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                            <div class="p-2 rounded-2 bg-light border small text-muted d-flex align-items-center justify-content-between">
+                                <span><i class="bi bi-shield-check text-forest me-1"></i>Original Manufacturer Term</span>
+                                <span class="fw-semibold text-dark">24 Months</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Panel 3: Service Support -->
+            <div class="pc-showcase-panel" id="tab-service">
+                <div class="row align-items-center g-4">
+                    <div class="col-lg-6">
+                        <div class="pc-hero-kicker mb-2">LOCAL PUNJAB NETWORK</div>
+                        <h3 class="h4 fw-bold text-dark font-display mb-3">Certified Support at LPU &amp; Nearby Hubs</h3>
+                        <p class="text-muted mb-4">
+                            When equipment needs maintenance, find authentic walk-in assistance right on campus at the Uni-Mall, in Phagwara on GT Road, in Model Town Jalandhar, or at the Law Gate student hub.
+                        </p>
+                        <div class="d-flex flex-column gap-2 mb-3">
+                            <div class="small text-dark fw-semibold d-flex align-items-center gap-2">
+                                <i class="bi bi-check2-circle text-forest fs-5"></i>
+                                <span>Direct walk-in diagnostics at LPU Uni-Mall Ground Floor</span>
+                            </div>
+                            <div class="small text-dark fw-semibold d-flex align-items-center gap-2">
+                                <i class="bi bi-check2-circle text-forest fs-5"></i>
+                                <span>Real phone hotlines and verified operating schedules</span>
+                            </div>
+                            <div class="small text-dark fw-semibold d-flex align-items-center gap-2">
+                                <i class="bi bi-check2-circle text-forest fs-5"></i>
+                                <span>One-click Google Maps directions to repair benches</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="p-4 rounded-3 border" style="background-color: #FFFFFF; box-shadow: var(--pc-shadow-card);">
+                            <div class="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom">
+                                <span class="small fw-bold text-dark"><i class="bi bi-building me-2 text-forest"></i>LPU Uni-Mall Device Care &amp; Triage Kiosk</span>
+                                <span class="pc-glass-badge pc-glass-badge-sample">Sample Hub</span>
+                            </div>
+                            <div class="small text-muted mb-2"><i class="bi bi-geo-alt text-forest me-1"></i>Uni-Mall, Ground Floor, Central Plaza, LPU Campus, Phagwara</div>
+                            <div class="p-3 rounded-2 bg-light border mb-3 small">
+                                <div class="d-flex justify-content-between mb-1">
+                                    <span class="text-muted">Telephone Hotline:</span>
+                                    <a href="tel:+911824517000" class="text-forest fw-semibold text-decoration-none">+91 1824 517000</a>
+                                </div>
+                                <div class="d-flex justify-content-between mb-1">
+                                    <span class="text-muted">Operating Hours:</span>
+                                    <span class="fw-semibold text-dark">Mon-Sat: 9:00 AM - 7:30 PM</span>
+                                </div>
+                                <div class="d-flex justify-content-between">
+                                    <span class="text-muted">Supported Brands:</span>
+                                    <span class="fw-semibold text-dark">Apple, Dell, HP, Lenovo, ASUS</span>
+                                </div>
+                            </div>
+                            <a href="https://maps.google.com/?q=Lovely+Professional+University+Uni+Mall+Phagwara" target="_blank" rel="noopener noreferrer" class="btn btn-stone btn-sm w-100">
+                                <i class="bi bi-map me-1"></i> Open Google Maps Directions
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Panel 4: Repair Tracking -->
+            <div class="pc-showcase-panel" id="tab-tracking">
+                <div class="row align-items-center g-4">
+                    <div class="col-lg-6">
+                        <div class="pc-hero-kicker mb-2">END-TO-END SLA AUDIT</div>
+                        <h3 class="h4 fw-bold text-dark font-display mb-3">Live 5-Stage Repair Journey Tracker</h3>
+                        <p class="text-muted mb-4">
+                            Never wonder where your device is or what repair work has been completed. Track every transition in real time from ticket submission to technician allocation, bench diagnostics, resolution proof, and final pickup.
+                        </p>
+                        <div class="p-3 rounded-3 border bg-light small mb-3">
+                            <div class="text-forest fw-bold mb-1"><i class="bi bi-chat-left-quote me-1"></i>Technician Bench Remark</div>
+                            <div class="text-muted">"Display backlight bleeding repaired; thermal paste replaced; burn-in test complete at bench."</div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="p-4 rounded-3 border" style="background-color: #FFFFFF; box-shadow: var(--pc-shadow-card);">
+                            <div class="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom">
+                                <span class="small fw-bold text-dark">Ticket #PC-20261121-UAJJ</span>
+                                <span class="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle">Step 3 of 5</span>
+                            </div>
+                            <!-- 5-Step Repair Progress Bar -->
+                            <div class="pc-repair-journey p-0 my-3">
+                                <div class="pc-journey-step completed">
+                                    <div class="pc-journey-dot">✓</div>
+                                    <span class="pc-journey-title">1. Intake</span>
+                                </div>
+                                <div class="pc-journey-step completed">
+                                    <div class="pc-journey-dot">✓</div>
+                                    <span class="pc-journey-title">2. Review</span>
+                                </div>
+                                <div class="pc-journey-step active">
+                                    <div class="pc-journey-dot">3</div>
+                                    <span class="pc-journey-title">3. Repairing</span>
+                                </div>
+                                <div class="pc-journey-step">
+                                    <div class="pc-journey-dot">4</div>
+                                    <span class="pc-journey-title">4. Pickup</span>
+                                </div>
+                                <div class="pc-journey-step">
+                                    <div class="pc-journey-dot">5</div>
+                                    <span class="pc-journey-title">5. Closed</span>
+                                </div>
+                            </div>
+                            <div class="small text-muted pt-2 border-top d-flex justify-content-between align-items-center">
+                                <span><i class="bi bi-person-check text-forest me-1"></i>Alex Rivera (Specialist)</span>
+                                <span class="text-dark fw-semibold">Target: 23 Nov 2026</span>
                             </div>
                         </div>
                     </div>
@@ -170,87 +432,116 @@
 </section>
 
 <!-- =========================================================================
-     2. THE REALITY OF MODERN OWNERSHIP (HUMAN DILEMMAS & SYSTEM SOLUTIONS)
+     SECTION 3: CONNECTED 5-STAGE PRODUCT JOURNEY
      ========================================================================= -->
-<section class="py-5" id="dilemmas" style="border-top: 1px solid var(--pc-border-hairline); background-color: var(--pc-bg-secondary);">
+<section class="py-5" id="journey" style="background-color: #FFFFFF;">
     <div class="container-xl px-3 px-md-4 py-4">
-        <div class="text-center pc-section-header max-w-700 mx-auto">
-            <span class="pc-section-kicker">THE OWNERSHIP PROBLEM</span>
-            <h2 class="pc-section-title">The reality of modern product ownership</h2>
-            <p class="pc-section-subtitle mx-auto">
-                People acquire valuable devices and appliances every year, but the administrative burden of ownership is broken across paper slips, missed deadlines, and opaque repair centers.
+        <div class="text-center mb-5">
+            <span class="pc-hero-kicker mb-2">END-TO-END OWNERSHIP LIFECYCLE</span>
+            <h2 class="display-6 fw-bold text-dark font-display mb-2">The 5-Stage Care Journey</h2>
+            <p class="text-muted mx-auto" style="max-width: 620px;">
+                From the moment you unbox a new device to warranty milestones and repair resolutions, every step is clear, transparent, and effortlessly trackable.
             </p>
         </div>
 
-        <div class="row g-4">
-            <!-- Dilemma 1 -->
-            <div class="col-md-6 col-lg-3">
-                <div class="pc-dilemma-card reveal-on-scroll">
+        <!-- Connected Desktop & Mobile Stepper Grid -->
+        <div class="row g-4 pc-journey-grid">
+            <!-- Step 1 -->
+            <div class="col-md-6 col-lg-4">
+                <div class="pc-card pc-glass-card h-100 p-4 d-flex flex-column justify-content-between pc-journey-card">
                     <div>
-                        <div class="pc-dilemma-icon">
-                            <i class="bi bi-receipt-cutoff fs-4"></i>
+                        <div class="d-flex align-items-center justify-content-between mb-3">
+                            <div class="pc-step-number">STAGE 01</div>
+                            <i class="bi bi-mic text-forest fs-4"></i>
                         </div>
-                        <h5 class="fw-bold text-light mb-2 font-display">The Disappearing Receipt</h5>
-                        <p class="text-muted small mb-0">
-                            Thermal paper receipts fade to illegible blank sheets within months. When a breakdown occurs, consumers cannot prove their purchase date.
+                        <h3 class="h5 fw-bold text-dark mb-2 font-display">Register Your Product</h3>
+                        <p class="small text-muted mb-0">
+                            Add devices via quick manual entry, smart suggestions catalog, or by speaking your product details. Attach digital receipts for safe, permanent record-keeping.
                         </p>
                     </div>
-                    <div class="mt-3 pt-3 border-top small text-electric-teal fw-semibold" style="border-color: var(--pc-border-hairline) !important;">
-                        <i class="bi bi-check-circle me-1"></i> Stores verified PDFs outside web root.
+                    <div class="mt-4 pt-3 border-top small text-forest fw-semibold d-flex align-items-center gap-1">
+                        <span>Voice &amp; catalog assistance</span>
+                        <i class="bi bi-arrow-right"></i>
                     </div>
                 </div>
             </div>
 
-            <!-- Dilemma 2 -->
-            <div class="col-md-6 col-lg-3">
-                <div class="pc-dilemma-card reveal-on-scroll">
+            <!-- Step 2 -->
+            <div class="col-md-6 col-lg-4">
+                <div class="pc-card pc-glass-card h-100 p-4 d-flex flex-column justify-content-between pc-journey-card">
                     <div>
-                        <div class="pc-dilemma-icon" style="background-color: rgba(243, 182, 109, 0.10); color: var(--pc-warm-amber);">
-                            <i class="bi bi-hourglass-bottom fs-4"></i>
+                        <div class="d-flex align-items-center justify-content-between mb-3">
+                            <div class="pc-step-number">STAGE 02</div>
+                            <i class="bi bi-shield-check text-forest fs-4"></i>
                         </div>
-                        <h5 class="fw-bold text-light mb-2 font-display">The Lapsed Deadline</h5>
-                        <p class="text-muted small mb-0">
-                            Consumers discover a fault only to find the manufacturer warranty expired three weeks earlier because no tracking system gave warning.
+                        <h3 class="h5 fw-bold text-dark mb-2 font-display">Track Real-Time Warranty</h3>
+                        <p class="small text-muted mb-0">
+                            Never guess whether your device is still covered. Real-time warranty calculations show active days remaining, 30-day expiry notices, and verified coverage timelines.
                         </p>
                     </div>
-                    <div class="mt-3 pt-3 border-top small text-warm-amber fw-semibold" style="border-color: var(--pc-border-hairline) !important;">
-                        <i class="bi bi-check-circle me-1"></i> 30-day proactive radar flags expiring commitments.
+                    <div class="mt-4 pt-3 border-top small text-forest fw-semibold d-flex align-items-center gap-1">
+                        <span>Mathematical accuracy</span>
+                        <i class="bi bi-arrow-right"></i>
                     </div>
                 </div>
             </div>
 
-            <!-- Dilemma 3 -->
-            <div class="col-md-6 col-lg-3">
-                <div class="pc-dilemma-card reveal-on-scroll">
+            <!-- Step 3 -->
+            <div class="col-md-6 col-lg-4">
+                <div class="pc-card pc-glass-card h-100 p-4 d-flex flex-column justify-content-between pc-journey-card">
                     <div>
-                        <div class="pc-dilemma-icon" style="background-color: rgba(102, 140, 255, 0.10); color: var(--pc-electric-blue);">
-                            <i class="bi bi-question-circle fs-4"></i>
+                        <div class="d-flex align-items-center justify-content-between mb-3">
+                            <div class="pc-step-number">STAGE 03</div>
+                            <i class="bi bi-geo-alt text-forest fs-4"></i>
                         </div>
-                        <h5 class="fw-bold text-light mb-2 font-display">The Opaque Repair</h5>
-                        <p class="text-muted small mb-0">
-                            Once a device enters a service workshop, customers face unanswered phone calls and complete silence regarding diagnostic progress.
+                        <h3 class="h5 fw-bold text-dark mb-2 font-display">Find Nearby Service Support</h3>
+                        <p class="small text-muted mb-0">
+                            Discover local repair partners tailored to LPU, Phagwara, and Jalandhar. Filter by brand and category, review operating hours, and get real map directions.
                         </p>
                     </div>
-                    <div class="mt-3 pt-3 border-top small text-electric-blue fw-semibold" style="border-color: var(--pc-border-hairline) !important;">
-                        <i class="bi bi-check-circle me-1"></i> Governed 8-state machine with immutable audit log.
+                    <div class="mt-4 pt-3 border-top small text-forest fw-semibold d-flex align-items-center gap-1">
+                        <span>LPU &amp; Punjab directory</span>
+                        <i class="bi bi-arrow-right"></i>
                     </div>
                 </div>
             </div>
 
-            <!-- Dilemma 4 -->
-            <div class="col-md-6 col-lg-3">
-                <div class="pc-dilemma-card reveal-on-scroll">
+            <!-- Step 4 -->
+            <div class="col-md-6 col-lg-6">
+                <div class="pc-card pc-glass-card h-100 p-4 d-flex flex-column justify-content-between pc-journey-card">
                     <div>
-                        <div class="pc-dilemma-icon">
-                            <i class="bi bi-diagram-3 fs-4"></i>
+                        <div class="d-flex align-items-center justify-content-between mb-3">
+                            <div class="pc-step-number">STAGE 04</div>
+                            <i class="bi bi-wrench text-forest fs-4"></i>
                         </div>
-                        <h5 class="fw-bold text-light mb-2 font-display">Fragmented Records</h5>
-                        <p class="text-muted small mb-0">
-                            Serial numbers, user manuals, and service histories remain scattered across manufacturer portals and disorganized personal email folders.
+                        <h3 class="h5 fw-bold text-dark mb-2 font-display">Submit Service Tickets Seamlessly</h3>
+                        <p class="small text-muted mb-0">
+                            Report issues with pre-populated device details, failure descriptions, and optional diagnostic attachments. Route directly to designated service hubs or central service dispatch.
                         </p>
                     </div>
-                    <div class="mt-3 pt-3 border-top small text-electric-teal fw-semibold" style="border-color: var(--pc-border-hairline) !important;">
-                        <i class="bi bi-check-circle me-1"></i> A single, unified digital ownership inventory.
+                    <div class="mt-4 pt-3 border-top small text-forest fw-semibold d-flex align-items-center gap-1">
+                        <span>Zero repetitive data entry</span>
+                        <i class="bi bi-arrow-right"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 5 -->
+            <div class="col-md-12 col-lg-6">
+                <div class="pc-card pc-glass-card h-100 p-4 d-flex flex-column justify-content-between pc-journey-card">
+                    <div>
+                        <div class="d-flex align-items-center justify-content-between mb-3">
+                            <div class="pc-step-number">STAGE 05</div>
+                            <i class="bi bi-check-circle text-forest fs-4"></i>
+                        </div>
+                        <h3 class="h5 fw-bold text-dark mb-2 font-display">Follow the 5-Stage Repair Journey</h3>
+                        <p class="small text-muted mb-0">
+                            Track your hardware from intake verification through technician allocation, bench diagnostics, resolution proof, and final pickup with full audit history and status updates.
+                        </p>
+                    </div>
+                    <div class="mt-4 pt-3 border-top small text-forest fw-semibold d-flex align-items-center gap-1">
+                        <span>Transparent progress tracker</span>
+                        <i class="bi bi-arrow-right"></i>
                     </div>
                 </div>
             </div>
@@ -259,99 +550,112 @@
 </section>
 
 <!-- =========================================================================
-     3. CONNECTED 6-STAGE OWNERSHIP JOURNEY (HOW PRODUCTCARE WORKS)
+     SECTION 4: SERVICE CENTRE NETWORK (LPU & PUNJAB HUBS)
      ========================================================================= -->
-<section class="py-5" id="how-it-works" style="border-top: 1px solid var(--pc-border-hairline);">
+<section class="py-5" id="network" style="background-color: var(--pc-canvas);">
     <div class="container-xl px-3 px-md-4 py-4">
-        <div class="text-center pc-section-header max-w-700 mx-auto">
-            <span class="pc-section-kicker">THE 6-STAGE LIFECYCLE</span>
-            <h2 class="pc-section-title">A continuous ownership progression</h2>
-            <p class="pc-section-subtitle mx-auto">
-                From the moment you register an acquisition to the final resolution of a repair, ProductCare manages every transition with rigorous precision.
-            </p>
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-end mb-5 gap-3">
+            <div>
+                <span class="pc-hero-kicker mb-2">PUNJAB REGIONAL SUPPORT</span>
+                <h2 class="display-6 fw-bold text-dark font-display mb-1">LPU Campus &amp; Local Service Directory</h2>
+                <p class="text-muted small mb-0">Walk-in diagnostic desks and certified hardware repair partners across Lovely Professional University, Phagwara, and Jalandhar.</p>
+            </div>
+            <div>
+                <a asp-area="Customer" asp-controller="ServiceCenters" asp-action="Index" class="btn btn-forest btn-sm pc-btn-tactile">
+                    <i class="bi bi-geo-alt me-1"></i> Explore Full Directory
+                </a>
+            </div>
         </div>
 
         <div class="row g-4">
-            <!-- Stage 1 -->
-            <div class="col-md-4">
-                <div class="pc-journey-step reveal-on-scroll">
-                    <div class="pc-step-num">STAGE 01</div>
-                    <h5 class="fw-bold text-light mb-2 font-display">Register Acquisition</h5>
-                    <p class="text-muted small mb-3">
-                        Catalog brand, model, serial number, and store. Establish unique per-customer serial integrity from day one.
-                    </p>
-                    <div class="small font-mono p-2 rounded" style="background-color: var(--pc-surface-inset); border: 1px solid var(--pc-border-hairline); color: var(--pc-text-secondary);">
-                        &gt; UniqueConstraint(CustomerId, SerialNumber)
+            <!-- Hub 1: LPU Uni-Mall -->
+            <div class="col-md-6 col-lg-3">
+                <div class="pc-card pc-glass-card h-100 p-4 d-flex flex-column justify-content-between">
+                    <div>
+                        <div class="d-flex align-items-center justify-content-between mb-3">
+                            <span class="pc-glass-badge pc-glass-badge-sample">Sample Listing</span>
+                            <span class="small text-muted" style="font-size: 11px;">LPU Campus</span>
+                        </div>
+                        <h4 class="h6 fw-bold text-dark mb-1 font-display">LPU Uni-Mall Device Care</h4>
+                        <p class="small text-muted mb-2">Ground Floor, Central Plaza, Lovely Professional University, Phagwara</p>
+                        <div class="d-flex flex-wrap gap-1 mb-3">
+                            <span class="badge bg-light text-dark border" style="font-size: 10px;">Apple</span>
+                            <span class="badge bg-light text-dark border" style="font-size: 10px;">Dell</span>
+                            <span class="badge bg-light text-dark border" style="font-size: 10px;">HP</span>
+                            <span class="badge bg-light text-dark border" style="font-size: 10px;">Samsung</span>
+                        </div>
+                    </div>
+                    <div class="pt-2 border-top small text-muted">
+                        <i class="bi bi-telephone text-forest me-1"></i> +91 1824 517000
                     </div>
                 </div>
             </div>
 
-            <!-- Stage 2 -->
-            <div class="col-md-4">
-                <div class="pc-journey-step reveal-on-scroll">
-                    <div class="pc-step-num">STAGE 02</div>
-                    <h5 class="fw-bold text-light mb-2 font-display">Preserve Purchase Proof</h5>
-                    <p class="text-muted small mb-3">
-                        Upload invoice documents (PDF, JPG, PNG). Files are validated with magic byte inspection and stored outside the web root.
-                    </p>
-                    <div class="small font-mono p-2 rounded" style="background-color: var(--pc-surface-inset); border: 1px solid var(--pc-border-hairline); color: var(--pc-text-secondary);">
-                        &gt; Storage/Uploads/Invoices/{GUID}.pdf
+            <!-- Hub 2: Phagwara GT Road -->
+            <div class="col-md-6 col-lg-3">
+                <div class="pc-card pc-glass-card h-100 p-4 d-flex flex-column justify-content-between">
+                    <div>
+                        <div class="d-flex align-items-center justify-content-between mb-3">
+                            <span class="pc-glass-badge pc-glass-badge-sample">Sample Listing</span>
+                            <span class="small text-muted" style="font-size: 11px;">Phagwara</span>
+                        </div>
+                        <h4 class="h6 fw-bold text-dark mb-1 font-display">Phagwara GT Road Hardware Hub</h4>
+                        <p class="small text-muted mb-2">Opp. Bus Stand, Grand Trunk Road, Phagwara, Punjab</p>
+                        <div class="d-flex flex-wrap gap-1 mb-3">
+                            <span class="badge bg-light text-dark border" style="font-size: 10px;">Dell</span>
+                            <span class="badge bg-light text-dark border" style="font-size: 10px;">Lenovo</span>
+                            <span class="badge bg-light text-dark border" style="font-size: 10px;">ASUS</span>
+                            <span class="badge bg-light text-dark border" style="font-size: 10px;">Acer</span>
+                        </div>
+                    </div>
+                    <div class="pt-2 border-top small text-muted">
+                        <i class="bi bi-telephone text-forest me-1"></i> +91 1824 502211
                     </div>
                 </div>
             </div>
 
-            <!-- Stage 3 -->
-            <div class="col-md-4">
-                <div class="pc-journey-step reveal-on-scroll">
-                    <div class="pc-step-num">STAGE 03</div>
-                    <h5 class="fw-bold text-light mb-2 font-display">Dynamic Warranty Radar</h5>
-                    <p class="text-muted small mb-3">
-                        The centralized warranty engine computes remaining days, automatically transitioning records between Active, Expiring Soon, and Expired.
-                    </p>
-                    <div class="small font-mono p-2 rounded" style="background-color: var(--pc-surface-inset); border: 1px solid var(--pc-border-hairline); color: var(--pc-text-secondary);">
-                        &gt; PurchaseDate.AddMonths(Duration)
+            <!-- Hub 3: Jalandhar Model Town -->
+            <div class="col-md-6 col-lg-3">
+                <div class="pc-card pc-glass-card h-100 p-4 d-flex flex-column justify-content-between">
+                    <div>
+                        <div class="d-flex align-items-center justify-content-between mb-3">
+                            <span class="pc-glass-badge pc-glass-badge-sample">Sample Listing</span>
+                            <span class="small text-muted" style="font-size: 11px;">Jalandhar</span>
+                        </div>
+                        <h4 class="h6 fw-bold text-dark mb-1 font-display">Jalandhar Model Town Care</h4>
+                        <p class="small text-muted mb-2">Circular Road, Near Model Town Central Market, Jalandhar</p>
+                        <div class="d-flex flex-wrap gap-1 mb-3">
+                            <span class="badge bg-light text-dark border" style="font-size: 10px;">Apple</span>
+                            <span class="badge bg-light text-dark border" style="font-size: 10px;">Sony</span>
+                            <span class="badge bg-light text-dark border" style="font-size: 10px;">Bose</span>
+                            <span class="badge bg-light text-dark border" style="font-size: 10px;">LG</span>
+                        </div>
+                    </div>
+                    <div class="pt-2 border-top small text-muted">
+                        <i class="bi bi-telephone text-forest me-1"></i> +91 181 2450800
                     </div>
                 </div>
             </div>
 
-            <!-- Stage 4 -->
-            <div class="col-md-4">
-                <div class="pc-journey-step reveal-on-scroll">
-                    <div class="pc-step-num">STAGE 04</div>
-                    <h5 class="fw-bold text-light mb-2 font-display">Initiate Service Request</h5>
-                    <p class="text-muted small mb-3">
-                        When equipment develops faults, customers generate tickets with unique collision-safe identifiers (PC-YYYYMMDD-XXXX).
-                    </p>
-                    <div class="small font-mono p-2 rounded" style="background-color: var(--pc-surface-inset); border: 1px solid var(--pc-border-hairline); color: var(--pc-text-secondary);">
-                        &gt; GenerateTicketNumberAsync()
+            <!-- Hub 4: Law Gate Maheru -->
+            <div class="col-md-6 col-lg-3">
+                <div class="pc-card pc-glass-card h-100 p-4 d-flex flex-column justify-content-between">
+                    <div>
+                        <div class="d-flex align-items-center justify-content-between mb-3">
+                            <span class="pc-glass-badge pc-glass-badge-sample">Sample Listing</span>
+                            <span class="small text-muted" style="font-size: 11px;">Law Gate</span>
+                        </div>
+                        <h4 class="h6 fw-bold text-dark mb-1 font-display">Law Gate Student Assistance</h4>
+                        <p class="small text-muted mb-2">Shop 22, University Market Road, Maheru, Phagwara</p>
+                        <div class="d-flex flex-wrap gap-1 mb-3">
+                            <span class="badge bg-light text-dark border" style="font-size: 10px;">Xiaomi</span>
+                            <span class="badge bg-light text-dark border" style="font-size: 10px;">Realme</span>
+                            <span class="badge bg-light text-dark border" style="font-size: 10px;">OnePlus</span>
+                            <span class="badge bg-light text-dark border" style="font-size: 10px;">Samsung</span>
+                        </div>
                     </div>
-                </div>
-            </div>
-
-            <!-- Stage 5 -->
-            <div class="col-md-4">
-                <div class="pc-journey-step reveal-on-scroll">
-                    <div class="pc-step-num">STAGE 05</div>
-                    <h5 class="fw-bold text-light mb-2 font-display">Governed Progress</h5>
-                    <p class="text-muted small mb-3">
-                        Tickets advance through an 8-state machine with administrative triage, technician assignment, and customer remarks.
-                    </p>
-                    <div class="small font-mono p-2 rounded" style="background-color: var(--pc-surface-inset); border: 1px solid var(--pc-border-hairline); color: var(--pc-text-secondary);">
-                        &gt; ServiceRequestWorkflowService.Transition()
-                    </div>
-                </div>
-            </div>
-
-            <!-- Stage 6 -->
-            <div class="col-md-4">
-                <div class="pc-journey-step reveal-on-scroll">
-                    <div class="pc-step-num">STAGE 06</div>
-                    <h5 class="fw-bold text-light mb-2 font-display">Complete Ownership History</h5>
-                    <p class="text-muted small mb-3">
-                        Maintain an immutable chronological record of diagnostics, replaced parts, and service milestones throughout product life.
-                    </p>
-                    <div class="small font-mono p-2 rounded" style="background-color: var(--pc-surface-inset); border: 1px solid var(--pc-border-hairline); color: var(--pc-text-secondary);">
-                        &gt; ServiceRequestHistory.Snapshot()
+                    <div class="pt-2 border-top small text-muted">
+                        <i class="bi bi-telephone text-forest me-1"></i> +91 1824 501234
                     </div>
                 </div>
             </div>
@@ -360,125 +664,39 @@
 </section>
 
 <!-- =========================================================================
-     4. GENUINE APPLICATION CAPABILITIES (VERIFIED IMPLEMENTATION)
+     SECTION 5: CALL TO ACTION & LIVE WORKSPACE PREVIEW
      ========================================================================= -->
-<section class="py-5" id="capabilities" style="background-color: var(--pc-bg-secondary); border-top: 1px solid var(--pc-border-hairline);">
-    <div class="container-xl px-3 px-md-4 py-4">
-        <div class="row align-items-center g-5 mb-5">
-            <div class="col-lg-6">
-                <span class="pc-section-kicker">ENGINEERING CAPABILITIES</span>
-                <h2 class="pc-section-title">Built for operational integrity, not presentation theater</h2>
-                <p class="text-muted">
-                    ProductCare is engineered on modern software development tools and techniques, adhering to enterprise design patterns, strict role-based access control, and asynchronous database architecture.
+<section class="py-5" id="experience" style="background-color: #FFFFFF;">
+    <div class="container-xl px-3 px-md-4">
+        <div class="pc-cta-banner p-4 p-md-5 text-center">
+            <div class="mx-auto" style="max-width: 660px;">
+                <span class="pc-hero-kicker mb-2 text-white" style="background: rgba(255,255,255,0.15); border-color: rgba(255,255,255,0.3);">START MANAGING YOUR HARDWARE</span>
+                <h2 class="display-6 fw-bold text-white mb-3 font-display">
+                    Your devices. Your warranty records.<br />
+                    <span>Organised in one place.</span>
+                </h2>
+                <p class="text-white-50 mb-4 fs-6">
+                    Sign in to view your verified hardware portfolio, check real-time coverage timelines, and access dedicated service centre support.
                 </p>
-            </div>
-            <div class="col-lg-6 text-lg-end">
-                <a href="/swagger" target="_blank" class="btn btn-midnight">
-                    <i class="bi bi-code-slash text-electric-teal me-1"></i> Inspect OpenAPI Specification
-                </a>
-            </div>
-        </div>
-
-        <div class="row g-4">
-            <!-- Feature 1 -->
-            <div class="col-md-6 col-lg-4">
-                <div class="pc-capability-card reveal-on-scroll">
-                    <div class="d-flex align-items-center gap-2 mb-3">
-                        <i class="bi bi-database-check fs-4 text-electric-teal"></i>
-                        <h6 class="fw-bold text-light mb-0 font-display">Per-Customer Isolation</h6>
-                    </div>
-                    <p class="text-muted small mb-0">
-                        Strict server-side ownership enforcement prevents Insecure Direct Object References (IDOR). Customers access only records linked directly to their authenticated Identity.
-                    </p>
+                <div class="d-flex flex-wrap justify-content-center gap-3">
+                    @if (User.Identity?.IsAuthenticated == true)
+                    {
+                        <a class="btn btn-light btn-lg pc-btn-tactile text-forest fw-bold" asp-area="Customer" asp-controller="Dashboard" asp-action="Index">
+                            <span>Open My Workspace</span>
+                            <i class="bi bi-arrow-right ms-1"></i>
+                        </a>
+                    }
+                    else
+                    {
+                        <a class="btn btn-light btn-lg pc-btn-tactile text-forest fw-bold" asp-area="" asp-controller="Account" asp-action="Register">
+                            <span>Create Free Account</span>
+                            <i class="bi bi-arrow-right ms-1"></i>
+                        </a>
+                        <a class="btn btn-outline-light btn-lg pc-btn-tactile" asp-area="" asp-controller="Account" asp-action="Login">
+                            <span>Sign In</span>
+                        </a>
+                    }
                 </div>
-            </div>
-
-            <!-- Feature 2 -->
-            <div class="col-md-6 col-lg-4">
-                <div class="pc-capability-card reveal-on-scroll">
-                    <div class="d-flex align-items-center gap-2 mb-3">
-                        <i class="bi bi-shield-lock fs-4 text-electric-teal"></i>
-                        <h6 class="fw-bold text-light mb-0 font-display">Physical File Validation</h6>
-                    </div>
-                    <p class="text-muted small mb-0">
-                        Invoices are validated using magic byte headers to confirm genuine file formats (PDF, JPEG, PNG). Stored safely outside the web root with unique GUID filenames.
-                    </p>
-                </div>
-            </div>
-
-            <!-- Feature 3 -->
-            <div class="col-md-6 col-lg-4">
-                <div class="pc-capability-card reveal-on-scroll">
-                    <div class="d-flex align-items-center gap-2 mb-3">
-                        <i class="bi bi-diagram-2 fs-4 text-electric-teal"></i>
-                        <h6 class="fw-bold text-light mb-0 font-display">Finite State Machine</h6>
-                    </div>
-                    <p class="text-muted small mb-0">
-                        Service tickets progress strictly across 8 validated states (Submitted &rarr; UnderReview &rarr; Assigned &rarr; InProgress &rarr; WaitingForCustomer &rarr; Resolved &rarr; Closed / Rejected).
-                    </p>
-                </div>
-            </div>
-
-            <!-- Feature 4 -->
-            <div class="col-md-6 col-lg-4">
-                <div class="pc-capability-card reveal-on-scroll">
-                    <div class="d-flex align-items-center gap-2 mb-3">
-                        <i class="bi bi-calendar3 fs-4 text-electric-teal"></i>
-                        <h6 class="fw-bold text-light mb-0 font-display">Precise Date Mathematics</h6>
-                    </div>
-                    <p class="text-muted small mb-0">
-                        The warranty engine accurately handles leap years, month-end boundary conditions, and negative day calculations, covered by 17 dedicated xUnit tests.
-                    </p>
-                </div>
-            </div>
-
-            <!-- Feature 5 -->
-            <div class="col-md-6 col-lg-4">
-                <div class="pc-capability-card reveal-on-scroll">
-                    <div class="d-flex align-items-center gap-2 mb-3">
-                        <i class="bi bi-journal-text fs-4 text-electric-teal"></i>
-                        <h6 class="fw-bold text-light mb-0 font-display">Immutable Audit Trails</h6>
-                    </div>
-                    <p class="text-muted small mb-0">
-                        Every status transition logs a historical snapshot recording the prior status, new status, actor username, administrative remarks, and timestamp in UTC.
-                    </p>
-                </div>
-            </div>
-
-            <!-- Feature 6 -->
-            <div class="col-md-6 col-lg-4">
-                <div class="pc-capability-card reveal-on-scroll">
-                    <div class="d-flex align-items-center gap-2 mb-3">
-                        <i class="bi bi-key fs-4 text-electric-teal"></i>
-                        <h6 class="fw-bold text-light mb-0 font-display">Dual Authentication</h6>
-                    </div>
-                    <p class="text-muted small mb-0">
-                        Supports secure Cookie Sessions for Razor MVC portals and signed JWT Bearer tokens for external API integration, documented seamlessly via OpenAPI 3.0.
-                    </p>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- =========================================================================
-     5. CLOSING INVITATION (AUTHENTICATION DESK ENTRY)
-     ========================================================================= -->
-<section class="py-5" id="security" style="border-top: 1px solid var(--pc-border-hairline);">
-    <div class="container-xl px-3 px-md-4 py-5 text-center">
-        <div class="max-w-700 mx-auto">
-            <span class="pc-section-kicker">START KEEPING TRACK</span>
-            <h2 class="pc-hero-headline mb-3">Take control of everything you own</h2>
-            <p class="pc-hero-lead mx-auto mb-4">
-                Open your personal Ownership Desk today. Catalog your devices, preserve your purchase proofs, and protect your warranty rights.
-            </p>
-            <div class="d-flex flex-wrap justify-content-center gap-3">
-                <a class="btn btn-electric btn-lg px-4 py-2" asp-area="" asp-controller="Account" asp-action="Register">
-                    Open Your Ownership Desk
-                </a>
-                <a class="btn btn-midnight btn-lg px-4 py-2" asp-area="" asp-controller="Account" asp-action="Login">
-                    Sign In to Existing Vault
-                </a>
             </div>
         </div>
     </div>

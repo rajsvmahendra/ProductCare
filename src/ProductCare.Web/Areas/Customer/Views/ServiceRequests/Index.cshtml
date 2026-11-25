@@ -6,62 +6,68 @@
 <!-- Page Header -->
 <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
     <div>
-        <span class="d-inline-block text-uppercase fw-bold small text-muted mb-1" style="letter-spacing: 0.08em; font-size: 0.72rem;">AFTER-SALES SERVICE</span>
-        <h1 class="h3 fw-bold text-dark mb-1 font-serif">Service &amp; Repair Requests</h1>
-        <p class="text-muted small mb-0">Follow ongoing repair diagnostics, technician updates, and warranty claims.</p>
+        <div class="d-flex align-items-center gap-2 mb-1">
+            <span class="d-inline-block fw-bold small text-muted font-display" style="font-size: 0.8rem;">After-sales service</span>
+            <span class="text-muted">&bull;</span>
+            <span class="badge bg-light text-dark border small" style="font-size: 11px;">5-stage repair tracking</span>
+        </div>
+        <h1 class="h2 fw-bold text-dark mb-1 font-display">Service &amp; Repair Requests</h1>
+        <p class="text-muted small mb-0">Follow ongoing repair diagnostics, technician bench updates, and warranty claims.</p>
     </div>
-    <a asp-action="Create" class="btn btn-forest btn-sm">
+    <a asp-action="Create" class="btn btn-forest btn-sm pc-btn-tactile px-3">
         <i class="bi bi-wrench me-1"></i>
-        <span>Raise New Request</span>
+        <span>Report an Issue</span>
     </a>
 </div>
 
-<!-- Filters Toolbar -->
-<div class="pc-card mb-4 p-3">
+<!-- Filters Toolbar (Bento Style) -->
+<div class="pc-bento-card pc-bento-white mb-4 p-4 shadow-sm">
     <form method="get" class="row g-2 align-items-center">
         <div class="col-md-5">
             <div class="input-group">
-                <span class="input-group-text"><i class="bi bi-search"></i></span>
-                <input type="text" name="search" value="@Model.SearchTerm" class="form-control" placeholder="Search ticket #, subject, product..." />
+                <span class="input-group-text bg-white border-end-0 text-muted" style="min-height: 42px; height: 42px;"><i class="bi bi-search"></i></span>
+                <input type="text" name="search" value="@Model.SearchTerm" class="form-control border-start-0" placeholder="Search ticket #, subject, product..." style="min-height: 42px; height: 42px;" />
             </div>
         </div>
         <div class="col-md-3">
-            <select name="status" class="form-select" asp-for="FilterStatus" asp-items="Html.GetEnumSelectList<ProductCare.Web.Models.Enums.RequestStatus>()">
+            <select name="status" class="form-select" asp-for="FilterStatus" asp-items="Html.GetEnumSelectList<ProductCare.Web.Models.Enums.RequestStatus>()" style="min-height: 42px; height: 42px;">
                 <option value="">-- All Statuses --</option>
             </select>
         </div>
         <div class="col-md-2">
-            <select name="priority" class="form-select" asp-for="FilterPriority" asp-items="Html.GetEnumSelectList<ProductCare.Web.Models.Enums.PriorityLevel>()">
+            <select name="priority" class="form-select" asp-for="FilterPriority" asp-items="Html.GetEnumSelectList<ProductCare.Web.Models.Enums.PriorityLevel>()" style="min-height: 42px; height: 42px;">
                 <option value="">-- All Priorities --</option>
             </select>
         </div>
         <div class="col-md-2 d-flex gap-2">
-            <button type="submit" class="btn btn-forest w-100 btn-sm">Filter</button>
-            <a asp-action="Index" class="btn btn-stone btn-sm d-flex align-items-center justify-content-center" title="Reset Filters">
+            <button type="submit" class="btn btn-forest w-100 pc-btn-tactile d-inline-flex align-items-center justify-content-center" style="min-height: 42px; height: 42px;">
+                <i class="bi bi-funnel me-1"></i> Filter
+            </button>
+            <a asp-action="Index" class="btn btn-stone pc-btn-tactile d-flex align-items-center justify-content-center" style="min-height: 42px; height: 42px; width: 42px;" title="Reset Filters">
                 <i class="bi bi-arrow-counterclockwise"></i>
             </a>
         </div>
     </form>
 </div>
 
-<!-- Tickets Table Card -->
-<div class="pc-card p-0 overflow-hidden">
-    <div class="pc-demo-topbar">
-        <span class="small fw-semibold text-dark"><i class="bi bi-ticket-detailed me-2 text-forest"></i>Service Request Queue</span>
-        <span class="badge bg-light text-muted border small">@Model.TotalCount Ticket(s)</span>
+<!-- Tickets Table Card (Bento Style) -->
+<div class="pc-bento-card pc-bento-white p-0 overflow-hidden shadow-sm">
+    <div class="d-flex align-items-center justify-content-between p-3 px-4 border-bottom" style="background-color: var(--pc-surface-secondary);">
+        <span class="small fw-bold text-dark font-display"><i class="bi bi-ticket-detailed me-2 text-forest"></i>Service Request Queue</span>
+        <span class="badge bg-white text-muted border small">@Model.TotalCount Ticket(s)</span>
     </div>
     <div>
         @if (Model.Requests.Any())
         {
             <div class="pc-table-wrapper border-0">
-                <table class="pc-table">
+                <table class="pc-table mb-0">
                     <thead>
                         <tr>
                             <th>Ticket #</th>
-                            <th>Product</th>
-                            <th>Category</th>
+                            <th>Asset / Device</th>
+                            <th>Campus Location</th>
                             <th>Subject</th>
-                            <th>Priority</th>
+                            <th>SLA Status</th>
                             <th>Status</th>
                             <th>Submitted</th>
                             <th class="text-end">Action</th>
@@ -75,18 +81,26 @@
                                     <a asp-action="Details" asp-route-id="@r.Id" class="text-dark text-decoration-none">
                                         #@r.TicketNumber
                                     </a>
+                                    @if (r.IsEscalated)
+                                    {
+                                        <span class="badge bg-danger ms-1" style="font-size: 9px;">ESCALATED</span>
+                                    }
                                 </td>
                                 <td>
                                     <div class="fw-semibold text-dark small">@r.ProductName</div>
-                                    <div class="small text-muted" style="font-size: 11px;">@r.ProductBrand</div>
+                                    <div class="small text-muted" style="font-size: 11px;">@r.CategoryName &bull; @r.ProductBrand</div>
                                 </td>
-                                <td><span class="badge bg-light text-dark border" style="font-size: 11px;">@r.CategoryName</span></td>
+                                <td class="small text-dark">
+                                    <i class="bi bi-geo-alt text-muted me-1"></i>@(r.CampusLocation ?? "Campus Facility")
+                                </td>
                                 <td class="fw-semibold text-dark small">@r.Subject</td>
-                                <td><span class="@r.PriorityBadgeCssClass" style="font-size: 11px;">@r.Priority</span></td>
+                                <td>
+                                    <span class="@r.SlaBadgeCssClass" style="font-size: 11px;">@r.SlaBadgeText</span>
+                                </td>
                                 <td><span class="@r.StatusBadgeCssClass" style="font-size: 11px;">@r.StatusDisplayText</span></td>
-                                <td class="small text-muted tabular-nums">@r.CreatedAtUtc.ToString("dd MMM yyyy")</td>
+                                <td class="small text-muted">@r.CreatedAtUtc.ToString("dd MMM yyyy")</td>
                                 <td class="text-end">
-                                    <a asp-action="Details" asp-route-id="@r.Id" class="btn btn-stone btn-sm" style="font-size: 11px; padding: 4px 8px;">
+                                    <a asp-action="Details" asp-route-id="@r.Id" class="btn btn-stone btn-sm pc-btn-tactile" style="font-size: 11px; padding: 5px 12px; height: 32px; border-radius: 8px;">
                                         View &rarr;
                                     </a>
                                 </td>
@@ -99,11 +113,11 @@
         else
         {
             <div class="p-5 text-center text-muted">
-                <i class="bi bi-inbox fs-1 text-muted mb-3 d-block"></i>
-                <h5 class="fw-bold text-dark font-serif">No service requests found</h5>
-                <p class="small text-muted mb-3">No service tickets match your active filter criteria.</p>
-                <a asp-action="Create" class="btn btn-forest btn-sm">
-                    <i class="bi bi-plus-lg me-1"></i> Submit a Service Request
+                <i class="bi bi-ticket-detailed fs-1 text-muted mb-3 d-block"></i>
+                <h5 class="fw-bold text-dark font-display">No service requests found</h5>
+                <p class="small text-muted mb-3">You don't have any open or historical service tickets matching your search.</p>
+                <a asp-action="Create" class="btn btn-forest btn-sm pc-btn-tactile">
+                    <i class="bi bi-wrench me-1"></i> Submit a New Ticket
                 </a>
             </div>
         }

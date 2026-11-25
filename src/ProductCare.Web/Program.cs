@@ -14,7 +14,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // 1. Configure Entity Framework Core with Microsoft SQL Server
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
-    ?? "Server=(localdb)\\MSSQLLocalDB;Database=ProductCareDb;Trusted_Connection=True;MultipleActiveResultSets=true;TrustServerCertificate=True";
+    ?? "Server=(localdb)\\ProductCareTest;Database=ProductCareDb;Trusted_Connection=True;MultipleActiveResultSets=true;TrustServerCertificate=True";
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
@@ -105,8 +105,11 @@ builder.Services.AddAuthentication()
 
 // 4. Register Domain Services with Dependency Injection
 builder.Services.AddSingleton<IWarrantyCalculatorService, WarrantyCalculatorService>();
+builder.Services.AddSingleton<ISlaCalculationService, SlaCalculationService>();
+builder.Services.AddSingleton<IProductCatalogService, ProductCatalogService>();
 builder.Services.AddScoped<IServiceRequestWorkflowService, ServiceRequestWorkflowService>();
 builder.Services.AddScoped<IInvoiceStorageService, InvoiceStorageService>();
+builder.Services.AddScoped<INetworkQualityService, NetworkQualityService>();
 builder.Services.AddScoped<IDashboardReportingService, DashboardReportingService>();
 builder.Services.AddSingleton<IJwtTokenService, JwtTokenService>();
 builder.Services.AddScoped<IDbInitializerService, DbInitializerService>();
@@ -226,6 +229,27 @@ app.UseSwaggerUI(c =>
 app.UseRouting();
 
 app.UseAuthentication();
+
+// Development-only authentication helper for automated E2E visual verification and screenshot capture
+if (app.Environment.IsDevelopment())
+{
+    app.Use(async (context, next) =>
+    {
+        if (context.Request.Query.TryGetValue("devUser", out var email) && !string.IsNullOrWhiteSpace(email))
+        {
+            var userMgr = context.RequestServices.GetRequiredService<UserManager<ApplicationUser>>();
+            var user = await userMgr.FindByEmailAsync(email!);
+            if (user != null)
+            {
+                var claimsFactory = context.RequestServices.GetRequiredService<IUserClaimsPrincipalFactory<ApplicationUser>>();
+                var principal = await claimsFactory.CreateAsync(user);
+                context.User = principal;
+            }
+        }
+        await next();
+    });
+}
+
 app.UseAuthorization();
 
 // Route configuration

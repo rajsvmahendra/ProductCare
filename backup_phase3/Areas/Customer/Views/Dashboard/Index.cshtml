@@ -1,0 +1,331 @@
+@model ProductCare.Web.ViewModels.Customer.CustomerDashboardViewModel
+@{
+    ViewData["Title"] = "Customer Workspace";
+
+    var coveredPct = Model.TotalProducts > 0 ? (int)Math.Round((double)Model.ActiveWarranties / Model.TotalProducts * 100) : 0;
+    var expiringPct = Model.TotalProducts > 0 ? (int)Math.Round((double)Model.ExpiringSoonWarranties / Model.TotalProducts * 100) : 0;
+    var expiredPct = Model.TotalProducts > 0 ? (int)Math.Round((double)Model.ExpiredWarranties / Model.TotalProducts * 100) : 0;
+}
+
+<!-- Top Header & Primary Actions -->
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
+    <div>
+        <span class="d-inline-block fw-semibold small text-muted mb-1 font-display" style="letter-spacing: 0.04em;">Customer Workspace</span>
+        <h1 class="h3 fw-bold text-dark mb-1 font-display">Welcome back, @Model.CustomerName</h1>
+        <p class="text-muted small mb-0">Overview of your registered hardware, warranty commitments, and active service tickets.</p>
+    </div>
+    <div class="d-flex align-items-center gap-2">
+        <a asp-action="Create" asp-controller="Products" class="btn btn-forest btn-sm pc-btn-tactile">
+            <i class="bi bi-plus-lg me-1"></i> Add Product
+        </a>
+        <a asp-action="Create" asp-controller="ServiceRequests" class="btn btn-stone btn-sm pc-btn-tactile">
+            <i class="bi bi-wrench me-1"></i> Report Issue
+        </a>
+    </div>
+</div>
+
+<!-- Summary Section: 4 KPI Cards -->
+<div class="row g-3 mb-4">
+    <!-- Total Registered Products -->
+    <div class="col-sm-6 col-xl-3">
+        <div class="pc-kpi-card pc-glass-card">
+            <div class="pc-kpi-label">Registered Products</div>
+            <div class="pc-kpi-val text-dark">@Model.TotalProducts</div>
+            <div class="small text-muted mt-2 d-flex align-items-center gap-1">
+                <i class="bi bi-boxes text-forest"></i> Active hardware catalog
+            </div>
+        </div>
+    </div>
+
+    <!-- Products Under Warranty -->
+    <div class="col-sm-6 col-xl-3">
+        <div class="pc-kpi-card pc-glass-card">
+            <div class="pc-kpi-label">Under Warranty</div>
+            <div class="pc-kpi-val text-success">@Model.ActiveWarranties</div>
+            <div class="small text-muted mt-2 d-flex align-items-center gap-1">
+                <i class="bi bi-shield-check text-success"></i> Active coverage valid
+            </div>
+        </div>
+    </div>
+
+    <!-- Warranty Expiring Soon -->
+    <div class="col-sm-6 col-xl-3">
+        <div class="pc-kpi-card pc-glass-card">
+            <div class="pc-kpi-label">Expiring Soon (&le;30d)</div>
+            <div class="pc-kpi-val text-warning">@Model.ExpiringSoonWarranties</div>
+            <div class="small text-muted mt-2 d-flex align-items-center gap-1">
+                <i class="bi bi-clock-history text-warning"></i> Renewal recommended
+            </div>
+        </div>
+    </div>
+
+    <!-- Open Service Tickets -->
+    <div class="col-sm-6 col-xl-3">
+        <div class="pc-kpi-card pc-glass-card">
+            <div class="pc-kpi-label">Open Service Tickets</div>
+            <div class="pc-kpi-val text-primary">@Model.OpenServiceRequests</div>
+            <div class="small text-muted mt-2 d-flex align-items-center gap-1">
+                <i class="bi bi-arrow-repeat text-primary"></i> In diagnostic or repair
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Main Content: Asymmetric Two-Column Layout -->
+<div class="row g-4">
+    <!-- Left Column (Wider): My Registered Devices & Recent Service Activity -->
+    <div class="col-lg-8">
+        <!-- 1. My Recent Products Section -->
+        <div class="pc-card pc-glass-card mb-4 p-4">
+            <div class="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom">
+                <div class="d-flex align-items-center gap-2">
+                    <i class="bi bi-laptop text-forest fs-5"></i>
+                    <h2 class="h5 fw-bold text-dark mb-0 font-display">My Registered Devices</h2>
+                </div>
+                <a asp-action="Index" asp-controller="Products" class="small fw-semibold text-forest text-decoration-none">
+                    View All (@Model.TotalProducts) &rarr;
+                </a>
+            </div>
+
+            @if (Model.RecentProducts.Any())
+            {
+                <div class="d-flex flex-column gap-3">
+                    @foreach (var prod in Model.RecentProducts)
+                    {
+                        <div class="p-3 rounded-3 border d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center gap-3 pc-card-hover" style="background-color: var(--pc-surface-secondary);">
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="pc-device-icon-box flex-shrink-0">
+                                    @if (prod.CategoryName.Contains("Laptop") || prod.CategoryName.Contains("Computer"))
+                                    {
+                                        <i class="bi bi-laptop"></i>
+                                    }
+                                    else if (prod.CategoryName.Contains("Mobile") || prod.CategoryName.Contains("Phone"))
+                                    {
+                                        <i class="bi bi-phone"></i>
+                                    }
+                                    else if (prod.CategoryName.Contains("Audio"))
+                                    {
+                                        <i class="bi bi-headphones"></i>
+                                    }
+                                    else if (prod.CategoryName.Contains("Watch"))
+                                    {
+                                        <i class="bi bi-smartwatch"></i>
+                                    }
+                                    else
+                                    {
+                                        <i class="bi bi-cpu"></i>
+                                    }
+                                </div>
+                                <div>
+                                    <h3 class="h6 fw-bold text-dark mb-0 font-display">
+                                        <a asp-controller="Products" asp-action="Details" asp-route-id="@prod.Id" class="text-dark text-decoration-none">
+                                            @prod.Name
+                                        </a>
+                                    </h3>
+                                    <div class="small text-muted d-flex align-items-center gap-2" style="font-size: 12px;">
+                                        <span>@prod.Brand</span>
+                                        <span>&bull;</span>
+                                        <span class="font-monospace">S/N: @prod.SerialNumber</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="d-flex align-items-center gap-3 w-100 w-sm-auto justify-content-between justify-content-sm-end">
+                                <div class="text-sm-end">
+                                    <span class="pc-badge @prod.StatusBadgeCssClass">
+                                        @prod.StatusText
+                                    </span>
+                                    <div class="text-muted small mt-1" style="font-size: 11px;">
+                                        @(prod.RemainingDays > 0 ? $"{prod.RemainingDays} days remaining" : "Expired")
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-center gap-1">
+                                    <a asp-controller="Products" asp-action="Details" asp-route-id="@prod.Id" class="btn btn-stone btn-sm px-2 py-1" title="View Details">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                    <a asp-controller="ServiceRequests" asp-action="Create" asp-route-productId="@prod.Id" class="btn btn-forest btn-sm px-2 py-1" title="Report Issue">
+                                        <i class="bi bi-wrench"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="text-center py-4 text-muted">
+                    <i class="bi bi-inbox fs-2 text-muted mb-2 d-block"></i>
+                    <p class="small mb-2">You haven't registered any devices yet.</p>
+                    <a asp-controller="Products" asp-action="Create" class="btn btn-forest btn-sm">Register Your First Device</a>
+                </div>
+            }
+        </div>
+
+        <!-- 2. Recent Service Activity -->
+        <div class="pc-card pc-glass-card p-4">
+            <div class="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom">
+                <div class="d-flex align-items-center gap-2">
+                    <i class="bi bi-clock-history text-forest fs-5"></i>
+                    <h2 class="h5 fw-bold text-dark mb-0 font-display">Recent Service Activity</h2>
+                </div>
+                <a asp-action="Index" asp-controller="ServiceRequests" class="small fw-semibold text-forest text-decoration-none">
+                    View All Tickets &rarr;
+                </a>
+            </div>
+
+            @if (Model.RecentServiceRequests.Any())
+            {
+                <div class="d-flex flex-column gap-3">
+                    @foreach (var sr in Model.RecentServiceRequests)
+                    {
+                        <div class="p-3 rounded-3 border d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center gap-3" style="background-color: var(--pc-surface);">
+                            <div class="overflow-hidden">
+                                <div class="d-flex align-items-center gap-2 mb-1">
+                                    <span class="small fw-bold text-forest">@sr.TicketNumber</span>
+                                    <span class="small text-muted">&bull;</span>
+                                    <span class="small text-dark fw-semibold">@sr.ProductName</span>
+                                    @if (!string.IsNullOrEmpty(sr.ServiceCenterName))
+                                    {
+                                        <span class="badge bg-light text-muted border small d-none d-md-inline" style="font-size: 10px;">
+                                            <i class="bi bi-building me-1"></i>@sr.ServiceCenterName
+                                        </span>
+                                    }
+                                </div>
+                                <div class="small text-muted text-truncate" style="max-width: 480px;">@sr.Subject</div>
+                                <div class="text-muted mt-1 d-flex align-items-center gap-2" style="font-size: 11px;">
+                                    <span>Logged @sr.CreatedAtUtc.ToString("dd MMM yyyy")</span>
+                                    <span>&bull;</span>
+                                    <span class="text-forest fw-medium"><i class="bi bi-arrow-right-short"></i>@sr.NextActionText</span>
+                                </div>
+                            </div>
+
+                            <div class="d-flex align-items-center gap-2 flex-shrink-0">
+                                <span class="@sr.StatusBadgeCssClass small" style="font-size: 11px;">
+                                    @sr.StatusText
+                                </span>
+                                <a asp-controller="ServiceRequests" asp-action="Details" asp-route-id="@sr.Id" class="btn btn-stone btn-sm px-2 py-1" title="View Ticket Details">
+                                    <i class="bi bi-chevron-right"></i>
+                                </a>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="text-center py-4 text-muted">
+                    <i class="bi bi-check2-circle fs-2 text-forest mb-2 d-block"></i>
+                    <p class="small mb-0">No active service tickets. All your devices are running smoothly.</p>
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- Right Column (Sidebar): Coverage Radar & Quick Actions -->
+    <div class="col-lg-4">
+        <!-- 1. Enhanced Coverage Radar with Visual Multi-Segment Bar -->
+        <div class="pc-card pc-glass-card mb-4 p-4">
+            <div class="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom">
+                <div class="d-flex align-items-center gap-2">
+                    <i class="bi bi-shield-check text-forest fs-5"></i>
+                    <h2 class="h6 fw-bold text-dark mb-0 font-display">Coverage Radar</h2>
+                </div>
+                <span class="badge bg-light text-dark border small">@Model.TotalProducts Devices</span>
+            </div>
+
+            <!-- Proportional Visual Distribution Bar -->
+            <div class="mb-3">
+                <div class="progress" style="height: 10px; border-radius: 999px; overflow: hidden; background-color: var(--pc-border-hairline);">
+                    @if (coveredPct > 0)
+                    {
+                        <div class="progress-bar bg-success" role="progressbar" style="width: @coveredPct%;" title="Under Warranty: @Model.ActiveWarranties device(s)" aria-valuenow="@coveredPct" aria-valuemin="0" aria-valuemax="100"></div>
+                    }
+                    @if (expiringPct > 0)
+                    {
+                        <div class="progress-bar bg-warning" role="progressbar" style="width: @expiringPct%;" title="Expiring Soon: @Model.ExpiringSoonWarranties device(s)" aria-valuenow="@expiringPct" aria-valuemin="0" aria-valuemax="100"></div>
+                    }
+                    @if (expiredPct > 0)
+                    {
+                        <div class="progress-bar bg-danger" role="progressbar" style="width: @expiredPct%;" title="Expired: @Model.ExpiredWarranties device(s)" aria-valuenow="@expiredPct" aria-valuemin="0" aria-valuemax="100"></div>
+                    }
+                </div>
+            </div>
+
+            <!-- Legend & Exact Breakdown -->
+            <div class="d-flex flex-column gap-2 mb-3">
+                <div class="d-flex align-items-center justify-content-between small">
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="d-inline-block rounded-circle bg-success" style="width: 8px; height: 8px;"></span>
+                        <span class="text-dark">Covered under warranty</span>
+                    </div>
+                    <span class="fw-bold text-dark">@Model.ActiveWarranties <span class="text-muted fw-normal">(@coveredPct%)</span></span>
+                </div>
+                <div class="d-flex align-items-center justify-content-between small">
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="d-inline-block rounded-circle bg-warning" style="width: 8px; height: 8px;"></span>
+                        <span class="text-dark">Expiring soon (&le;30d)</span>
+                    </div>
+                    <span class="fw-bold text-dark">@Model.ExpiringSoonWarranties <span class="text-muted fw-normal">(@expiringPct%)</span></span>
+                </div>
+                <div class="d-flex align-items-center justify-content-between small">
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="d-inline-block rounded-circle bg-danger" style="width: 8px; height: 8px;"></span>
+                        <span class="text-dark">Warranty expired</span>
+                    </div>
+                    <span class="fw-bold text-dark">@Model.ExpiredWarranties <span class="text-muted fw-normal">(@expiredPct%)</span></span>
+                </div>
+            </div>
+
+            <!-- Action Button -->
+            <a asp-action="Index" asp-controller="Warranty" class="btn btn-stone btn-sm w-100 pc-btn-tactile">
+                <i class="bi bi-clock-history me-1"></i> View Warranty Timeline &rarr;
+            </a>
+        </div>
+
+        <!-- 2. Quick Actions Card -->
+        <div class="pc-card pc-glass-card p-4">
+            <h2 class="h6 fw-bold text-dark mb-3 pb-2 border-bottom font-display">Quick Actions</h2>
+            <div class="d-flex flex-column gap-2">
+                <a asp-controller="Products" asp-action="Create" class="p-3 rounded-3 border text-decoration-none d-flex align-items-center justify-content-between pc-quick-action-link" style="background-color: var(--pc-surface);">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="pc-device-icon-box" style="width: 36px; height: 36px;">
+                            <i class="bi bi-plus-circle text-forest"></i>
+                        </div>
+                        <div>
+                            <div class="fw-semibold text-dark small">Register a Product</div>
+                            <div class="text-muted" style="font-size: 11px;">Manual or voice entry</div>
+                        </div>
+                    </div>
+                    <i class="bi bi-chevron-right text-muted small"></i>
+                </a>
+
+                <a asp-controller="ServiceCenters" asp-action="Index" class="p-3 rounded-3 border text-decoration-none d-flex align-items-center justify-content-between pc-quick-action-link" style="background-color: var(--pc-surface);">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="pc-device-icon-box" style="width: 36px; height: 36px;">
+                            <i class="bi bi-geo-alt text-forest"></i>
+                        </div>
+                        <div>
+                            <div class="fw-semibold text-dark small">Find a Service Centre</div>
+                            <div class="text-muted" style="font-size: 11px;">LPU &amp; Punjab local hubs</div>
+                        </div>
+                    </div>
+                    <i class="bi bi-chevron-right text-muted small"></i>
+                </a>
+
+                <a asp-controller="ServiceRequests" asp-action="Index" class="p-3 rounded-3 border text-decoration-none d-flex align-items-center justify-content-between pc-quick-action-link" style="background-color: var(--pc-surface);">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="pc-device-icon-box" style="width: 36px; height: 36px;">
+                            <i class="bi bi-tools text-forest"></i>
+                        </div>
+                        <div>
+                            <div class="fw-semibold text-dark small">Track a Repair</div>
+                            <div class="text-muted" style="font-size: 11px;">5-stage lifecycle status</div>
+                        </div>
+                    </div>
+                    <i class="bi bi-chevron-right text-muted small"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

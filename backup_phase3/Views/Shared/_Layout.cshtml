@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] — ProductCare</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body class="d-flex flex-column min-vh-100 pc-public-body">
+    <!-- Premium Floating Pill Navigation -->
+    <div class="pc-floating-nav-container">
+        <header class="pc-floating-navbar" id="pcPublicNavbar">
+            <!-- Left: Brand Logo -->
+            <div class="pc-nav-col-left">
+                <a class="pc-brand-logo d-flex align-items-center text-decoration-none" asp-area="" asp-controller="Home" asp-action="Index">
+                    <img src="~/images/productcare-logo.png" alt="ProductCare" height="34" class="pc-brand-img" />
+                </a>
+            </div>
+
+            <!-- Center: Primary Navigation Capsule (Desktop) -->
+            <nav class="d-none d-lg-flex pc-nav-capsule" id="pcMainDesktopNav" aria-label="Main Navigation">
+                <a class="pc-nav-pill active" href="/#overview" data-target="overview">Overview</a>
+                <a class="pc-nav-pill" href="/#showcase" data-target="showcase">Showcase</a>
+                <a class="pc-nav-pill" href="/#journey" data-target="journey">Product Journey</a>
+                <a class="pc-nav-pill" href="/#network" data-target="network">Service Network</a>
+                <a class="pc-nav-pill" href="/#experience" data-target="experience">Live Preview</a>
+            </nav>
+
+            <!-- Right: Primary Actions & User Status -->
+            <div class="pc-nav-col-right">
+                @if (User.Identity?.IsAuthenticated == true)
+                {
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <a class="btn btn-forest btn-sm pc-btn-tactile" asp-area="Admin" asp-controller="Dashboard" asp-action="Index">
+                            <i class="bi bi-shield-lock me-1"></i> Admin Workspace
+                        </a>
+                    }
+                    else
+                    {
+                        <a class="btn btn-forest btn-sm pc-btn-tactile" asp-area="Customer" asp-controller="Products" asp-action="Index">
+                            <i class="bi bi-laptop me-1"></i> My Products
+                        </a>
+                    }
+
+                    <div class="dropdown">
+                        <button class="btn btn-stone btn-sm dropdown-toggle pc-btn-tactile" type="button" id="userMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-person-circle me-1 text-forest"></i> @User.Identity?.Name
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end pc-glass-dropdown shadow-sm" aria-labelledby="userMenuButton">
+                            <li><h6 class="dropdown-header">@User.Identity?.Name</h6></li>
+                            <li>
+                                <a class="dropdown-item" asp-area="Customer" asp-controller="Dashboard" asp-action="Index">
+                                    <i class="bi bi-grid me-2 text-muted"></i> Customer Dashboard
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" asp-area="Customer" asp-controller="Products" asp-action="Index">
+                                    <i class="bi bi-laptop me-2 text-muted"></i> My Devices
+                                </a>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <form asp-area="" asp-controller="Account" asp-action="Logout" method="post" class="m-0 p-0">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="dropdown-item text-danger d-flex align-items-center gap-2">
+                                        <i class="bi bi-box-arrow-right"></i> Sign Out
+                                    </button>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
+                }
+                else
+                {
+                    <a class="btn btn-stone btn-sm pc-btn-tactile" asp-area="" asp-controller="Account" asp-action="Login">
+                        Sign In
+                    </a>
+                    <a class="btn btn-forest btn-sm pc-btn-tactile pc-btn-tactile-primary" asp-area="" asp-controller="Account" asp-action="Register">
+                        Get Started
+                    </a>
+                }
+
+                <!-- Mobile Hamburger Button -->
+                <button class="d-lg-none btn btn-stone btn-sm px-2 py-1 pc-btn-tactile ms-2" id="pcMobileNavToggle" type="button" aria-label="Toggle navigation">
+                    <i class="bi bi-list fs-5"></i>
+                </button>
+            </div>
+        </header>
+    </div>
+
+    <!-- Mobile Off-Canvas Navigation Drawer -->
+    <div id="pcMobileNavDrawer" class="d-lg-none position-fixed top-0 start-0 w-100 h-100 z-3" style="background: rgba(251, 249, 245, 0.98); transform: translateY(-100%); transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);">
+        <div class="container h-100 d-flex flex-column justify-content-between p-4">
+            <div>
+                <div class="d-flex align-items-center justify-content-between mb-4 pb-3 border-bottom">
+                    <a class="pc-brand-logo" asp-area="" asp-controller="Home" asp-action="Index">
+                        <img src="~/images/productcare-logo.png" alt="ProductCare" height="34" class="pc-brand-img" />
+                    </a>
+                    <button id="pcMobileNavClose" class="btn btn-stone btn-sm pc-btn-tactile" type="button" aria-label="Close menu">
+                        <i class="bi bi-x-lg"></i>
+                    </button>
+                </div>
+
+                <nav class="d-flex flex-column gap-3 mb-4">
+                    <a class="text-dark fs-5 fw-semibold text-decoration-none py-1" href="/#overview">Overview</a>
+                    <a class="text-dark fs-5 fw-semibold text-decoration-none py-1" href="/#showcase">Showcase</a>
+                    <a class="text-dark fs-5 fw-semibold text-decoration-none py-1" href="/#journey">Product Journey</a>
+                    <a class="text-dark fs-5 fw-semibold text-decoration-none py-1" href="/#network">Service Network</a>
+                    <a class="text-dark fs-5 fw-semibold text-decoration-none py-1" href="/#experience">Live Preview</a>
+                    @if (User.Identity?.IsAuthenticated == true)
+                    {
+                        <a class="text-forest fs-5 fw-semibold text-decoration-none py-1" asp-area="Customer" asp-controller="Products" asp-action="Index">My Registered Devices</a>
+                        <a class="text-forest fs-5 fw-semibold text-decoration-none py-1" asp-area="Customer" asp-controller="Dashboard" asp-action="Index">Customer Dashboard</a>
+                    }
+                </nav>
+            </div>
+
+            <div class="pt-3 border-top">
+                @if (User.Identity?.IsAuthenticated == true)
+                {
+                    <div class="small text-muted mb-2">Signed in as <strong class="text-dark">@User.Identity?.Name</strong></div>
+                    <div class="d-flex flex-column gap-2">
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <a class="btn btn-forest w-100" asp-area="Admin" asp-controller="Dashboard" asp-action="Index">
+                                Admin Workspace
+                            </a>
+                        }
+                        else
+                        {
+                            <a class="btn btn-forest w-100" asp-area="Customer" asp-controller="Dashboard" asp-action="Index">
+                                My Products
+                            </a>
+                        }
+                        <form asp-area="" asp-controller="Account" asp-action="Logout" method="post" class="w-100">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn btn-stone text-danger w-100">
+                                Sign Out
+                            </button>
+                        </form>
+                    </div>
+                }
+                else
+                {
+                    <div class="d-flex flex-column gap-2">
+                        <a class="btn btn-stone w-100" asp-area="" asp-controller="Account" asp-action="Login">Sign In</a>
+                        <a class="btn btn-forest w-100" asp-area="" asp-controller="Account" asp-action="Register">Create Account</a>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Page Content -->
+    <main role="main" class="flex-grow-1">
+        @RenderBody()
+    </main>
+
+    <!-- Editorial ProductCare Footer -->
+    <footer class="pc-public-footer mt-auto py-5 border-top">
+        <div class="container-xl px-3 px-md-4">
+            <div class="row g-4 mb-4">
+                <div class="col-lg-5">
+                    <div class="pc-brand-logo mb-3">
+                        <img src="~/images/productcare-logo.png" alt="ProductCare" height="38" class="pc-brand-img" />
+                    </div>
+                    <p class="text-muted small pe-lg-5">
+                        ProductCare is the consumer warranty tracking, device management, and repair support portal. Keep your purchase records organised, understand warranty coverage, and connect with authorized local service hubs.
+                    </p>
+                </div>
+
+                <div class="col-6 col-md-3 col-lg-2">
+                    <div class="pc-footer-title">Platform</div>
+                    <ul class="pc-footer-list">
+                        <li><a href="/#showcase">Showcase</a></li>
+                        <li><a href="/#journey">Product Journey</a></li>
+                        <li><a href="/#features">Service Network</a></li>
+                        <li><a href="/#experience">Live Preview</a></li>
+                        <li><a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy &amp; Terms</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-6 col-md-3 col-lg-2">
+                    <div class="pc-footer-title">Access</div>
+                    <ul class="pc-footer-list">
+                        <li><a asp-area="" asp-controller="Account" asp-action="Register">Get Started</a></li>
+                        <li><a asp-area="" asp-controller="Account" asp-action="Login">Sign In</a></li>
+                        <li><a href="/swagger" target="_blank">Swagger REST API</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-md-6 col-lg-3">
+                    <div class="pc-footer-title">Architecture</div>
+                    <p class="small text-muted mb-3">
+                        Engineered with ASP.NET Core 10, C# 13, EF Core 10, and SQL Server LocalDB. Deterministic SLA workflows, secure invoice vault, and regional service network support.
+                    </p>
+                    <a href="/swagger" target="_blank" class="btn btn-stone btn-sm d-inline-flex align-items-center gap-2 pc-btn-tactile">
+                        <i class="bi bi-code-slash text-forest"></i> Interactive API Docs
+                    </a>
+                </div>
+            </div>
+
+            <div class="border-top pt-4 d-flex flex-column flex-sm-row justify-content-between align-items-center gap-2 small text-muted">
+                <div>&copy; 2026 ProductCare. Academic Project &bull; INT402 Modern Web Programming Tools and Techniques.</div>
+                <div>LPU, Phagwara &amp; Jalandhar Service Network.</div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

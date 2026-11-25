@@ -1,0 +1,137 @@
+@model ProductCare.Web.ViewModels.Customer.WarrantyOverviewViewModel
+@{
+    ViewData["Title"] = "Warranty Status";
+}
+
+<!-- Page Header -->
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
+    <div>
+        <span class="d-inline-block text-uppercase fw-bold small text-muted mb-1" style="letter-spacing: 0.06em; font-size: 0.72rem;">COVERAGE STATUS</span>
+        <h1 class="h3 fw-bold text-dark mb-1 font-display">Warranty Coverage Timeline</h1>
+        <p class="text-muted small mb-0">Chronological timeline of all your registered product warranties, remaining durations, and expiration milestones.</p>
+    </div>
+    <a asp-controller="Products" asp-action="Create" class="btn btn-forest btn-sm">
+        <i class="bi bi-plus-lg me-1"></i> Add Product
+    </a>
+</div>
+
+<!-- Status Summary Filter Cards -->
+<div class="row g-3 mb-4">
+    <div class="col-sm-6 col-md-3">
+        <a asp-action="Index" class="text-decoration-none">
+            <div class="pc-kpi-card" style="@(!Model.FilterStatus.HasValue ? "border-color: var(--pc-forest); box-shadow: 0 0 0 2px var(--pc-forest-soft);" : "")">
+                <div class="pc-kpi-label">All Warranties</div>
+                <div class="pc-kpi-val text-dark">@Model.TotalProductsCount</div>
+            </div>
+        </a>
+    </div>
+    <div class="col-sm-6 col-md-3">
+        <a asp-action="Index" asp-route-filter="Active" class="text-decoration-none">
+            <div class="pc-kpi-card" style="@(Model.FilterStatus == ProductCare.Web.Models.Enums.WarrantyStatus.Active ? "border-color: var(--pc-forest); box-shadow: 0 0 0 2px var(--pc-forest-soft);" : "")">
+                <div class="pc-kpi-label">Active Coverage</div>
+                <div class="pc-kpi-val text-success">@Model.ActiveCount</div>
+            </div>
+        </a>
+    </div>
+    <div class="col-sm-6 col-md-3">
+        <a asp-action="Index" asp-route-filter="ExpiringSoon" class="text-decoration-none">
+            <div class="pc-kpi-card" style="@(Model.FilterStatus == ProductCare.Web.Models.Enums.WarrantyStatus.ExpiringSoon ? "border-color: var(--pc-amber); box-shadow: 0 0 0 2px var(--pc-amber-soft);" : "")">
+                <div class="pc-kpi-label">Expiring Soon (&le;30d)</div>
+                <div class="pc-kpi-val text-warning">@Model.ExpiringSoonCount</div>
+            </div>
+        </a>
+    </div>
+    <div class="col-sm-6 col-md-3">
+        <a asp-action="Index" asp-route-filter="Expired" class="text-decoration-none">
+            <div class="pc-kpi-card" style="@(Model.FilterStatus == ProductCare.Web.Models.Enums.WarrantyStatus.Expired ? "border-color: var(--pc-red); box-shadow: 0 0 0 2px var(--pc-red-soft);" : "")">
+                <div class="pc-kpi-label">Expired Warranties</div>
+                <div class="pc-kpi-val text-danger">@Model.ExpiredCount</div>
+            </div>
+        </a>
+    </div>
+</div>
+
+<!-- Warranty Table Card -->
+<div class="pc-card p-0 overflow-hidden">
+    <div class="d-flex align-items-center justify-content-between p-3 border-bottom" style="background-color: var(--pc-surface-secondary);">
+        <span class="small fw-semibold text-dark"><i class="bi bi-clock-history me-2 text-forest"></i>Chronological Coverage Overview</span>
+        <span class="badge bg-light text-muted border small">Sorted by Expiration Date</span>
+    </div>
+    <div>
+        @if (Model.WarrantyItems.Any())
+        {
+            <div class="pc-table-wrapper border-0">
+                <table class="pc-table">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Category</th>
+                            <th>Purchase Date</th>
+                            <th>Warranty Expiry</th>
+                            <th>Remaining Time</th>
+                            <th>Status</th>
+                            <th class="text-end">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.WarrantyItems)
+                        {
+                            <tr>
+                                <td>
+                                    <a asp-controller="Products" asp-action="Details" asp-route-id="@item.ProductId" class="fw-semibold text-dark text-decoration-none">
+                                        @item.ProductName
+                                    </a>
+                                    <div class="small text-muted font-monospace" style="font-size: 11px;">@item.Brand &middot; S/N: @item.SerialNumber</div>
+                                </td>
+                                <td>
+                                    <span class="badge bg-light text-dark border" style="font-size: 11px;">@item.CategoryName</span>
+                                </td>
+                                <td class="small text-muted">@item.PurchaseDate.ToString("dd MMM yyyy")</td>
+                                <td class="small fw-semibold text-dark">@item.WarrantyExpiryDate.ToString("dd MMM yyyy")</td>
+                                <td class="small">
+                                    @if (item.RemainingDays > 0)
+                                    {
+                                        <span class="fw-bold @(item.RemainingDays <= 30 ? "text-warning" : "text-dark")">
+                                            @item.RemainingDays days
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">Expired (@Math.Abs(item.RemainingDays)d ago)</span>
+                                    }
+                                </td>
+                                <td>
+                                    @if (item.Status == ProductCare.Web.Models.Enums.WarrantyStatus.Active)
+                                    {
+                                        <span class="pc-badge pc-badge-active">Active</span>
+                                    }
+                                    else if (item.Status == ProductCare.Web.Models.Enums.WarrantyStatus.ExpiringSoon)
+                                    {
+                                        <span class="pc-badge pc-badge-expiring">Expiring Soon</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="pc-badge pc-badge-expired">Expired</span>
+                                    }
+                                </td>
+                                <td class="text-end">
+                                    <a asp-controller="ServiceRequests" asp-action="Create" asp-route-productId="@item.ProductId" class="btn btn-stone btn-sm" title="Submit Service Ticket" style="font-size: 11px; padding: 4px 8px;">
+                                        <i class="bi bi-wrench"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <div class="p-5 text-center text-muted">
+                <i class="bi bi-shield-check fs-1 text-muted mb-3 d-block"></i>
+                <h5 class="fw-bold text-dark font-display">No warranties matching filter</h5>
+                <p class="small text-muted mb-0">No registered device warranties found under the selected coverage status.</p>
+            </div>
+        }
+    </div>
+</div>

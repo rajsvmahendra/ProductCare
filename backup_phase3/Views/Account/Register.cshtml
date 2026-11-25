@@ -1,0 +1,92 @@
+@model ProductCare.Web.ViewModels.Account.RegisterViewModel
+@{
+    ViewData["Title"] = "Create Account — ProductCare";
+}
+
+<div class="pc-auth-desk">
+    <div class="container-xl px-3 px-md-4">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-8 col-lg-6">
+                <div class="pc-card pc-glass-card p-4 p-md-5 shadow-sm">
+                    <!-- Brand & Heading -->
+                    <div class="text-center mb-4">
+                        <a asp-controller="Home" asp-action="Index" class="d-inline-flex align-items-center justify-content-center mb-3 text-decoration-none">
+                            <img src="~/images/productcare-logo.png" alt="ProductCare" height="46" class="pc-brand-img" style="max-height: 46px; width: auto;" />
+                        </a>
+                        <h2 class="h4 fw-bold text-dark font-display mb-1">Create Your Account</h2>
+                        <p class="text-muted small mb-0">Register to manage devices, verify warranties, and track service tickets.</p>
+                    </div>
+
+                    <!-- Registration Form -->
+                    <form asp-action="Register" method="post" id="registerForm">
+                        @Html.AntiForgeryToken()
+
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger py-2 small mb-3" style="background-color: #FEF2F2; border-color: #FECACA; color: #991B1B;" role="alert"></div>
+
+                        <!-- Full Name -->
+                        <div class="mb-3">
+                            <label asp-for="FullName" class="form-label">Full Name</label>
+                            <input asp-for="FullName" class="form-control" placeholder="Enter your full name" autocomplete="name" required autofocus />
+                            <span asp-validation-for="FullName" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Email Address -->
+                        <div class="mb-3">
+                            <label asp-for="Email" class="form-label">Email Address</label>
+                            <input asp-for="Email" type="email" class="form-control" placeholder="Enter your email address" autocomplete="email" required />
+                            <span asp-validation-for="Email" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Password & Confirmation -->
+                        <div class="row g-3 mb-3">
+                            <div class="col-sm-6">
+                                <label asp-for="Password" class="form-label">Password</label>
+                                <div class="input-group">
+                                    <input asp-for="Password" type="password" id="regPassword" class="form-control" placeholder="At least 6 chars" autocomplete="new-password" required />
+                                    <button type="button" class="btn btn-stone pc-toggle-password" data-target="regPassword" aria-label="Show password" title="Show password">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+                                </div>
+                                <span asp-validation-for="Password" class="text-danger small"></span>
+                            </div>
+                            <div class="col-sm-6">
+                                <label asp-for="ConfirmPassword" class="form-label">Confirm Password</label>
+                                <div class="input-group">
+                                    <input asp-for="ConfirmPassword" type="password" id="regConfirmPassword" class="form-control" placeholder="Re-enter password" autocomplete="new-password" required />
+                                    <button type="button" class="btn btn-stone pc-toggle-password" data-target="regConfirmPassword" aria-label="Show password" title="Show password">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+                                </div>
+                                <span asp-validation-for="ConfirmPassword" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <!-- Terms Agreement Checkbox -->
+                        <div class="mb-4">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="termsCheck" required />
+                                <label class="form-check-label small text-muted" for="termsCheck">
+                                    I agree to the <a asp-area="" asp-controller="Home" asp-action="Privacy" class="text-forest">Terms of Service and Privacy Policy</a>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <button type="submit" class="btn btn-forest w-100 mb-3">
+                            <span>Complete Registration</span>
+                            <i class="bi bi-arrow-right"></i>
+                        </button>
+                    </form>
+
+                    <div class="text-center small text-muted pt-2 border-top">
+                        Already have an account? <a asp-action="Login" class="fw-semibold text-forest">Sign in here</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

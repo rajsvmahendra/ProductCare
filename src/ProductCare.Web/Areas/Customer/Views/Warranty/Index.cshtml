@@ -1,67 +1,102 @@
 @model ProductCare.Web.ViewModels.Customer.WarrantyOverviewViewModel
 @{
-    ViewData["Title"] = "Warranty Timeline";
+    ViewData["Title"] = "Warranty Status";
 }
 
 <!-- Page Header -->
 <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
     <div>
-        <span class="d-inline-block text-uppercase fw-bold small text-muted mb-1" style="letter-spacing: 0.08em; font-size: 0.72rem;">COVERAGE COMMITMENTS</span>
-        <h1 class="h3 fw-bold text-dark mb-1 font-serif">Warranty Coverage Timeline</h1>
-        <p class="text-muted small mb-0">Chronological timeline of all your registered product warranties, remaining durations, and expiration milestones.</p>
+        <div class="d-flex align-items-center gap-2 mb-1">
+            <span class="d-inline-block fw-bold small text-muted font-display" style="font-size: 0.8rem;">Coverage status</span>
+            <span class="text-muted">&bull;</span>
+            <span class="badge bg-light text-dark border small" style="font-size: 11px;">Warranty schedule</span>
+        </div>
+        <h1 class="h2 fw-bold text-dark mb-1 font-display">Warranty Coverage Timeline</h1>
+        <p class="text-muted small mb-0">Chronological timeline of all your registered product warranties, remaining
+            durations, and expiration milestones.</p>
     </div>
-    <a asp-controller="Products" asp-action="Create" class="btn btn-forest btn-sm">
-        <i class="bi bi-plus-lg me-1"></i> Register Product
+    <a asp-controller="Products" asp-action="Create" class="btn btn-forest btn-sm pc-btn-tactile px-3">
+        <i class="bi bi-plus-lg me-1"></i> Add Product
     </a>
 </div>
 
-<!-- Status Summary Filter Cards -->
+<!-- Bento Status Summary Filter Cards (Phase 5 Functional Pastel System) -->
 <div class="row g-3 mb-4">
+    <!-- 1. All Warranties (Warm Ivory) -->
     <div class="col-sm-6 col-md-3">
         <a asp-action="Index" class="text-decoration-none">
-            <div class="pc-kpi-card" style="@(!Model.FilterStatus.HasValue ? "border-color: var(--pc-forest); box-shadow: 0 0 0 2px var(--pc-forest-soft);" : "")">
-                <div class="pc-kpi-label">All Warranties</div>
-                <div class="pc-kpi-val text-dark">@Model.TotalProductsCount</div>
+            <div class="pc-bento-card pc-bento-ivory h-100 p-3"
+                style="@(!Model.FilterStatus.HasValue ? "box-shadow: 0 0 0 2px var(--pc-forest), 0 8px 24px -4px rgba(15, 23, 42, 0.1) !important;" : "")">
+                <div class="d-flex align-items-center justify-content-between mb-2">
+                    <span class="pc-bento-kicker mb-0">All Devices</span>
+                    <i class="bi bi-boxes text-muted"></i>
+                </div>
+                <div class="pc-bento-stat text-dark" style="font-size: 2.2rem;">@Model.TotalProductsCount</div>
+                <div class="small text-muted mt-1" style="font-size: 11px;">All registered devices</div>
             </div>
         </a>
     </div>
+
+    <!-- 2. Active Coverage (Pastel Lime) -->
     <div class="col-sm-6 col-md-3">
         <a asp-action="Index" asp-route-filter="Active" class="text-decoration-none">
-            <div class="pc-kpi-card" style="@(Model.FilterStatus == ProductCare.Web.Models.Enums.WarrantyStatus.Active ? "border-color: var(--pc-forest); box-shadow: 0 0 0 2px var(--pc-forest-soft);" : "")">
-                <div class="pc-kpi-label">Active Coverage</div>
-                <div class="pc-kpi-val" style="color: var(--pc-status-active);">@Model.ActiveCount</div>
+            <div class="pc-bento-card pc-bento-lime h-100 p-3"
+                style="@(Model.FilterStatus == ProductCare.Web.Models.Enums.WarrantyStatus.Active ? "box-shadow: 0 0 0 2px #152718, 0 8px 24px -4px rgba(22, 163, 74, 0.2) !important;" : "")">
+                <div class="d-flex align-items-center justify-content-between mb-2">
+                    <span class="pc-bento-kicker mb-0" style="color: #2D4C2A;">Active Valid</span>
+                    <i class="bi bi-shield-check text-dark"></i>
+                </div>
+                <div class="pc-bento-stat" style="font-size: 2.2rem; color: #0E1C10;">@Model.ActiveCount</div>
+                <div class="small fw-medium mt-1" style="font-size: 11px; color: #2D4C2A;">Full Manufacturer SLA</div>
             </div>
         </a>
     </div>
+
+    <!-- 3. Expiring Soon (Muted Peach) -->
     <div class="col-sm-6 col-md-3">
         <a asp-action="Index" asp-route-filter="ExpiringSoon" class="text-decoration-none">
-            <div class="pc-kpi-card" style="@(Model.FilterStatus == ProductCare.Web.Models.Enums.WarrantyStatus.ExpiringSoon ? "border-color: var(--pc-amber); box-shadow: 0 0 0 2px var(--pc-amber-soft);" : "")">
-                <div class="pc-kpi-label">Expiring Soon (&le;30d)</div>
-                <div class="pc-kpi-val" style="color: var(--pc-amber);">@Model.ExpiringSoonCount</div>
+            <div class="pc-bento-card pc-bento-peach h-100 p-3"
+                style="@(Model.FilterStatus == ProductCare.Web.Models.Enums.WarrantyStatus.ExpiringSoon ? "box-shadow: 0 0 0 2px #8C4707, 0 8px 24px -4px rgba(245, 158, 11, 0.2) !important;" : "")">
+                <div class="d-flex align-items-center justify-content-between mb-2">
+                    <span class="pc-bento-kicker mb-0" style="color: #8C4707;">Expiring (&le;30d)</span>
+                    <i class="bi bi-clock-history text-warning"></i>
+                </div>
+                <div class="pc-bento-stat" style="font-size: 2.2rem; color: #432207;">@Model.ExpiringSoonCount</div>
+                <div class="small fw-medium mt-1" style="font-size: 11px; color: #8C4707;">Renewal Recommended</div>
             </div>
         </a>
     </div>
+
+    <!-- 4. Expired Warranties (Soft Coral) -->
     <div class="col-sm-6 col-md-3">
         <a asp-action="Index" asp-route-filter="Expired" class="text-decoration-none">
-            <div class="pc-kpi-card" style="@(Model.FilterStatus == ProductCare.Web.Models.Enums.WarrantyStatus.Expired ? "border-color: var(--pc-status-expired); box-shadow: 0 0 0 2px var(--pc-status-expired-bg);" : "")">
-                <div class="pc-kpi-label">Expired Warranties</div>
-                <div class="pc-kpi-val" style="color: var(--pc-status-expired);">@Model.ExpiredCount</div>
+            <div class="pc-bento-card pc-bento-coral h-100 p-3"
+                style="@(Model.FilterStatus == ProductCare.Web.Models.Enums.WarrantyStatus.Expired ? "box-shadow: 0 0 0 2px #7F1D1D, 0 8px 24px -4px rgba(239, 68, 68, 0.2) !important;" : "")">
+                <div class="d-flex align-items-center justify-content-between mb-2">
+                    <span class="pc-bento-kicker mb-0" style="color: #7F1D1D;">Expired</span>
+                    <i class="bi bi-exclamation-circle text-danger"></i>
+                </div>
+                <div class="pc-bento-stat" style="font-size: 2.2rem; color: #7F1D1D;">@Model.ExpiredCount</div>
+                <div class="small fw-medium mt-1" style="font-size: 11px; color: #7F1D1D;">Out of Warranty</div>
             </div>
         </a>
     </div>
 </div>
 
-<!-- Warranty Table Card -->
-<div class="pc-card p-0 overflow-hidden">
-    <div class="pc-demo-topbar">
-        <span class="small fw-semibold text-dark"><i class="bi bi-clock-history me-2 text-forest"></i>Chronological Coverage Overview</span>
-        <span class="badge bg-light text-muted border small">Sorted by Expiration Date</span>
+<!-- Chronological Warranty Timeline Bento Card -->
+<div class="pc-bento-card pc-bento-white p-0 overflow-hidden shadow-sm">
+    <div class="d-flex align-items-center justify-content-between p-3 px-4 border-bottom"
+        style="background-color: var(--pc-surface-secondary);">
+        <span class="small fw-bold text-dark font-display"><i
+                class="bi bi-clock-history me-2 text-forest"></i>Chronological Coverage Overview</span>
+        <span class="badge bg-white text-muted border small">Sorted by Expiration Date</span>
     </div>
     <div>
         @if (Model.WarrantyItems.Any())
+
         {
             <div class="pc-table-wrapper border-0">
-                <table class="pc-table">
+                <table class="pc-table mb-0">
                     <thead>
                         <tr>
                             <th>Product</th>
@@ -75,57 +110,64 @@
                     </thead>
                     <tbody>
                         @foreach (var item in Model.WarrantyItems)
+
                         {
                             <tr>
                                 <td>
-                                    <a asp-controller="Products" asp-action="Details" asp-route-id="@item.ProductId" class="fw-semibold text-dark text-decoration-none">
+                                    <a asp-controller="Products" asp-action="Details" asp-route-id="@item.ProductId"
+                                        class="fw-semibold text-dark text-decoration-none">
                                         @item.ProductName
                                     </a>
-                                    <div class="small text-muted font-monospace" style="font-size: 11px;">@item.Brand &middot; S/N: @item.SerialNumber</div>
+                                    <div class="small text-muted font-monospace" style="font-size: 11px;">@item.Brand &middot;
+                                        S/N: @item.SerialNumber</div>
                                 </td>
                                 <td>
-                                    <span class="badge bg-light text-dark border" style="font-size: 11px;">@item.CategoryName</span>
+                                    <span class="badge bg-light text-dark border"
+                                        style="font-size: 11px;">@item.CategoryName</span>
                                 </td>
-                                <td class="small text-muted tabular-nums">@item.PurchaseDate.ToString("dd MMM yyyy")</td>
-                                <td class="small fw-semibold text-dark tabular-nums">@item.WarrantyExpiryDate.ToString("dd MMM yyyy")</td>
-                                <td class="small tabular-nums">
+                                <td class="small text-muted">@item.PurchaseDate.ToString("dd MMM yyyy")</td>
+                                <td class="small fw-semibold text-dark">@item.WarrantyExpiryDate.ToString("dd MMM yyyy")</td>
+                                <td class="small">
                                     @if (item.RemainingDays > 0)
+
                                     {
                                         <span class="fw-bold @(item.RemainingDays <= 30 ? "text-warning" : "text-dark")">
                                             @item.RemainingDays days
                                         </span>
                                     }
+
                                     else
+
                                     {
                                         <span class="text-muted">Expired (@Math.Abs(item.RemainingDays)d ago)</span>
                                     }
                                 </td>
                                 <td>
                                     @if (item.Status == ProductCare.Web.Models.Enums.WarrantyStatus.Active)
+
                                     {
                                         <span class="pc-badge pc-badge-active">Active</span>
                                     }
+
                                     else if (item.Status == ProductCare.Web.Models.Enums.WarrantyStatus.ExpiringSoon)
+
                                     {
                                         <span class="pc-badge pc-badge-expiring">Expiring Soon</span>
                                     }
+
                                     else
+
                                     {
                                         <span class="pc-badge pc-badge-expired">Expired</span>
                                     }
                                 </td>
                                 <td class="text-end">
-                                    <div class="btn-group btn-group-sm">
-                                        <a asp-controller="Products" asp-action="Details" asp-route-id="@item.ProductId" class="btn btn-stone btn-sm" title="View Product">
-                                            <i class="bi bi-eye"></i>
-                                        </a>
-                                        @if (item.Status != ProductCare.Web.Models.Enums.WarrantyStatus.Expired)
-                                        {
-                                            <a asp-controller="ServiceRequests" asp-action="Create" asp-route-productId="@item.ProductId" class="btn btn-stone btn-sm text-forest" title="Raise Service Request">
-                                                <i class="bi bi-wrench"></i> Claim
-                                            </a>
-                                        }
-                                    </div>
+                                    <a asp-controller="ServiceRequests" asp-action="Create"
+                                        asp-route-productId="@item.ProductId"
+                                        class="btn btn-stone btn-sm pc-btn-tactile d-inline-flex align-items-center justify-content-center"
+                                        title="Submit Service Ticket" style="min-height: 32px; height: 32px; width: 32px;">
+                                        <i class="bi bi-wrench"></i>
+                                    </a>
                                 </td>
                             </tr>
                         }
@@ -133,13 +175,15 @@
                 </table>
             </div>
         }
+
         else
+
         {
             <div class="p-5 text-center text-muted">
                 <i class="bi bi-shield-check fs-1 text-muted mb-3 d-block"></i>
-                <h5 class="fw-bold text-dark font-serif">No warranty items found</h5>
-                <p class="small text-muted mb-3">No registered devices match the selected coverage status filter.</p>
-                <a asp-action="Index" class="btn btn-stone btn-sm">Clear Status Filter</a>
+                <h5 class="fw-bold text-dark font-display">No warranties matching filter</h5>
+                <p class="small text-muted mb-0">No registered device warranties found under the selected coverage status.
+                </p>
             </div>
         }
     </div>

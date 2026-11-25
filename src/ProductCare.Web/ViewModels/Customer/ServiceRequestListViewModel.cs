@@ -30,4 +30,11 @@ public class CustomerServiceRequestListItem
     public string StatusDisplayText { get; set; } = string.Empty;
     public DateTime CreatedAtUtc { get; set; }
     public DateTime? UpdatedAtUtc { get; set; }
+    public string? CampusLocation { get; set; }
+    public string? ServiceCenterName { get; set; }
+    public DateTime? SlaDeadlineUtc { get; set; }
+    public bool IsOverdue { get; set; }
+    public bool IsEscalated { get; set; }
+    public string SlaBadgeText { get; set; } = string.Empty;
+    public string SlaBadgeCssClass { get; set; } = "badge bg-secondary";
 }

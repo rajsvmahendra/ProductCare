@@ -17,29 +17,39 @@ public class ProductsController : Controller
     private readonly ApplicationDbContext _context;
     private readonly IWarrantyCalculatorService _warrantyCalculator;
     private readonly IInvoiceStorageService _invoiceStorage;
+    private readonly IProductCatalogService _productCatalog;
     private readonly ILogger<ProductsController> _logger;
 
     public ProductsController(
         ApplicationDbContext context,
         IWarrantyCalculatorService warrantyCalculator,
         IInvoiceStorageService invoiceStorage,
+        IProductCatalogService productCatalog,
         ILogger<ProductsController> logger)
     {
         _context = context;
         _warrantyCalculator = warrantyCalculator;
         _invoiceStorage = invoiceStorage;
+        _productCatalog = productCatalog;
         _logger = logger;
     }
 
     private string CurrentUserId => User.FindFirstValue(ClaimTypes.NameIdentifier)!;
 
     [HttpGet]
-    public async Task<IActionResult> Index(ProductCategory? category, WarrantyStatus? status, string? search)
+    public IActionResult Suggest(string? query)
+    {
+        var suggestions = _productCatalog.SearchSuggestions(query, maxResults: 8);
+        return Json(suggestions);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Index(ProductCategory? category, WarrantyStatus? status, string? search, string? sort)
     {
         var today = DateOnly.FromDateTime(DateTime.UtcNow);
         var query = _context.Products
             .AsNoTracking()
-            .Where(p => p.UserId == CurrentUserId);
+            .Where(p => p.UserId == CurrentUserId && !p.IsArchived);
 
         if (category.HasValue)
         {
@@ -86,6 +96,7 @@ public class ProductsController : Controller
                 SerialNumber = p.SerialNumber,
                 Category = p.Category,
                 CategoryName = p.Category.ToString(),
+                SubCategory = p.SubCategory,
                 PurchaseDate = p.PurchaseDate,
                 WarrantyDurationMonths = p.WarrantyDurationMonths,
                 WarrantyExpiryDate = p.WarrantyExpiryDate,
@@ -98,12 +109,21 @@ public class ProductsController : Controller
             });
         }
 
+        list = sort switch
+        {
+            "expiry_desc" => list.OrderByDescending(p => p.WarrantyExpiryDate).ToList(),
+            "name_asc" => list.OrderBy(p => p.Name).ToList(),
+            "purchase_desc" => list.OrderByDescending(p => p.PurchaseDate).ToList(),
+            _ => list.OrderBy(p => p.WarrantyExpiryDate).ToList()
+        };
+
         var model = new ProductListViewModel
         {
             Products = list,
             FilterCategory = category,
             FilterStatus = status,
-            SearchTerm = search
+            SearchTerm = search,
+            Sort = sort
         };
 
         return View(model);
@@ -115,7 +135,7 @@ public class ProductsController : Controller
         var product = await _context.Products
             .AsNoTracking()
             .Include(p => p.ServiceRequests)
-            .FirstOrDefaultAsync(p => p.Id == id && p.UserId == CurrentUserId);
+            .FirstOrDefaultAsync(p => p.Id == id && p.UserId == CurrentUserId && !p.IsArchived);
 
         if (product == null)
         {
@@ -151,6 +171,7 @@ public class ProductsController : Controller
             SerialNumber = product.SerialNumber,
             Category = product.Category,
             CategoryName = product.Category.ToString(),
+            SubCategory = product.SubCategory,
             PurchaseDate = product.PurchaseDate,
             WarrantyDurationMonths = product.WarrantyDurationMonths,
             WarrantyExpiryDate = product.WarrantyExpiryDate,
@@ -234,6 +255,7 @@ public class ProductsController : Controller
             ModelNumber = model.ModelNumber.Trim(),
             SerialNumber = model.SerialNumber.Trim(),
             Category = model.Category,
+            SubCategory = model.SubCategory?.Trim(),
             PurchaseDate = model.PurchaseDate,
             WarrantyDurationMonths = model.WarrantyDurationMonths,
             WarrantyExpiryDate = expiryDate,
@@ -258,7 +280,7 @@ public class ProductsController : Controller
     public async Task<IActionResult> Edit(int id)
     {
         var product = await _context.Products
-            .FirstOrDefaultAsync(p => p.Id == id && p.UserId == CurrentUserId);
+            .FirstOrDefaultAsync(p => p.Id == id && p.UserId == CurrentUserId && !p.IsArchived);
 
         if (product == null)
         {
@@ -273,6 +295,7 @@ public class ProductsController : Controller
             ModelNumber = product.ModelNumber,
             SerialNumber = product.SerialNumber,
             Category = product.Category,
+            SubCategory = product.SubCategory,
             PurchaseDate = product.PurchaseDate,
             WarrantyDurationMonths = product.WarrantyDurationMonths,
             PurchaseStore = product.PurchaseStore,
@@ -294,7 +317,7 @@ public class ProductsController : Controller
         }
 
         var product = await _context.Products
-            .FirstOrDefaultAsync(p => p.Id == id && p.UserId == CurrentUserId);
+            .FirstOrDefaultAsync(p => p.Id == id && p.UserId == CurrentUserId && !p.IsArchived);
 
         if (product == null)
         {
@@ -351,6 +374,7 @@ public class ProductsController : Controller
         product.ModelNumber = model.ModelNumber.Trim();
         product.SerialNumber = model.SerialNumber.Trim();
         product.Category = model.Category;
+        product.SubCategory = model.SubCategory?.Trim();
         product.PurchaseDate = model.PurchaseDate;
         product.WarrantyDurationMonths = model.WarrantyDurationMonths;
         product.WarrantyExpiryDate = _warrantyCalculator.CalculateExpiryDate(model.PurchaseDate, model.WarrantyDurationMonths);
@@ -371,21 +395,25 @@ public class ProductsController : Controller
     {
         var product = await _context.Products
             .Include(p => p.ServiceRequests)
-            .FirstOrDefaultAsync(p => p.Id == id && p.UserId == CurrentUserId);
+            .FirstOrDefaultAsync(p => p.Id == id && p.UserId == CurrentUserId && !p.IsArchived);
 
         if (product == null)
         {
             return NotFound();
         }
 
-        // Prevent deletion if there are any service requests (preserves audit integrity and avoids foreign key conflict)
+        // If there are service requests, soft-delete / archive to preserve ticket audit history
         if (product.ServiceRequests.Any())
         {
-            TempData["ErrorMessage"] = "Cannot delete this product because service history is attached to it. Registered products with service records are preserved for audit purposes.";
-            return RedirectToAction(nameof(Details), new { id });
+            product.IsArchived = true;
+            product.ArchivedAtUtc = DateTime.UtcNow;
+            await _context.SaveChangesAsync();
+
+            TempData["SuccessMessage"] = $"Product '{product.Name}' has been archived from your active inventory. Service history remains preserved for auditing.";
+            return RedirectToAction(nameof(Index));
         }
 
-        // Delete physical invoice file
+        // Hard delete when no service requests reference this product
         if (!string.IsNullOrEmpty(product.InvoiceFileName))
         {
             await _invoiceStorage.DeleteInvoiceAsync(product.InvoiceFileName);
@@ -395,7 +423,7 @@ public class ProductsController : Controller
         _context.Products.Remove(product);
         await _context.SaveChangesAsync();
 
-        TempData["SuccessMessage"] = $"Product '{productName}' has been deleted.";
+        TempData["SuccessMessage"] = $"Product '{productName}' has been removed from your inventory.";
         return RedirectToAction(nameof(Index));
     }
 

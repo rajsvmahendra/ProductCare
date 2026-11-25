@@ -10,6 +10,9 @@ public class ServiceRequestCreateViewModel
     [Display(Name = "Product")]
     public int ProductId { get; set; }
 
+    [Display(Name = "Authorized / Local Service Center (Optional)")]
+    public int? ServiceCenterId { get; set; }
+
     [Required(ErrorMessage = "Please select a request category.")]
     [Display(Name = "Request Category")]
     public RequestCategory Category { get; set; } = RequestCategory.Repair;
@@ -28,6 +31,17 @@ public class ServiceRequestCreateViewModel
     [Display(Name = "Issue Description")]
     public string Description { get; set; } = string.Empty;
 
+    [Required(ErrorMessage = "Please specify the campus building or location.")]
+    [StringLength(255, ErrorMessage = "Location cannot exceed 255 characters.")]
+    [Display(Name = "Campus Facility / Location")]
+    public string CampusLocation { get; set; } = "Main Academic Block - Floor 2";
+
+    [Display(Name = "Diagnostic Attachment or Photo (Optional)")]
+    public Microsoft.AspNetCore.Http.IFormFile? Attachment { get; set; }
+
     // Dropdown list items populated from the customer's products
     public List<SelectListItem> AvailableProducts { get; set; } = new();
+
+    // Dropdown list items populated from active service centers
+    public List<SelectListItem> AvailableServiceCenters { get; set; } = new();
 }

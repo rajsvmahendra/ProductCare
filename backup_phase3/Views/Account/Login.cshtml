@@ -1,0 +1,72 @@
+@model ProductCare.Web.ViewModels.Account.LoginViewModel
+@{
+    ViewData["Title"] = "Sign In — ProductCare";
+}
+
+<div class="pc-auth-desk">
+    <div class="container-xl px-3 px-md-4">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-8 col-lg-5">
+                <div class="pc-card pc-glass-card p-4 p-md-5 shadow-sm">
+                    <!-- Brand & Heading -->
+                    <div class="text-center mb-4">
+                        <a asp-controller="Home" asp-action="Index" class="d-inline-flex align-items-center justify-content-center mb-3 text-decoration-none">
+                            <img src="~/images/productcare-logo.png" alt="ProductCare" height="46" class="pc-brand-img" style="max-height: 46px; width: auto;" />
+                        </a>
+                        <h2 class="h4 fw-bold text-dark font-display mb-1">Sign In to ProductCare</h2>
+                        <p class="text-muted small mb-0">Enter your credentials to access your device records and tickets.</p>
+                    </div>
+
+                    <!-- Login Form -->
+                    <form asp-action="Login" method="post" id="loginForm">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" asp-for="ReturnUrl" />
+
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger py-2 small mb-3" style="background-color: #FEF2F2; border-color: #FECACA; color: #991B1B;" role="alert"></div>
+
+                        <!-- Email Address -->
+                        <div class="mb-3">
+                            <label asp-for="Email" class="form-label">Email Address</label>
+                            <input asp-for="Email" type="email" id="emailInput" class="form-control" placeholder="Enter your registered email" autocomplete="email" required autofocus />
+                            <span asp-validation-for="Email" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Password -->
+                        <div class="mb-3">
+                            <label asp-for="Password" class="form-label">Password</label>
+                            <div class="input-group">
+                                <input asp-for="Password" type="password" id="loginPassword" class="form-control" placeholder="Enter your password" autocomplete="current-password" required />
+                                <button type="button" class="btn btn-stone pc-toggle-password" data-target="loginPassword" aria-label="Show password" title="Show password">
+                                    <i class="bi bi-eye"></i>
+                                </button>
+                            </div>
+                            <span asp-validation-for="Password" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Remember Me -->
+                        <div class="mb-4 d-flex align-items-center justify-content-between">
+                            <div class="form-check">
+                                <input asp-for="RememberMe" class="form-check-input" id="rememberMeCheck" />
+                                <label class="form-check-label small text-muted" for="rememberMeCheck">Remember me</label>
+                            </div>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <button type="submit" class="btn btn-forest w-100 mb-3">
+                            <span>Sign In</span>
+                            <i class="bi bi-arrow-right"></i>
+                        </button>
+                    </form>
+
+                    <div class="text-center small text-muted pt-2 border-top">
+                        Don't have an account? <a asp-action="Register" class="fw-semibold text-forest">Create an account</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

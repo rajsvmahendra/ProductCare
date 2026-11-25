@@ -9,12 +9,15 @@ public class AdminServiceRequestListViewModel
     public RequestStatus? FilterStatus { get; set; }
     public PriorityLevel? FilterPriority { get; set; }
     public RequestCategory? FilterCategory { get; set; }
+    public string? FilterLocation { get; set; }
+    public bool? FilterOverdueOnly { get; set; }
     public string? SearchTerm { get; set; }
 
     public int TotalTickets { get; set; }
     public int PendingCount { get; set; }
     public int InProgressCount { get; set; }
     public int ResolvedCount { get; set; }
+    public int OverdueCount { get; set; }
 }
 
 public class AdminTicketListItem
@@ -36,6 +39,14 @@ public class AdminTicketListItem
     public string StatusBadgeCssClass { get; set; } = string.Empty;
     public string StatusDisplayText { get; set; } = string.Empty;
     public string? AssignedTechnician { get; set; }
+    public string? CampusLocation { get; set; }
+    public string? ServiceCenterName { get; set; }
+    public DateTime? SlaDeadlineUtc { get; set; }
+    public bool IsOverdue { get; set; }
+    public bool IsApproachingBreach { get; set; }
+    public bool IsEscalated { get; set; }
+    public string SlaBadgeText { get; set; } = string.Empty;
+    public string SlaBadgeCssClass { get; set; } = "badge bg-secondary";
     public DateTime CreatedAtUtc { get; set; }
     public DateTime? UpdatedAtUtc { get; set; }
 }
