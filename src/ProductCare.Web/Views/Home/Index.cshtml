@@ -6,7 +6,7 @@
      SECTION 1: TECHNOLOGY POSTER PRODUCT HERO
      ========================================================================= -->
 <section class="pc-hero-section" id="overview">
-    <div class="container-xl px-3 px-md-4" style="max-width: 1240px;">
+    <div class="container-xl px-3 px-md-4" style="max-width: 1280px;">
         <div class="row align-items-center justify-content-between g-4 g-lg-5 py-lg-3">
             <!-- Left: Editorial Headline & Value Narrative -->
             <div class="col-lg-6">
@@ -45,7 +45,7 @@
                     else
                     {
                         <a class="btn btn-stone btn-lg pc-btn-tactile" asp-area="" asp-controller="Account" asp-action="Register">
-                            <span>Manage My Products</span>
+                            <span>Get Started</span>
                             <i class="bi bi-arrow-right ms-1"></i>
                         </a>
                     }
@@ -72,89 +72,47 @@
                 </div>
             </div>
 
-            <!-- Right: 3D Dimensional Technology Poster Composition -->
-            <div class="col-lg-6 d-none d-lg-block">
+            <!-- Right: Interactive Liquid Glass Hero Video Composition -->
+            <div class="col-lg-6 col-12 mt-4 mt-lg-0 d-flex justify-content-center justify-content-lg-end">
                 <liquid-glass id="heroGlassScene" class="pc-hero-liquid-scene" backdrop="/lib/liquid-glass/backdrops/ceramic.webp" dim="0" style="min-height: 0; overflow: visible; background: transparent;">
-                    <div class="pc-hero-poster-scene">
-                        <!-- Ambient Glow Layer -->
-                        <div class="pc-poster-glow"></div>
+                    <div class="pc-hero-video-wrapper">
+                        <!-- Ambient Lavender & Emerald Soft Shadow Glow -->
+                        <div class="pc-hero-video-glow"></div>
 
-                        <!-- Main Dimensional Hardware Surface Card -->
-                        <div class="pc-poster-main-card">
-                            <!-- Top Bezel Bar -->
-                            <div class="d-flex align-items-center justify-content-between mb-3 pb-3 border-bottom">
-                                <div class="d-flex align-items-center gap-3">
-                                    <div class="pc-poster-icon-box">
-                                        <i class="bi bi-laptop fs-4 text-forest"></i>
-                                    </div>
-                                    <div>
-                                        <div class="fw-bold text-dark font-display" style="font-size: 1.05rem;">MacBook Pro 16" M3 Max</div>
-                                        <div class="text-muted small" style="font-size: 11px;">S/N: C02G73276936 &bull; Apple</div>
-                                    </div>
-                                </div>
-                                <span class="pc-badge pc-badge-active shadow-xs">
-                                    <i class="bi bi-shield-check me-1"></i> Under Warranty
-                                </span>
-                            </div>
+                        <!-- 16:9 Rounded Master Video Capsule Card -->
+                        <div class="pc-hero-video-card" id="pcHeroVideoCard" glass>
+                            <!-- Primary Autoplay Video Element -->
+                            <video id="heroVideoPrimary"
+                                   class="pc-hero-video pc-hero-video-active"
+                                   src="~/videos/productcare_hero.mp4"
+                                   poster="~/images/hero-video-poster.webp"
+                                   autoplay
+                                   muted
+                                   playsinline
+                                   loop
+                                   preload="auto"
+                                   aria-label="ProductCare digital product warranty visual animation"></video>
 
-                            <!-- Mathematical Coverage Visual Bar -->
-                            <div class="pc-poster-metric-box mb-3">
-                                <div class="d-flex justify-content-between small text-muted mb-1">
-                                    <span>Purchase Date</span>
-                                    <span class="fw-semibold text-dark">15 Jan 2026</span>
-                                </div>
-                                <div class="d-flex justify-content-between small text-muted mb-2">
-                                    <span>Standard Term</span>
-                                    <span class="fw-semibold text-dark">24 Months</span>
-                                </div>
-                                <!-- Radial & Track Progress Indicator -->
-                                <div class="progress mb-2" style="height: 6px; background-color: rgba(16, 185, 129, 0.15); border-radius: 999px;">
-                                    <div class="progress-bar" role="progressbar" style="width: 58%; background: linear-gradient(90deg, #10B981, #285B50); border-radius: 999px;" aria-valuenow="58" aria-valuemin="0" aria-valuemax="100"></div>
-                                </div>
-                                <div class="d-flex justify-content-between align-items-center mt-2 small">
-                                    <span class="text-muted" style="font-size: 11px;">Valid through 15 Jan 2028</span>
-                                    <span class="fw-bold text-forest" style="font-size: 11px;"><i class="bi bi-clock-history me-1"></i>420 days remaining</span>
-                                </div>
-                            </div>
+                            <!-- Standby Crossfade Video for Smooth Seamless Looping -->
+                            <video id="heroVideoSecondary"
+                                   class="pc-hero-video pc-hero-video-standby"
+                                   src="~/videos/productcare_hero.mp4"
+                                   muted
+                                   playsinline
+                                   preload="auto"
+                                   aria-hidden="true"></video>
 
-                            <!-- Active Service Work Order Badge -->
-                            <div class="pc-poster-ticket-box">
-                                <div class="d-flex justify-content-between align-items-center mb-1">
-                                    <span class="small fw-bold text-dark">
-                                         <i class="bi bi-wrench me-1 text-forest"></i>Ticket #PC-20261121-UAJJ
-                                    </span>
-                                    <span class="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle" style="font-size: 10px;">IN PROGRESS</span>
-                                </div>
-                                <p class="small text-muted mb-2" style="font-size: 11px; line-height: 1.4;">Display backlight inspection &amp; thermal diagnostics.</p>
-                                <div class="d-flex justify-content-between align-items-center small text-muted pt-2 border-top">
-                                    <span class="d-flex align-items-center gap-1 text-truncate" style="max-width: 60%; font-size: 11px;">
-                                        <i class="bi bi-building text-forest"></i> LPU Uni-Mall Kiosk
-                                    </span>
-                                    <span class="text-forest fw-semibold" style="font-size: 11px;"><i class="bi bi-person-check me-1"></i>Bench Diagnostic</span>
-                                </div>
-                            </div>
-                        </div>
+                            <!-- High-Fidelity Static Poster Fallback (Accessible & Reduced-Motion) -->
+                            <img src="~/images/hero-video-poster.webp"
+                                 alt="ProductCare 3D Device Care Animation"
+                                 class="pc-hero-video-poster-fallback"
+                                 id="pcHeroVideoPosterFallback" />
 
-                        <!-- Floating Element 1: Liquid Glass Shield -->
-                        <div class="pc-floating-glass-badge pc-float-shield" glass>
-                            <div class="pc-badge-icon-emerald">
-                                <i class="bi bi-shield-fill-check"></i>
-                            </div>
-                            <div>
-                                <div class="fw-bold text-dark" style="font-size: 12px;">Active Protection</div>
-                                <div class="text-muted" style="font-size: 10px;">Live Calculation</div>
-                            </div>
-                        </div>
+                            <!-- Interactive Cursor-Following Specular Highlight & Sheen -->
+                            <div class="pc-hero-video-sheen" id="pcHeroVideoSheen" aria-hidden="true"></div>
 
-                        <!-- Floating Element 2: Digital Proof Pill -->
-                        <div class="pc-floating-glass-badge pc-float-invoice" glass>
-                            <div class="pc-badge-icon-stone">
-                                <i class="bi bi-receipt"></i>
-                            </div>
-                            <div>
-                                <div class="fw-bold text-dark" style="font-size: 12px;">Invoice Proof #9842</div>
-                                <div class="text-muted" style="font-size: 10px;">Apple Store &bull; ₹2,499.00</div>
-                            </div>
+                            <!-- Subtle Loop Transition Dissolve Glaze -->
+                            <div class="pc-hero-video-glaze" id="pcHeroVideoGlaze" aria-hidden="true"></div>
                         </div>
                     </div>
                 </liquid-glass>
@@ -701,3 +659,152 @@
         </div>
     </div>
 </section>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const videoPrimary = document.getElementById('heroVideoPrimary');
+            const videoSecondary = document.getElementById('heroVideoSecondary');
+            const videoCard = document.getElementById('pcHeroVideoCard');
+            const posterFallback = document.getElementById('pcHeroVideoPosterFallback');
+            const glaze = document.getElementById('pcHeroVideoGlaze');
+
+            if (!videoPrimary || !videoCard) return;
+
+            const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+            // 1. Reduced-motion preference: keep static poster, disable autoplay
+            if (prefersReducedMotion) {
+                if (posterFallback) posterFallback.style.display = 'block';
+                videoPrimary.style.display = 'none';
+                if (videoSecondary) videoSecondary.style.display = 'none';
+                return;
+            }
+
+            const TARGET_SPEED = 1.2;
+
+            // Enforce playbackRate = 1.2 across all video lifecycle events
+            function enforcePlaybackSpeed(v) {
+                if (!v) return;
+                try {
+                    v.defaultPlaybackRate = TARGET_SPEED;
+                    v.playbackRate = TARGET_SPEED;
+                } catch (e) {
+                    console.warn('Playback rate assignment:', e);
+                }
+            }
+
+            [videoPrimary, videoSecondary].forEach(v => {
+                if (!v) return;
+                v.addEventListener('loadedmetadata', () => enforcePlaybackSpeed(v));
+                v.addEventListener('canplay', () => enforcePlaybackSpeed(v));
+                v.addEventListener('play', () => enforcePlaybackSpeed(v));
+                v.addEventListener('playing', () => enforcePlaybackSpeed(v));
+                v.addEventListener('ratechange', () => {
+                    if (Math.abs(v.playbackRate - TARGET_SPEED) > 0.01 && !v.paused) {
+                        v.playbackRate = TARGET_SPEED;
+                    }
+                });
+            });
+
+            // 2. Autoplay initiation
+            let isPrimaryActive = true;
+            let isCrossfading = false;
+
+            const playPromise = videoPrimary.play();
+            if (playPromise !== undefined) {
+                playPromise.then(() => {
+                    enforcePlaybackSpeed(videoPrimary);
+                    if (posterFallback) {
+                        posterFallback.style.opacity = '0';
+                        setTimeout(() => { posterFallback.style.display = 'none'; }, 450);
+                    }
+                }).catch(() => {
+                    // Autoplay was blocked or user interaction required; poster remains visible
+                    if (posterFallback) posterFallback.style.display = 'block';
+                });
+            }
+
+            // 3. Smooth Seamless Looping & Crossfade Controller
+            // The 10s video contains a dark diagonal opening and ends on a bright pastel 3D emblem.
+            // We initiate a soft 0.6s crossfade 0.75s before completion to eliminate hard cuts.
+            function handleLoopCrossfade() {
+                const activeVid = isPrimaryActive ? videoPrimary : videoSecondary;
+                const standbyVid = isPrimaryActive ? videoSecondary : videoPrimary;
+
+                if (!activeVid || !standbyVid || isCrossfading) return;
+
+                const duration = activeVid.duration;
+                if (!duration || isNaN(duration)) return;
+
+                const threshold = duration - 0.75;
+                if (activeVid.currentTime >= threshold && !activeVid.paused) {
+                    isCrossfading = true;
+
+                    // Prepare standby video to take over
+                    standbyVid.currentTime = 0;
+                    enforcePlaybackSpeed(standbyVid);
+
+                    const standbyPromise = standbyVid.play();
+                    if (standbyPromise !== undefined) {
+                        standbyPromise.then(() => {
+                            enforcePlaybackSpeed(standbyVid);
+
+                            // Soft dissolve glaze for visual continuity
+                            if (glaze) glaze.classList.add('pc-glaze-active');
+
+                            // Execute smooth crossfade
+                            standbyVid.classList.add('pc-hero-video-active');
+                            standbyVid.classList.remove('pc-hero-video-standby');
+                            activeVid.classList.remove('pc-hero-video-active');
+                            activeVid.classList.add('pc-hero-video-standby');
+
+                            setTimeout(() => {
+                                if (glaze) glaze.classList.remove('pc-glaze-active');
+                                isPrimaryActive = !isPrimaryActive;
+                                isCrossfading = false;
+                                activeVid.pause();
+                                activeVid.currentTime = 0;
+                            }, 650);
+                        }).catch(() => {
+                            // Fallback to native video loop if dual-stream is restricted
+                            isCrossfading = false;
+                        });
+                    } else {
+                        isCrossfading = false;
+                    }
+                }
+            }
+
+            videoPrimary.addEventListener('timeupdate', handleLoopCrossfade);
+            if (videoSecondary) {
+                videoSecondary.addEventListener('timeupdate', handleLoopCrossfade);
+            }
+
+            // 4. Refined Interactive Liquid Glass Cursor Specular Highlight & Sheen
+            const isFinePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+            if (isFinePointer) {
+                videoCard.addEventListener('mousemove', function (e) {
+                    const rect = videoCard.getBoundingClientRect();
+                    const x = ((e.clientX - rect.left) / rect.width) * 100;
+                    const y = ((e.clientY - rect.top) / rect.height) * 100;
+
+                    videoCard.style.setProperty('--sheen-x', `${x.toFixed(1)}%`);
+                    videoCard.style.setProperty('--sheen-y', `${y.toFixed(1)}%`);
+
+                    // Subtle 4-5px hover lift with restrained 3.5deg perspective tilt
+                    const tiltX = (((e.clientY - rect.top) / rect.height) - 0.5) * -3.5;
+                    const tiltY = (((e.clientX - rect.left) / rect.width) - 0.5) * 3.5;
+
+                    videoCard.style.transform = `translateY(-5px) perspective(1100px) rotateX(${tiltX.toFixed(2)}deg) rotateY(${tiltY.toFixed(2)}deg)`;
+                });
+
+                videoCard.addEventListener('mouseleave', function () {
+                    videoCard.style.transform = '';
+                    videoCard.style.removeProperty('--sheen-x');
+                    videoCard.style.removeProperty('--sheen-y');
+                });
+            }
+        });
+    </script>
+}

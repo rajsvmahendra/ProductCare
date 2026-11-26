@@ -9,5 +9,7 @@ public interface IDbInitializerService
 
     Task<string> ProvisionAdminUserAsync(string? email = null, string? password = null);
 
+    Task EnsureDatabaseObjectsCreatedAsync();
+
     Task SeedDemoDataAsync();
 }

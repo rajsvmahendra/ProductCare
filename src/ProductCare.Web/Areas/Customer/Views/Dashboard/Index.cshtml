@@ -1,24 +1,23 @@
 @model ProductCare.Web.ViewModels.Customer.CustomerDashboardViewModel
 @{
     ViewData["Title"] = "Customer Workspace";
-
-    var coveredPct = Model.TotalProducts > 0 ? (int)Math.Round((double)Model.ActiveWarranties / Model.TotalProducts * 100) : 0;
-    var expiringPct = Model.TotalProducts > 0 ? (int)Math.Round((double)Model.ExpiringSoonWarranties / Model.TotalProducts * 100) : 0;
-    var expiredPct = Model.TotalProducts > 0 ? (int)Math.Round((double)Model.ExpiredWarranties / Model.TotalProducts * 100) : 0;
-
-    var laptopCount = Model.RecentProducts.Count(p => p.CategoryName.Contains("Laptop") || p.CategoryName.Contains("Computer"));
+    var coveredPct = Model.TotalProducts > 0 ? (int)Math.Round((double)Model.ActiveWarranties / Model.TotalProducts * 100) :
+    0;
+    var expiringPct = Model.TotalProducts > 0 ? (int)Math.Round((double)Model.ExpiringSoonWarranties / Model.TotalProducts *
+    100) : 0;
+    var expiredPct = Model.TotalProducts > 0 ? (int)Math.Round((double)Model.ExpiredWarranties / Model.TotalProducts * 100)
+    : 0;
+    var laptopCount = Model.RecentProducts.Count(p => p.CategoryName.Contains("Laptop") ||
+    p.CategoryName.Contains("Computer"));
     var audioCount = Model.RecentProducts.Count(p => p.CategoryName.Contains("Audio"));
     var phoneCount = Model.RecentProducts.Count(p => p.CategoryName.Contains("Mobile") || p.CategoryName.Contains("Phone"));
-
     // Correctly select the active protected hardware (not expired)
     var activeDevice = Model.RecentProducts
-        .Where(p => p.RemainingDays > 0)
-        .OrderByDescending(p => p.RemainingDays)
-        .FirstOrDefault();
-
+    .Where(p => p.RemainingDays > 0)
+    .OrderByDescending(p => p.RemainingDays)
+    .FirstOrDefault();
     var activeServiceRequest = Model.RecentServiceRequests.FirstOrDefault();
 }
-
 <!-- Top Header & Workspace Actions -->
 <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
     <div>
@@ -28,22 +27,23 @@
         <h1 class="h2 fw-bold text-dark mb-1 font-display">
             Hello, <span class="pc-text-gradient-forest">@Model.CustomerName</span>
         </h1>
-        <p class="text-muted small mb-0">View and manage your hardware protection, warranty coverage, and active service requests.</p>
+        <p class="text-muted small mb-0">View and manage your hardware protection, warranty coverage, and active service
+            requests.</p>
     </div>
     <div class="d-flex align-items-center gap-2">
-        <a asp-action="Create" asp-controller="Products" class="btn btn-forest btn-sm pc-btn-tactile rounded-pill px-3 shadow-xs">
+        <a asp-action="Create" asp-controller="Products"
+            class="btn btn-forest btn-sm pc-btn-tactile rounded-pill px-3 shadow-xs">
             <i class="bi bi-plus-lg me-1"></i> Add product
         </a>
-        <a asp-action="Create" asp-controller="ServiceRequests" class="btn btn-stone btn-sm pc-btn-tactile rounded-pill px-3 shadow-xs">
+        <a asp-action="Create" asp-controller="ServiceRequests"
+            class="btn btn-stone btn-sm pc-btn-tactile rounded-pill px-3 shadow-xs">
             <i class="bi bi-wrench me-1"></i> Report issue
         </a>
     </div>
 </div>
-
 <!-- ============================================================================
      BENTO GRID ARCHITECTURE (CUSTOMER-CENTRIC, REAL DATA, ACCURATE PASS FLIP)
      ============================================================================ -->
-
 <!-- Bento Row 1: Warranty Overview, Digital Pass (3D Flip), Warranty Coverage -->
 <div class="row g-4 mb-4">
     <!-- Card 1: Warranty Overview (Real Metrics, Sentence Case) -->
@@ -52,43 +52,46 @@
             <div>
                 <div class="d-flex align-items-center justify-content-between mb-3">
                     <span class="pc-bento-kicker text-muted">Warranty overview</span>
-                    <a asp-controller="Warranty" asp-action="Index" class="text-muted text-decoration-none small" title="View details">
+                    <a asp-controller="Warranty" asp-action="Index" class="text-muted text-decoration-none small"
+                        title="View details">
                         <i class="bi bi-arrow-up-right"></i>
                     </a>
                 </div>
-
                 <div class="d-flex align-items-baseline gap-2 mb-1">
                     <span class="pc-bento-stat text-dark">@Model.ActiveWarranties</span>
                     <span class="text-muted fw-semibold small">covered / @Model.TotalProducts total</span>
                 </div>
-                <div class="small text-muted mb-3">Active coverage rate: <strong class="text-dark">@coveredPct%</strong></div>
-
+                <div class="small text-muted mb-3">Active coverage rate: <strong class="text-dark">@coveredPct%</strong>
+                </div>
                 <!-- Coverage Progress Track -->
                 <div class="progress mb-3" style="height: 8px; border-radius: 999px; background-color: #F1F5F9;">
-                    <div class="progress-bar bg-success" role="progressbar" style="width: @coveredPct%;" aria-valuenow="@coveredPct" aria-valuemin="0" aria-valuemax="100"></div>
+                    <div class="progress-bar bg-success" role="progressbar" style="width: @coveredPct%;"
+                        aria-valuenow="@coveredPct" aria-valuemin="0" aria-valuemax="100"></div>
                 </div>
-
                 <!-- Real Data Status Breakdown Chips -->
                 <div class="d-flex flex-wrap gap-2 my-2">
-                    <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-2 py-1 small">
+                    <span
+                        class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-2 py-1 small">
                         <i class="bi bi-shield-check me-1"></i>@Model.ActiveWarranties valid
                     </span>
                     @if (Model.ExpiringSoonWarranties > 0)
                     {
-                        <span class="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle rounded-pill px-2 py-1 small">
+                        <span
+                            class="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle rounded-pill px-2 py-1 small">
                             <i class="bi bi-clock-history me-1"></i>@Model.ExpiringSoonWarranties expiring
                         </span>
                     }
                     @if (Model.ExpiredWarranties > 0)
                     {
-                        <span class="badge bg-danger-subtle text-danger border border-danger-subtle rounded-pill px-2 py-1 small">
+                        <span
+                            class="badge bg-danger-subtle text-danger border border-danger-subtle rounded-pill px-2 py-1 small">
                             <i class="bi bi-exclamation-circle me-1"></i>@Model.ExpiredWarranties expired
                         </span>
                     }
                 </div>
             </div>
-
-            <div class="d-flex align-items-center justify-content-between pt-3 border-top mt-3" style="border-color: rgba(0, 0, 0, 0.05) !important;">
+            <div class="d-flex align-items-center justify-content-between pt-3 border-top mt-3"
+                style="border-color: rgba(0, 0, 0, 0.05) !important;">
                 <span class="small text-muted" style="font-size: 11px;">Warranty status</span>
                 <a asp-controller="Warranty" asp-action="Index" class="small fw-bold text-forest text-decoration-none">
                     View coverage details &rarr;
@@ -96,18 +99,20 @@
             </div>
         </div>
     </div>
-
     <!-- Card 2: ProductCare Digital Pass with Accurate Hardware Data & 3D Flip -->
     <div class="col-lg-4">
-        <div class="pc-pass-card-scene" id="pcDigitalPassCard" title="Click card to flip between pass and warranty summary">
+        <div class="pc-pass-card-scene" id="pcDigitalPassCard"
+            title="Click card to flip between pass and warranty summary">
             <div class="pc-pass-card-inner">
                 <!-- Front Side: Elegant Protection Pass (Accurate Active Device or Neutral State) -->
                 <div class="pc-pass-card-front @(activeDevice == null ? "pc-pass-neutral" : "")">
                     <!-- Top Brand Row -->
                     <div class="d-flex align-items-center justify-content-between">
                         <div class="d-flex align-items-center gap-2">
-                            <img src="~/images/productcare-emblem.png" alt="ProductCare" height="18" style="filter: brightness(0) invert(1);" />
-                            <span class="small fw-bold text-white font-display" style="letter-spacing: 0.04em;">ProductCare Pass</span>
+                            <img src="~/images/productcare-emblem.png" alt="ProductCare" height="18"
+                                style="filter: brightness(0) invert(1);" />
+                            <span class="small fw-bold text-white font-display"
+                                style="letter-spacing: 0.04em;">ProductCare Pass</span>
                         </div>
                         @if (activeDevice != null)
                         {
@@ -128,12 +133,12 @@
                             </span>
                         }
                     </div>
-
                     <!-- Center Device & Coverage Details (Accurate Active Hardware or Neutral Account Status) -->
                     <div class="my-auto py-2">
                         @if (activeDevice != null)
                         {
-                            <div class="text-white-50 small mb-1" style="font-size: 10px; letter-spacing: 0.04em;">PRIMARY COVERED HARDWARE</div>
+                            <div class="text-white-50 small mb-1" style="font-size: 10px; letter-spacing: 0.04em;">PRIMARY
+                                COVERED HARDWARE</div>
                             <div class="h6 fw-bold text-white mb-1 font-display text-truncate">
                                 @activeDevice.Name
                             </div>
@@ -150,7 +155,8 @@
                         }
                         else if (Model.TotalProducts > 0)
                         {
-                            <div class="text-white-50 small mb-1" style="font-size: 10px; letter-spacing: 0.04em;">ACCOUNT PROTECTION STATUS</div>
+                            <div class="text-white-50 small mb-1" style="font-size: 10px; letter-spacing: 0.04em;">ACCOUNT
+                                PROTECTION STATUS</div>
                             <div class="h6 fw-bold text-white mb-1 font-display">
                                 Warranty Renewal Available
                             </div>
@@ -160,7 +166,8 @@
                         }
                         else
                         {
-                            <div class="text-white-50 small mb-1" style="font-size: 10px; letter-spacing: 0.04em;">ACCOUNT STATUS</div>
+                            <div class="text-white-50 small mb-1" style="font-size: 10px; letter-spacing: 0.04em;">ACCOUNT
+                                STATUS</div>
                             <div class="h6 fw-bold text-white mb-1 font-display">
                                 No Hardware Registered
                             </div>
@@ -169,13 +176,14 @@
                             </div>
                         }
                     </div>
-
                     <!-- Bottom Meta & Flip Hint -->
-                    <div class="d-flex align-items-end justify-content-between pt-2 border-top border-white-50" style="border-color: rgba(255, 255, 255, 0.2) !important;">
+                    <div class="d-flex align-items-end justify-content-between pt-2 border-top border-white-50"
+                        style="border-color: rgba(255, 255, 255, 0.2) !important;">
                         <div>
                             <div class="text-white-50" style="font-size: 9px; letter-spacing: 0.05em;">PASS HOLDER</div>
                             <div class="small fw-bold text-white text-truncate" style="max-width: 160px;">
-                                @(string.IsNullOrWhiteSpace(Model.CustomerName) ? "Verified customer" : Model.CustomerName)
+                                @(string.IsNullOrWhiteSpace(Model.CustomerName) ? "Verified customer" :
+                                    Model.CustomerName)
                             </div>
                         </div>
                         <div class="pc-pass-flip-hint">
@@ -184,14 +192,13 @@
                         </div>
                     </div>
                 </div>
-
                 <!-- Back Side: Accurate Warranty Summary & Direct Timeline Link -->
                 <div class="pc-pass-card-back">
                     <div class="d-flex align-items-center justify-content-between">
                         <span class="small fw-bold text-white font-display">Warranty summary</span>
-                        <span class="badge bg-white-50 text-white rounded-pill" style="font-size: 10px;">@Model.TotalProducts device(s)</span>
+                        <span class="badge bg-white-50 text-white rounded-pill"
+                            style="font-size: 10px;">@Model.TotalProducts device(s)</span>
                     </div>
-
                     <div class="d-flex flex-column gap-2 my-auto py-2">
                         <div class="d-flex align-items-center justify-content-between small">
                             <span class="text-white-50">Active warranties:</span>
@@ -210,9 +217,11 @@
                             <strong class="text-white">@Model.OpenServiceRequests</strong>
                         </div>
                     </div>
-
-                    <div class="d-flex align-items-center justify-content-between pt-2 border-top" style="border-color: rgba(255, 255, 255, 0.15) !important;">
-                        <a asp-controller="Warranty" asp-action="Index" class="btn btn-light btn-sm rounded-pill px-3 fw-semibold shadow-xs" style="font-size: 11px;">
+                    <div class="d-flex align-items-center justify-content-between pt-2 border-top"
+                        style="border-color: rgba(255, 255, 255, 0.15) !important;">
+                        <a asp-controller="Warranty" asp-action="Index"
+                            class="btn btn-light btn-sm rounded-pill px-3 fw-semibold shadow-xs"
+                            style="font-size: 11px;">
                             View timeline &rarr;
                         </a>
                         <div class="pc-pass-flip-hint">
@@ -224,44 +233,49 @@
             </div>
         </div>
     </div>
-
     <!-- Card 3: Warranty Coverage (Semicircular Arc Gauge, Sentence Case) -->
     <div class="col-lg-4">
         <div class="pc-bento-card pc-bento-white h-100">
             <div class="d-flex align-items-center justify-content-between mb-2">
                 <span class="pc-bento-kicker text-muted">Warranty coverage</span>
-                <a asp-controller="Warranty" asp-action="Index" class="text-muted text-decoration-none small" title="Review status">
+                <a asp-controller="Warranty" asp-action="Index" class="text-muted text-decoration-none small"
+                    title="Review status">
                     <i class="bi bi-arrow-up-right"></i>
                 </a>
             </div>
-
             <div class="row align-items-center my-auto">
                 <!-- Status Dots Legend on Left -->
                 <div class="col-5">
                     <div class="d-flex flex-column gap-2">
                         <div class="d-flex align-items-center gap-2 small">
-                            <span class="d-inline-block rounded-circle bg-success" style="width: 8px; height: 8px;"></span>
+                            <span class="d-inline-block rounded-circle bg-success"
+                                style="width: 8px; height: 8px;"></span>
                             <span class="text-muted" style="font-size: 11px;">Active (@Model.ActiveWarranties)</span>
                         </div>
                         <div class="d-flex align-items-center gap-2 small">
-                            <span class="d-inline-block rounded-circle bg-primary" style="width: 8px; height: 8px;"></span>
-                            <span class="text-muted" style="font-size: 11px;">In triage (@Model.OpenServiceRequests)</span>
+                            <span class="d-inline-block rounded-circle bg-primary"
+                                style="width: 8px; height: 8px;"></span>
+                            <span class="text-muted" style="font-size: 11px;">In triage
+                                (@Model.OpenServiceRequests)</span>
                         </div>
                         <div class="d-flex align-items-center gap-2 small">
-                            <span class="d-inline-block rounded-circle bg-warning" style="width: 8px; height: 8px;"></span>
-                            <span class="text-muted" style="font-size: 11px;">Expiring (@Model.ExpiringSoonWarranties)</span>
+                            <span class="d-inline-block rounded-circle bg-warning"
+                                style="width: 8px; height: 8px;"></span>
+                            <span class="text-muted" style="font-size: 11px;">Expiring
+                                (@Model.ExpiringSoonWarranties)</span>
                         </div>
                     </div>
                 </div>
-
                 <!-- Semicircular SVG Arc Gauge on Right -->
                 <div class="col-7 text-center">
                     <div class="pc-arc-gauge-container">
                         <svg class="pc-arc-gauge-svg" viewBox="0 0 100 100">
                             <!-- Background Track -->
-                            <circle cx="50" cy="50" r="40" fill="none" stroke="#F1F5F9" stroke-width="12" stroke-dasharray="125.6 125.6" stroke-linecap="round" />
+                            <circle cx="50" cy="50" r="40" fill="none" stroke="#F1F5F9" stroke-width="12"
+                                stroke-dasharray="125.6 125.6" stroke-linecap="round" />
                             <!-- Active Arc (Emerald) -->
-                            <circle cx="50" cy="50" r="40" fill="none" stroke="#10B981" stroke-width="12" stroke-dasharray="@(coveredPct * 1.25) 200" stroke-linecap="round" />
+                            <circle cx="50" cy="50" r="40" fill="none" stroke="#10B981" stroke-width="12"
+                                stroke-dasharray="@(coveredPct * 1.25) 200" stroke-linecap="round" />
                         </svg>
                         <div class="pc-arc-gauge-val">
                             @coveredPct%
@@ -270,8 +284,8 @@
                     </div>
                 </div>
             </div>
-
-            <div class="d-flex align-items-center justify-content-between pt-3 border-top mt-3" style="border-color: rgba(0, 0, 0, 0.05) !important;">
+            <div class="d-flex align-items-center justify-content-between pt-3 border-top mt-3"
+                style="border-color: rgba(0, 0, 0, 0.05) !important;">
                 <span class="small text-muted" style="font-size: 11px;">Authorized SLA network</span>
                 <a asp-controller="Warranty" asp-action="Index" class="small fw-bold text-forest text-decoration-none">
                     Review status &rarr;
@@ -280,23 +294,24 @@
         </div>
     </div>
 </div>
-
 <!-- Bento Row 2: My Products & Service Request Progress -->
 <div class="row g-4 mb-4">
     <!-- Card 4: My Products (Natural Heading, Brand Icons, Real Hardware List) -->
     <div class="col-lg-6">
         <div class="pc-bento-card pc-bento-white h-100">
             <div>
-                <div class="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom" style="border-color: rgba(0, 0, 0, 0.05) !important;">
+                <div class="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom"
+                    style="border-color: rgba(0, 0, 0, 0.05) !important;">
                     <div class="d-flex align-items-center gap-2">
                         <span class="pc-bento-kicker text-muted">My products</span>
-                        <span class="badge bg-light text-dark border small" style="font-size: 11px;">@Model.TotalProducts registered</span>
+                        <span class="badge bg-light text-dark border small"
+                            style="font-size: 11px;">@Model.TotalProducts registered</span>
                     </div>
-                    <a asp-controller="Products" asp-action="Create" class="small fw-semibold text-forest text-decoration-none" title="Register new product">
+                    <a asp-controller="Products" asp-action="Create"
+                        class="small fw-semibold text-forest text-decoration-none" title="Register new product">
                         <i class="bi bi-plus-circle me-1"></i>Add
                     </a>
                 </div>
-
                 @if (Model.RecentProducts.Any())
                 {
                     <div class="d-flex flex-column">
@@ -306,10 +321,9 @@
                             var isSony = prod.Brand.Contains("Sony", StringComparison.OrdinalIgnoreCase);
                             var isDell = prod.Brand.Contains("Dell", StringComparison.OrdinalIgnoreCase);
                             var isSamsung = prod.Brand.Contains("Samsung", StringComparison.OrdinalIgnoreCase);
-
-                            var brandBg = isApple ? "#111418" : (isSony ? "#3730A3" : (isDell ? "#0369A1" : (isSamsung ? "#047857" : "#475569")));
+                            var brandBg = isApple ? "#111418" : (isSony ? "#3730A3" : (isDell ? "#0369A1" : (isSamsung ?
+                            "#047857" : "#475569")));
                             var brandInitial = !string.IsNullOrWhiteSpace(prod.Brand) ? prod.Brand.Substring(0, 1) : "P";
-
                             <div class="pc-trans-item">
                                 <div class="d-flex align-items-center gap-3">
                                     <div class="pc-brand-circle-avatar text-white" style="background-color: @brandBg;">
@@ -332,16 +346,17 @@
                                     </div>
                                     <div>
                                         <h3 class="h6 fw-bold text-dark mb-0 font-display">
-                                            <a asp-controller="Products" asp-action="Details" asp-route-id="@prod.Id" class="text-dark text-decoration-none">
+                                            <a asp-controller="Products" asp-action="Details" asp-route-id="@prod.Id"
+                                                class="text-dark text-decoration-none">
                                                 @prod.Name
                                             </a>
                                         </h3>
                                         <div class="text-muted" style="font-size: 11px;">
-                                            <span>@prod.Brand</span> &bull; <span class="font-monospace">S/N: @prod.SerialNumber</span>
+                                            <span>@prod.Brand</span> &bull; <span class="font-monospace">S/N:
+                                                @prod.SerialNumber</span>
                                         </div>
                                     </div>
                                 </div>
-
                                 <div class="d-flex align-items-center gap-3">
                                     <div class="text-end">
                                         <span class="pc-badge @prod.StatusBadgeCssClass" style="font-size: 11px;">
@@ -351,7 +366,8 @@
                                             @(prod.RemainingDays > 0 ? $"{prod.RemainingDays}d left" : "Expired")
                                         </div>
                                     </div>
-                                    <a asp-controller="Products" asp-action="Details" asp-route-id="@prod.Id" class="btn btn-link text-muted p-1 hover-dark" title="View details">
+                                    <a asp-controller="Products" asp-action="Details" asp-route-id="@prod.Id"
+                                        class="btn btn-link text-muted p-1 hover-dark" title="View details">
                                         <i class="bi bi-chevron-right small"></i>
                                     </a>
                                 </div>
@@ -364,12 +380,13 @@
                     <div class="text-center py-4 text-muted">
                         <i class="bi bi-inbox fs-2 text-muted mb-2 d-block"></i>
                         <p class="small mb-2">No registered devices found.</p>
-                        <a asp-controller="Products" asp-action="Create" class="btn btn-forest btn-sm rounded-pill px-3">Register your first device</a>
+                        <a asp-controller="Products" asp-action="Create"
+                            class="btn btn-forest btn-sm rounded-pill px-3">Register your first device</a>
                     </div>
                 }
             </div>
-
-            <div class="d-flex align-items-center justify-content-between pt-3 border-top mt-3" style="border-color: rgba(0, 0, 0, 0.05) !important;">
+            <div class="d-flex align-items-center justify-content-between pt-3 border-top mt-3"
+                style="border-color: rgba(0, 0, 0, 0.05) !important;">
                 <span class="small text-muted" style="font-size: 11px;">Complete product registry</span>
                 <a asp-action="Index" asp-controller="Products" class="small fw-bold text-forest text-decoration-none">
                     View all (@Model.TotalProducts) &rarr;
@@ -377,35 +394,38 @@
             </div>
         </div>
     </div>
-
     <!-- Card 5: Service Request Progress (Clear Purpose, 4-Stage Stepper) -->
     <div class="col-lg-6">
         <div class="pc-bento-card pc-bento-white h-100">
             <div>
-                <div class="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom" style="border-color: rgba(0, 0, 0, 0.05) !important;">
+                <div class="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom"
+                    style="border-color: rgba(0, 0, 0, 0.05) !important;">
                     <div class="d-flex align-items-center gap-2">
                         <span class="pc-bento-kicker text-muted">Service request progress</span>
-                        <span class="badge bg-primary text-white small" style="font-size: 10px;">@Model.OpenServiceRequests active</span>
+                        <span class="badge bg-primary text-white small"
+                            style="font-size: 10px;">@Model.OpenServiceRequests active</span>
                     </div>
-                    <a asp-controller="ServiceRequests" asp-action="Create" class="small fw-semibold text-primary text-decoration-none" title="Report an issue">
+                    <a asp-controller="ServiceRequests" asp-action="Create"
+                        class="small fw-semibold text-primary text-decoration-none" title="Report an issue">
                         <i class="bi bi-plus-circle me-1"></i>New ticket
                     </a>
                 </div>
-
                 <!-- Active Service Request Stepper or Nominal Indicator -->
                 @if (activeServiceRequest != null)
                 {
                     <div class="p-3 rounded-3 bg-light border border-primary-subtle shadow-xs mb-3">
                         <div class="d-flex align-items-center justify-content-between mb-2">
                             <div>
-                                <span class="fw-bold font-monospace text-primary small">#@activeServiceRequest.TicketNumber</span>
+                                <span
+                                    class="fw-bold font-monospace text-primary small">#@activeServiceRequest.TicketNumber</span>
                                 <span class="text-muted small mx-1">&bull;</span>
                                 <span class="fw-bold text-dark small">@activeServiceRequest.ProductName</span>
                             </div>
-                            <span class="@activeServiceRequest.StatusBadgeCssClass small" style="font-size: 11px;">@activeServiceRequest.StatusText</span>
+                            <span class="@activeServiceRequest.StatusBadgeCssClass small"
+                                style="font-size: 11px;">@activeServiceRequest.StatusText</span>
                         </div>
-                        <div class="small text-muted mb-2 text-truncate" style="font-size: 11px;">@activeServiceRequest.Subject</div>
-
+                        <div class="small text-muted mb-2 text-truncate" style="font-size: 11px;">
+                            @activeServiceRequest.Subject</div>
                         <!-- 4-Stage Repair Stepper -->
                         <div class="pc-repair-stepper d-flex align-items-center justify-content-between pt-2 border-top">
                             <div class="pc-stepper-node completed text-center">
@@ -436,29 +456,30 @@
                         <i class="bi bi-shield-check text-success fs-3"></i>
                         <div>
                             <div class="fw-bold text-dark small">All devices operational</div>
-                            <div class="text-muted small" style="font-size: 11px;">Zero open service tickets. All registered hardware is operating nominally.</div>
+                            <div class="text-muted small" style="font-size: 11px;">Zero open service tickets. All registered
+                                hardware is operating nominally.</div>
                         </div>
                     </div>
                 }
-
                 <!-- Quick Summary Stats -->
-                <div class="d-flex align-items-center justify-content-between p-2 rounded-2 bg-light border text-muted small" style="font-size: 11px;">
+                <div class="d-flex align-items-center justify-content-between p-2 rounded-2 bg-light border text-muted small"
+                    style="font-size: 11px;">
                     <span>Open requests: <strong class="text-dark">@Model.OpenServiceRequests</strong></span>
                     <span>&bull;</span>
                     <span>Resolved tickets: <strong class="text-dark">@Model.ResolvedServiceRequests</strong></span>
                 </div>
             </div>
-
-            <div class="d-flex align-items-center justify-content-between pt-3 border-top mt-3" style="border-color: rgba(0, 0, 0, 0.05) !important;">
+            <div class="d-flex align-items-center justify-content-between pt-3 border-top mt-3"
+                style="border-color: rgba(0, 0, 0, 0.05) !important;">
                 <span class="small text-muted" style="font-size: 11px;">Service tracking</span>
-                <a asp-controller="ServiceRequests" asp-action="Index" class="small fw-bold text-primary text-decoration-none">
+                <a asp-controller="ServiceRequests" asp-action="Index"
+                    class="small fw-bold text-primary text-decoration-none">
                     Track all requests &rarr;
                 </a>
             </div>
         </div>
     </div>
 </div>
-
 <!-- Bento Row 3: Full-Width Dark Feature Banner -->
 <div class="row g-4">
     <div class="col-12">
@@ -468,12 +489,15 @@
                     <i class="bi bi-shield-check"></i>
                 </div>
                 <div>
-                    <h2 class="h5 fw-bold text-white mb-1 font-display">Need authorized repair or warranty extension?</h2>
-                    <p class="text-white-50 small mb-0">Certified service centres provide authorized diagnostics, OEM replacement parts, and guaranteed 48-hour SLA turnaround.</p>
+                    <h2 class="h5 fw-bold text-white mb-1 font-display">Need authorized repair or warranty extension?
+                    </h2>
+                    <p class="text-white-50 small mb-0">Certified service centres provide authorized diagnostics, OEM
+                        replacement parts, and guaranteed 48-hour SLA turnaround.</p>
                 </div>
             </div>
             <div class="flex-shrink-0">
-                <a asp-controller="ServiceRequests" asp-action="Create" class="btn btn-light rounded-pill px-4 py-2 fw-semibold pc-btn-tactile shadow-sm">
+                <a asp-controller="ServiceRequests" asp-action="Create"
+                    class="btn btn-light rounded-pill px-4 py-2 fw-semibold pc-btn-tactile shadow-sm">
                     Book priority service &rarr;
                 </a>
             </div>

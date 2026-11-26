@@ -24,6 +24,8 @@
                 @Html.AntiForgeryToken()
                 <input type="hidden" name="ReturnUrl" value="" />
 
+                <div id="loginClientError" class="alert alert-danger py-2 small mb-3 d-none stagger-item" style="--i: 2; background-color: #FEF2F2; border-color: #FECACA; color: #991B1B;" role="alert"></div>
+
                 <!-- Email Address -->
                 <div class="auth-field-box stagger-item" style="--i: 3;">
                     <input name="Email" type="email" id="emailInput" class="auth-input-inner" placeholder="Enter your registered email" autocomplete="email" required />
@@ -205,6 +207,28 @@
                     switchToLogin();
                 });
             });
+
+            // Client-side validation for embedded login form
+            const loginForm = document.getElementById('loginForm');
+            if (loginForm) {
+                loginForm.addEventListener('submit', function (e) {
+                    const errBox = document.getElementById('loginClientError');
+                    const email = document.getElementById('emailInput')?.value?.trim() || '';
+                    const pwd = document.getElementById('loginPassword')?.value || '';
+
+                    if (!email || !pwd) {
+                        e.preventDefault();
+                        if (errBox) {
+                            errBox.textContent = 'Please enter your registered email and password.';
+                            errBox.classList.remove('d-none');
+                        }
+                        return false;
+                    }
+                    if (errBox) {
+                        errBox.classList.add('d-none');
+                    }
+                });
+            }
 
             // Check URL query param or hash for immediate switch
             const urlParams = new URLSearchParams(window.location.search);

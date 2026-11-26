@@ -110,6 +110,87 @@ public class DbInitializerService : IDbInitializerService
         return "[Administrator account already exists]";
     }
 
+    public async Task EnsureDatabaseObjectsCreatedAsync()
+    {
+        try
+        {
+            // Create or alter view vw_ProductWarrantySummary
+            await _context.Database.ExecuteSqlRawAsync(@"
+CREATE OR ALTER VIEW dbo.vw_ProductWarrantySummary
+AS
+SELECT 
+    p.Id AS ProductId,
+    p.Name AS ProductName,
+    p.Brand,
+    p.ModelNumber,
+    p.SerialNumber,
+    CASE p.Category
+        WHEN 1 THEN 'Electronics'
+        WHEN 2 THEN 'Computers'
+        WHEN 3 THEN 'Mobile Devices'
+        WHEN 4 THEN 'Home Appliances'
+        WHEN 5 THEN 'Kitchen Appliances'
+        WHEN 6 THEN 'Home Entertainment'
+        WHEN 7 THEN 'Wearables'
+        WHEN 8 THEN 'Office Equipment'
+        ELSE 'Other'
+    END AS CategoryName,
+    p.UserId,
+    u.FullName AS CustomerName,
+    ISNULL(u.Email, 'N/A') AS CustomerEmail,
+    p.PurchaseDate,
+    p.WarrantyDurationMonths,
+    p.WarrantyExpiryDate,
+    DATEDIFF(day, CAST(GETUTCDATE() AS DATE), p.WarrantyExpiryDate) AS DaysRemaining,
+    CASE 
+        WHEN CAST(GETUTCDATE() AS DATE) > p.WarrantyExpiryDate THEN 'Expired'
+        WHEN DATEDIFF(day, CAST(GETUTCDATE() AS DATE), p.WarrantyExpiryDate) <= 30 THEN 'Expiring Soon'
+        ELSE 'Active'
+    END AS WarrantyStatusText
+FROM dbo.Products p
+INNER JOIN dbo.AspNetUsers u ON p.UserId = u.Id;");
+
+            // Create or alter stored procedure sp_GetServiceTicketStatistics
+            await _context.Database.ExecuteSqlRawAsync(@"
+CREATE OR ALTER PROCEDURE dbo.sp_GetServiceTicketStatistics
+    @StartDate DATETIME = NULL,
+    @EndDate DATETIME = NULL
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT 
+        CASE sr.Category
+            WHEN 1 THEN 'Repair'
+            WHEN 2 THEN 'Installation'
+            WHEN 3 THEN 'Maintenance'
+            WHEN 4 THEN 'Warranty Claim'
+            ELSE 'Other'
+        END AS CategoryName,
+        COUNT(sr.Id) AS TotalTickets,
+        SUM(CASE WHEN sr.Status = 1 THEN 1 ELSE 0 END) AS SubmittedCount,
+        SUM(CASE WHEN sr.Status = 2 THEN 1 ELSE 0 END) AS UnderReviewCount,
+        SUM(CASE WHEN sr.Status = 3 THEN 1 ELSE 0 END) AS AssignedCount,
+        SUM(CASE WHEN sr.Status = 4 THEN 1 ELSE 0 END) AS InProgressCount,
+        SUM(CASE WHEN sr.Status = 5 THEN 1 ELSE 0 END) AS WaitingForCustomerCount,
+        SUM(CASE WHEN sr.Status = 6 THEN 1 ELSE 0 END) AS ResolvedCount,
+        SUM(CASE WHEN sr.Status = 7 THEN 1 ELSE 0 END) AS ClosedCount,
+        SUM(CASE WHEN sr.Status = 8 THEN 1 ELSE 0 END) AS RejectedCount
+    FROM dbo.ServiceRequests sr
+    WHERE (@StartDate IS NULL OR sr.CreatedAtUtc >= @StartDate)
+      AND (@EndDate IS NULL OR sr.CreatedAtUtc <= @EndDate)
+    GROUP BY sr.Category
+    ORDER BY TotalTickets DESC;
+END;");
+
+            _logger.LogInformation("Database views and stored procedures ensured successfully.");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Could not ensure views/stored procedures automatically; fallback LINQ queries will be used.");
+        }
+    }
+
     public async Task SeedDemoDataAsync()
     {
         await EnsureRolesExistAsync();

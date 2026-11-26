@@ -1,0 +1,15 @@
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Server=YOUR_DATABASE_HOST; Database=YOUR_DATABASE_NAME; User Id=YOUR_DB_USER; Password=YOUR_DB_PASSWORD; Encrypt=False; MultipleActiveResultSets=True;"
+  },
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning",
+      "Microsoft.EntityFrameworkCore.Database.Command": "Warning"
+    }
+  },
+  "Database": {
+    "AutoMigrateOnStartup": true
+  }
+}

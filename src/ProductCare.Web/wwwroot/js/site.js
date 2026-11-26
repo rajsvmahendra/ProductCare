@@ -6,45 +6,57 @@
 document.addEventListener('DOMContentLoaded', function () {
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    // 1. Password Visibility Toggles (Bidirectional, Accessible, Safe)
-    const toggleButtons = document.querySelectorAll('.pc-toggle-password, .btn-password-toggle');
-    toggleButtons.forEach(btn => {
-        if (!btn.getAttribute('type')) {
-            btn.setAttribute('type', 'button');
+    // 1. Password Visibility Toggles (Bidirectional, Accessible, Safe, Delegated)
+    // Ensures clicking the eye toggle NEVER submits any form, and controls ONLY its corresponding password input.
+    document.addEventListener('click', function (e) {
+        const btn = e.target.closest('.pc-toggle-password, .btn-password-toggle, .auth-pwd-toggle, .pwd-toggle-btn');
+        if (!btn) return;
+
+        // Ensure clicking eye icon never submits the form or bubbles to form handlers
+        e.preventDefault();
+        e.stopPropagation();
+
+        const targetId = btn.getAttribute('data-target');
+        let input = null;
+
+        // 1. First search closest parent container (ensures toggle controls only its immediate sibling field)
+        const container = btn.closest('.auth-field-box, .input-group, .position-relative, div');
+        if (container) {
+            input = container.querySelector('input[type="password"], input[type="text"]');
         }
 
-        btn.addEventListener('click', function (e) {
-            e.preventDefault();
-            const targetId = this.getAttribute('data-target');
-            const input = document.getElementById(targetId);
-            if (!input) return;
+        // 2. If not found in sibling container, fallback to document ID
+        if (!input && targetId) {
+            input = document.getElementById(targetId);
+        }
 
-            const icon = this.querySelector('i');
-            const eyeOpen = this.querySelector('.pc-eye-open');
-            const eyeSlash = this.querySelector('.pc-eye-slash');
+        if (!input) return;
 
-            if (input.type === 'password') {
-                input.type = 'text';
-                if (icon) {
-                    icon.classList.remove('bi-eye');
-                    icon.classList.add('bi-eye-slash');
-                }
-                if (eyeOpen) eyeOpen.style.display = 'none';
-                if (eyeSlash) eyeSlash.style.display = 'inline-block';
-                this.setAttribute('aria-label', 'Hide password');
-                this.setAttribute('title', 'Hide password');
-            } else {
-                input.type = 'password';
-                if (icon) {
-                    icon.classList.remove('bi-eye-slash');
-                    icon.classList.add('bi-eye');
-                }
-                if (eyeOpen) eyeOpen.style.display = 'inline-block';
-                if (eyeSlash) eyeSlash.style.display = 'none';
-                this.setAttribute('aria-label', 'Show password');
-                this.setAttribute('title', 'Show password');
+        const icon = btn.querySelector('i');
+        const eyeOpen = btn.querySelector('.pc-eye-open');
+        const eyeSlash = btn.querySelector('.pc-eye-slash');
+
+        if (input.type === 'password') {
+            input.type = 'text';
+            if (icon) {
+                icon.classList.remove('bi-eye');
+                icon.classList.add('bi-eye-slash');
             }
-        });
+            if (eyeOpen) eyeOpen.style.display = 'none';
+            if (eyeSlash) eyeSlash.style.display = 'inline-block';
+            btn.setAttribute('aria-label', 'Hide password');
+            btn.setAttribute('title', 'Hide password');
+        } else {
+            input.type = 'password';
+            if (icon) {
+                icon.classList.remove('bi-eye-slash');
+                icon.classList.add('bi-eye');
+            }
+            if (eyeOpen) eyeOpen.style.display = 'inline-block';
+            if (eyeSlash) eyeSlash.style.display = 'none';
+            btn.setAttribute('aria-label', 'Show password');
+            btn.setAttribute('title', 'Show password');
+        }
     });
 
     // 2. Copy to Clipboard Utility
@@ -173,19 +185,18 @@ document.addEventListener('DOMContentLoaded', function () {
     const sidebarClose = document.getElementById('pcSidebarMobileClose');
     const backdrop = document.getElementById('pcPortalBackdrop');
 
-    // Desktop: Restore Expanded State from localStorage or URL parameter (Default is compact 60px rail)
+    // Desktop: Restore Expanded State only on explicit URL parameter (Default is compact 60px rail; flyout remains closed on page load and reload)
     const flyout = document.getElementById('pcSidebarFlyout');
     if (portalLayout && window.innerWidth >= 992) {
         try {
             const urlParams = new URLSearchParams(window.location.search);
             const isExplicitlyExpanded = urlParams.get('expanded') === 'true';
-            const isExplicitlyCollapsed = urlParams.get('collapsed') === 'true' || urlParams.get('expanded') === 'false';
-            const savedExpanded = localStorage.getItem('pc_sidebar_expanded') === 'true';
 
             if (isExplicitlyExpanded) {
                 if (flyout) flyout.classList.add('show');
-            } else if (!isExplicitlyCollapsed && savedExpanded) {
-                if (flyout) flyout.classList.add('show');
+            } else {
+                if (flyout) flyout.classList.remove('show');
+                localStorage.setItem('pc_sidebar_expanded', 'false');
             }
         } catch (e) {}
     }
@@ -208,16 +219,24 @@ document.addEventListener('DOMContentLoaded', function () {
     } catch (e) {}
 
     const railToggle = document.getElementById('pcRailExpandBtn');
-    const flyout = document.getElementById('pcSidebarFlyout');
     const flyoutClose = document.getElementById('pcFlyoutCloseBtn');
 
     function toggleDesktopFlyout() {
         if (!flyout) return;
+        const willShow = !flyout.classList.contains('show');
         flyout.classList.toggle('show');
+        try {
+            localStorage.setItem('pc_sidebar_expanded', willShow ? 'true' : 'false');
+        } catch (e) {}
     }
 
     function closeDesktopFlyout() {
-        if (flyout) flyout.classList.remove('show');
+        if (flyout) {
+            flyout.classList.remove('show');
+            try {
+                localStorage.setItem('pc_sidebar_expanded', 'false');
+            } catch (e) {}
+        }
     }
 
     if (collapseToggle) {
@@ -240,6 +259,24 @@ document.addEventListener('DOMContentLoaded', function () {
         flyoutClose.addEventListener('click', function (e) {
             e.preventDefault();
             closeDesktopFlyout();
+        });
+    }
+
+    // Automatically close expanded navigation flyout immediately on selecting any navigation link
+    if (flyout) {
+        flyout.addEventListener('click', function (e) {
+            const navLink = e.target.closest('a');
+            if (!navLink) return;
+
+            // Do not intercept or close on non-navigation controls (like close button)
+            if (navLink.id === 'pcFlyoutCloseBtn' || navLink.classList.contains('btn-close')) {
+                return;
+            }
+
+            // Immediately collapse the expanded flyout on link navigation
+            if (navLink.getAttribute('href')) {
+                closeDesktopFlyout();
+            }
         });
     }
 
@@ -300,6 +337,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (sidebar) {
         sidebar.querySelectorAll('.pc-sidebar-link').forEach(link => {
             link.addEventListener('click', function () {
+                closeDesktopFlyout();
                 if (window.innerWidth < 992) {
                     closeMobileDrawer();
                 }

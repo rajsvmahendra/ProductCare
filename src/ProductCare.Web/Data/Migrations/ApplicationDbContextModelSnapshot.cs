@@ -246,6 +246,57 @@ namespace ProductCare.Web.Data.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("ProductCare.Web.Models.Entities.NetworkQualityReport", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("CampusZone")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<double>("DownloadSpeedMbps")
+                        .HasColumnType("float");
+
+                    b.Property<bool>("IsClientMeasured")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("LatencyMs")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("MeasuredAtUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("NetworkType")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CampusZone")
+                        .HasDatabaseName("IX_NetworkQualityReports_CampusZone");
+
+                    b.HasIndex("MeasuredAtUtc")
+                        .HasDatabaseName("IX_NetworkQualityReports_MeasuredAtUtc");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("NetworkQualityReports", (string)null);
+                });
+
             modelBuilder.Entity("ProductCare.Web.Models.Entities.Product", b =>
                 {
                     b.Property<int>("Id")
@@ -253,6 +304,9 @@ namespace ProductCare.Web.Data.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime?>("ArchivedAtUtc")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Brand")
                         .IsRequired()
@@ -279,6 +333,11 @@ namespace ProductCare.Web.Data.Migrations
                     b.Property<string>("InvoiceOriginalFileName")
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
+
+                    b.Property<bool>("IsArchived")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.Property<string>("ModelNumber")
                         .IsRequired()
@@ -310,6 +369,10 @@ namespace ProductCare.Web.Data.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<string>("SubCategory")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
                     b.Property<DateTime?>("UpdatedAtUtc")
                         .HasColumnType("datetime2");
 
@@ -330,6 +393,9 @@ namespace ProductCare.Web.Data.Migrations
 
                     b.HasIndex("WarrantyExpiryDate")
                         .HasDatabaseName("IX_Products_WarrantyExpiryDate");
+
+                    b.HasIndex("UserId", "IsArchived")
+                        .HasDatabaseName("IX_Products_UserId_IsArchived");
 
                     b.HasIndex("UserId", "SerialNumber")
                         .IsUnique()
@@ -396,6 +462,98 @@ namespace ProductCare.Web.Data.Migrations
                     b.ToView("vw_ProductWarrantySummary", (string)null);
                 });
 
+            modelBuilder.Entity("ProductCare.Web.Models.Entities.ServiceCenter", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Country")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTime>("CreatedAtUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsVerified")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Locality")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("MapUrl")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<string>("OpeningHours")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("Phone")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("State")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("SupportedBrands")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("SupportedCategories")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("Website")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("City")
+                        .HasDatabaseName("IX_ServiceCenters_City");
+
+                    b.HasIndex("IsActive")
+                        .HasDatabaseName("IX_ServiceCenters_IsActive");
+
+                    b.ToTable("ServiceCenters", (string)null);
+                });
+
             modelBuilder.Entity("ProductCare.Web.Models.Entities.ServiceRequest", b =>
                 {
                     b.Property<int>("Id")
@@ -412,6 +570,22 @@ namespace ProductCare.Web.Data.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<string>("AttachmentContentType")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("AttachmentFileName")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("AttachmentOriginalFileName")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("CampusLocation")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
                     b.Property<int>("Category")
                         .HasColumnType("int");
 
@@ -423,13 +597,26 @@ namespace ProductCare.Web.Data.Migrations
                         .HasMaxLength(2000)
                         .HasColumnType("nvarchar(2000)");
 
+                    b.Property<bool>("IsEscalated")
+                        .HasColumnType("bit");
+
                     b.Property<int>("Priority")
                         .HasColumnType("int");
 
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
 
+                    b.Property<string>("ResolutionProofFileName")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
                     b.Property<DateTime?>("ResolvedAtUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("ServiceCenterId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("SlaDeadlineUtc")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("Status")
@@ -459,6 +646,9 @@ namespace ProductCare.Web.Data.Migrations
 
                     b.HasIndex("ProductId")
                         .HasDatabaseName("IX_ServiceRequests_ProductId");
+
+                    b.HasIndex("ServiceCenterId")
+                        .HasDatabaseName("IX_ServiceRequests_ServiceCenterId");
 
                     b.HasIndex("Status")
                         .HasDatabaseName("IX_ServiceRequests_Status");
@@ -606,6 +796,17 @@ namespace ProductCare.Web.Data.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("ProductCare.Web.Models.Entities.NetworkQualityReport", b =>
+                {
+                    b.HasOne("ProductCare.Web.Models.Entities.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("ProductCare.Web.Models.Entities.Product", b =>
                 {
                     b.HasOne("ProductCare.Web.Models.Entities.ApplicationUser", "User")
@@ -625,6 +826,11 @@ namespace ProductCare.Web.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("ProductCare.Web.Models.Entities.ServiceCenter", "ServiceCenter")
+                        .WithMany("ServiceRequests")
+                        .HasForeignKey("ServiceCenterId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
                     b.HasOne("ProductCare.Web.Models.Entities.ApplicationUser", "User")
                         .WithMany("ServiceRequests")
                         .HasForeignKey("UserId")
@@ -632,6 +838,8 @@ namespace ProductCare.Web.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Product");
+
+                    b.Navigation("ServiceCenter");
 
                     b.Navigation("User");
                 });
@@ -665,6 +873,11 @@ namespace ProductCare.Web.Data.Migrations
                 });
 
             modelBuilder.Entity("ProductCare.Web.Models.Entities.Product", b =>
+                {
+                    b.Navigation("ServiceRequests");
+                });
+
+            modelBuilder.Entity("ProductCare.Web.Models.Entities.ServiceCenter", b =>
                 {
                     b.Navigation("ServiceRequests");
                 });

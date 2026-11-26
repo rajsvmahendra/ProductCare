@@ -76,6 +76,8 @@
             <form asp-action="Register" asp-controller="Account" method="post" id="registerForm" class="w-100">
                 @Html.AntiForgeryToken()
 
+                <div id="regClientError" class="alert alert-danger py-2 small mb-3 d-none stagger-item" style="--i: 2; background-color: #FEF2F2; border-color: #FECACA; color: #991B1B;" role="alert"></div>
+
                 <!-- Full Name -->
                 <div class="auth-field-box stagger-item" style="--i: 3;">
                     <input name="FullName" type="text" id="regFullName" class="auth-input-inner" placeholder="Enter your full name" autocomplete="name" required />
@@ -203,6 +205,55 @@
                     switchToLogin();
                 });
             });
+
+            // Client-side validation for embedded registration form
+            const regForm = document.getElementById('registerForm');
+            if (regForm) {
+                regForm.addEventListener('submit', function (e) {
+                    const errBox = document.getElementById('regClientError');
+                    const fullName = document.getElementById('regFullName')?.value?.trim() || '';
+                    const email = document.getElementById('regEmail')?.value?.trim() || '';
+                    const pwd = document.getElementById('regPassword')?.value || '';
+                    const confirmPwd = document.getElementById('regConfirmPassword')?.value || '';
+                    const terms = document.getElementById('termsCheck')?.checked;
+
+                    if (!fullName || !email) {
+                        e.preventDefault();
+                        if (errBox) {
+                            errBox.textContent = 'Please fill in all required fields.';
+                            errBox.classList.remove('d-none');
+                        }
+                        return false;
+                    }
+                    if (pwd.length < 6) {
+                        e.preventDefault();
+                        if (errBox) {
+                            errBox.textContent = 'Password must be at least 6 characters long.';
+                            errBox.classList.remove('d-none');
+                        }
+                        return false;
+                    }
+                    if (pwd !== confirmPwd) {
+                        e.preventDefault();
+                        if (errBox) {
+                            errBox.textContent = 'The password and confirmation password do not match.';
+                            errBox.classList.remove('d-none');
+                        }
+                        return false;
+                    }
+                    if (!terms) {
+                        e.preventDefault();
+                        if (errBox) {
+                            errBox.textContent = 'You must agree to the Terms & Privacy policy.';
+                            errBox.classList.remove('d-none');
+                        }
+                        return false;
+                    }
+                    if (errBox) {
+                        errBox.classList.add('d-none');
+                    }
+                });
+            }
 
             // Check URL query param or hash for immediate switch
             const urlParams = new URLSearchParams(window.location.search);

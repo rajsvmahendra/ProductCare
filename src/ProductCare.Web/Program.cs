@@ -261,4 +261,33 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
+// 8. Automatic database migration and role initialization (Safe & Idempotent)
+if (app.Configuration.GetValue<bool>("Database:AutoMigrateOnStartup", true))
+{
+    using var scope = app.Services.CreateScope();
+    var services = scope.ServiceProvider;
+    var logger = services.GetRequiredService<ILogger<Program>>();
+    try
+    {
+        var db = services.GetRequiredService<ApplicationDbContext>();
+        if (db.Database.IsRelational())
+        {
+            logger.LogInformation("ProductCare: Applying pending EF Core database migrations...");
+            await db.Database.MigrateAsync();
+            logger.LogInformation("ProductCare: Database migrations up to date.");
+
+            var initializer = services.GetRequiredService<IDbInitializerService>();
+            await initializer.EnsureRolesExistAsync();
+            var adminResult = await initializer.ProvisionAdminUserAsync();
+            logger.LogInformation("ProductCare: Administrator provisioning status: {Status}", adminResult);
+
+            await initializer.EnsureDatabaseObjectsCreatedAsync();
+        }
+    }
+    catch (Exception ex)
+    {
+        logger.LogError(ex, "ProductCare: Automatic database migration or role initialization encountered an error on startup.");
+    }
+}
+
 app.Run();
